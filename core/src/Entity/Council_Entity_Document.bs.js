@@ -3,33 +3,50 @@
 import * as Caml_obj from "rescript/lib/es6/caml_obj.js";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 
-function make(id, state) {
+function make(id, data) {
   return {
           id: id,
-          state: state
+          state: data !== undefined ? ({
+                TAG: /* Free */0,
+                _0: data
+              }) : undefined
         };
 }
 
 function transition(t, $$event) {
-  var state = t.state;
+  var match = t.state;
   var id = t.id;
   if ($$event.TAG === /* Created */0) {
     return {
             TAG: /* Ok */0,
             _0: {
               id: id,
-              state: $$event.state
+              state: {
+                TAG: /* Free */0,
+                _0: $$event.data
+              }
             }
           };
   }
-  if (state === undefined) {
+  if (match === undefined) {
     return {
             TAG: /* Error */1,
-            _0: /* Uninitialized */{
+            _0: {
+              TAG: /* Uninitialized */0,
               _0: id
             }
           };
   }
+  if (match.TAG !== /* Free */0) {
+    return {
+            TAG: /* Error */1,
+            _0: {
+              TAG: /* Locked */1,
+              _0: id
+            }
+          };
+  }
+  var data = match._0;
   switch ($$event.TAG | 0) {
     case /* SectionAdded */1 :
         return {
@@ -37,11 +54,14 @@ function transition(t, $$event) {
                 _0: {
                   id: id,
                   state: {
-                    title: state.title,
-                    sections: Belt_Array.concat(state.sections, [$$event.section]),
-                    tags: state.tags,
-                    owner: state.owner,
-                    responsibility: state.responsibility
+                    TAG: /* Free */0,
+                    _0: {
+                      title: data.title,
+                      sections: Belt_Array.concat(data.sections, [$$event.section]),
+                      tags: data.tags,
+                      owner: data.owner,
+                      responsibility: data.responsibility
+                    }
                   }
                 }
               };
@@ -52,13 +72,16 @@ function transition(t, $$event) {
                 _0: {
                   id: id,
                   state: {
-                    title: state.title,
-                    sections: Belt_Array.keep(state.sections, (function (id) {
-                            return Caml_obj.notequal(id, deleted);
-                          })),
-                    tags: state.tags,
-                    owner: state.owner,
-                    responsibility: state.responsibility
+                    TAG: /* Free */0,
+                    _0: {
+                      title: data.title,
+                      sections: Belt_Array.keep(data.sections, (function (id) {
+                              return Caml_obj.notequal(id, deleted);
+                            })),
+                      tags: data.tags,
+                      owner: data.owner,
+                      responsibility: data.responsibility
+                    }
                   }
                 }
               };
@@ -68,11 +91,14 @@ function transition(t, $$event) {
                 _0: {
                   id: id,
                   state: {
-                    title: state.title,
-                    sections: state.sections,
-                    tags: state.tags,
-                    owner: state.owner,
-                    responsibility: $$event.responsibility
+                    TAG: /* Free */0,
+                    _0: {
+                      title: data.title,
+                      sections: data.sections,
+                      tags: data.tags,
+                      owner: data.owner,
+                      responsibility: $$event.responsibility
+                    }
                   }
                 }
               };
@@ -82,11 +108,26 @@ function transition(t, $$event) {
                 _0: {
                   id: id,
                   state: {
-                    title: state.title,
-                    sections: state.sections,
-                    tags: $$event.tags,
-                    owner: state.owner,
-                    responsibility: state.responsibility
+                    TAG: /* Free */0,
+                    _0: {
+                      title: data.title,
+                      sections: data.sections,
+                      tags: $$event.tags,
+                      owner: data.owner,
+                      responsibility: data.responsibility
+                    }
+                  }
+                }
+              };
+    case /* Locked */5 :
+        return {
+                TAG: /* Ok */0,
+                _0: {
+                  id: id,
+                  state: {
+                    TAG: /* Locked */1,
+                    by: $$event.by,
+                    data: data
                   }
                 }
               };
@@ -94,11 +135,11 @@ function transition(t, $$event) {
   }
 }
 
-function create(t, date, state) {
+function create(t, date, data) {
   var $$event = {
     TAG: /* Created */0,
     date: date,
-    state: state
+    data: data
   };
   return [
           transition(t, $$event),
@@ -154,12 +195,25 @@ function modifyTags(t, date, tags) {
         ];
 }
 
+function lock(t, date, by) {
+  var $$event = {
+    TAG: /* Locked */5,
+    date: date,
+    by: by
+  };
+  return [
+          transition(t, $$event),
+          [$$event]
+        ];
+}
+
 var Command = {
   create: create,
   addSection: addSection,
   deleteSection: deleteSection,
   assignResponsibility: assignResponsibility,
-  modifyTags: modifyTags
+  modifyTags: modifyTags,
+  lock: lock
 };
 
 var Id;
