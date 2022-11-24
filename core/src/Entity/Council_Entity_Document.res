@@ -1,16 +1,14 @@
-module Section = Council_Entity_Section
-module User = Council_Entity_User
+module Id = Council_Entity_Document_Id
 
-module Id = Id.Make({
-  type t
-})
+module SectionId = Council_Entity_Section_Id
+module UserId = Council_Entity_User_Id
 
 type data = {
   title: string,
-  sections: array<Section.Id.t>,
+  sections: array<SectionId.t>,
   tags: array<string>,
-  owner: User.Id.t,
-  responsibility: User.Id.t,
+  owner: UserId.t,
+  responsibility: UserId.t,
 }
 
 type t = {
@@ -25,9 +23,9 @@ let make = (id: Id.t, data) => {
 
 type event =
   | Created({date: Js.Date.t, data: data})
-  | SectionAdded({date: Js.Date.t, section: Section.Id.t})
-  | SectionDeleted({date: Js.Date.t, section: Section.Id.t})
-  | ResponsibilityAssigned({date: Js.Date.t, responsibility: User.Id.t})
+  | SectionAdded({date: Js.Date.t, section: SectionId.t})
+  | SectionDeleted({date: Js.Date.t, section: SectionId.t})
+  | ResponsibilityAssigned({date: Js.Date.t, responsibility: UserId.t})
   | TagsModified({date: Js.Date.t, tags: array<string>})
 
 type error = Uninitialized(Id.t)

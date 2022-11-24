@@ -1,6 +1,4 @@
-module Id = Id.Make({
-  type t
-})
+module Id = Council_Entity_Section_Id
 
 type data = {
   heading: string,

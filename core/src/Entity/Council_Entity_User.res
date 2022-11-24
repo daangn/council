@@ -1,13 +1,11 @@
-module Organization = Council_Entity_Organization
+module Id = Council_Entity_User_Id
 
-module Id = Id.Make({
-  type t
-})
+module OrganizationId = Council_Entity_Organization_Id
 
 type data = {
   username: string,
   email: string,
-  org: Organization.Id.t,
+  org: OrganizationId.t,
 }
 
 type t = {
