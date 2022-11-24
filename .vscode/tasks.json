@@ -1,0 +1,28 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "compose-up-db",
+      "command": "docker-compose -f docker-compose.db.yml up",
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "compose-down-db",
+      "command": "docker-compose -f docker-compose.db.yml down",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "new"
+      }
+    }
+  ]
+}
