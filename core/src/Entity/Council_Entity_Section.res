@@ -1,6 +1,6 @@
 module Id = Council_Entity_Section_Id
 
-type data = {
+type state = {
   heading: string,
   body: string,
   tags: array<string>,
@@ -8,16 +8,16 @@ type data = {
 
 type t = {
   id: Id.t,
-  data: option<data>,
+  state: option<state>,
 }
 
-let make = (id, data) => {
+let make = (id, state) => {
   id,
-  data,
+  state,
 }
 
 type event =
-  | Created({date: Js.Date.t, data: data})
+  | Created({date: Js.Date.t, state: state})
   | HeadingModified({date: Js.Date.t, heading: string})
   | BodyModified({date: Js.Date.t, body: string})
   | TagsModified({date: Js.Date.t, tags: array<string>})
@@ -26,44 +26,44 @@ type error = Uninitialized(Id.t)
 
 let transition: Transition.t<t, event, error> = (t, event) =>
   switch (t, event) {
-  | ({id}, Created({data})) =>
+  | ({id}, Created({state})) =>
     Ok({
       id,
-      data: Some(data),
+      state: Some(state),
     })
-  | ({id, data: Some(data)}, HeadingModified({heading})) =>
+  | ({id, state: Some(state)}, HeadingModified({heading})) =>
     Ok({
       id,
-      data: Some({
-        ...data,
+      state: Some({
+        ...state,
         heading,
       }),
     })
 
-  | ({id, data: Some(data)}, BodyModified({body})) =>
+  | ({id, state: Some(state)}, BodyModified({body})) =>
     Ok({
       id,
-      data: Some({
-        ...data,
+      state: Some({
+        ...state,
         body,
       }),
     })
 
-  | ({id, data: Some(data)}, TagsModified({tags})) =>
+  | ({id, state: Some(state)}, TagsModified({tags})) =>
     Ok({
       id,
-      data: Some({
-        ...data,
+      state: Some({
+        ...state,
         tags,
       }),
     })
 
-  | ({id, data: None}, _) => Error(Uninitialized(id))
+  | ({id, state: None}, _) => Error(Uninitialized(id))
   }
 
 module Command = {
-  let create = (t, ~date, ~data) => {
-    let event = Created({date, data})
+  let create = (t, ~date, ~state) => {
+    let event = Created({date, state})
     (t->transition(event), [event])
   }
 

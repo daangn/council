@@ -3,26 +3,26 @@
 import * as Caml_obj from "rescript/lib/es6/caml_obj.js";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 
-function make(id, data) {
+function make(id, state) {
   return {
           id: id,
-          data: data
+          state: state
         };
 }
 
 function transition(t, $$event) {
-  var data = t.data;
+  var state = t.state;
   var id = t.id;
   if ($$event.TAG === /* Created */0) {
     return {
             TAG: /* Ok */0,
             _0: {
               id: id,
-              data: $$event.data
+              state: $$event.state
             }
           };
   }
-  if (data === undefined) {
+  if (state === undefined) {
     return {
             TAG: /* Error */1,
             _0: /* Uninitialized */{
@@ -36,12 +36,12 @@ function transition(t, $$event) {
                 TAG: /* Ok */0,
                 _0: {
                   id: id,
-                  data: {
-                    title: data.title,
-                    sections: Belt_Array.concat(data.sections, [$$event.section]),
-                    tags: data.tags,
-                    owner: data.owner,
-                    responsibility: data.responsibility
+                  state: {
+                    title: state.title,
+                    sections: Belt_Array.concat(state.sections, [$$event.section]),
+                    tags: state.tags,
+                    owner: state.owner,
+                    responsibility: state.responsibility
                   }
                 }
               };
@@ -51,14 +51,14 @@ function transition(t, $$event) {
                 TAG: /* Ok */0,
                 _0: {
                   id: id,
-                  data: {
-                    title: data.title,
-                    sections: Belt_Array.keep(data.sections, (function (id) {
+                  state: {
+                    title: state.title,
+                    sections: Belt_Array.keep(state.sections, (function (id) {
                             return Caml_obj.notequal(id, deleted);
                           })),
-                    tags: data.tags,
-                    owner: data.owner,
-                    responsibility: data.responsibility
+                    tags: state.tags,
+                    owner: state.owner,
+                    responsibility: state.responsibility
                   }
                 }
               };
@@ -67,11 +67,11 @@ function transition(t, $$event) {
                 TAG: /* Ok */0,
                 _0: {
                   id: id,
-                  data: {
-                    title: data.title,
-                    sections: data.sections,
-                    tags: data.tags,
-                    owner: data.owner,
+                  state: {
+                    title: state.title,
+                    sections: state.sections,
+                    tags: state.tags,
+                    owner: state.owner,
                     responsibility: $$event.responsibility
                   }
                 }
@@ -81,12 +81,12 @@ function transition(t, $$event) {
                 TAG: /* Ok */0,
                 _0: {
                   id: id,
-                  data: {
-                    title: data.title,
-                    sections: data.sections,
+                  state: {
+                    title: state.title,
+                    sections: state.sections,
                     tags: $$event.tags,
-                    owner: data.owner,
-                    responsibility: data.responsibility
+                    owner: state.owner,
+                    responsibility: state.responsibility
                   }
                 }
               };
@@ -94,11 +94,11 @@ function transition(t, $$event) {
   }
 }
 
-function create(t, date, data) {
+function create(t, date, state) {
   var $$event = {
     TAG: /* Created */0,
     date: date,
-    data: data
+    state: state
   };
   return [
           transition(t, $$event),

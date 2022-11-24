@@ -3,7 +3,7 @@ module Id = Council_Entity_Document_Id
 module SectionId = Council_Entity_Section_Id
 module UserId = Council_Entity_User_Id
 
-type data = {
+type state = {
   title: string,
   sections: array<SectionId.t>,
   tags: array<string>,
@@ -13,16 +13,16 @@ type data = {
 
 type t = {
   id: Id.t,
-  data: option<data>,
+  state: option<state>,
 }
 
-let make = (id: Id.t, data) => {
+let make = (id: Id.t, state) => {
   id,
-  data,
+  state,
 }
 
 type event =
-  | Created({date: Js.Date.t, data: data})
+  | Created({date: Js.Date.t, state: state})
   | SectionAdded({date: Js.Date.t, section: SectionId.t})
   | SectionDeleted({date: Js.Date.t, section: SectionId.t})
   | ResponsibilityAssigned({date: Js.Date.t, responsibility: UserId.t})
@@ -32,49 +32,49 @@ type error = Uninitialized(Id.t)
 
 let transition: Transition.t<t, event, error> = (t, event) =>
   switch (t, event) {
-  | ({id}, Created({data})) =>
+  | ({id}, Created({state})) =>
     Ok({
       id,
-      data: Some(data),
+      state: Some(state),
     })
-  | ({id, data: Some(data)}, SectionAdded({section})) =>
+  | ({id, state: Some(state)}, SectionAdded({section})) =>
     Ok({
       id,
-      data: Some({
-        ...data,
-        sections: data.sections->Belt.Array.concat([section]),
+      state: Some({
+        ...state,
+        sections: state.sections->Belt.Array.concat([section]),
       }),
     })
-  | ({id, data: Some(data)}, SectionDeleted({section: deleted})) =>
+  | ({id, state: Some(state)}, SectionDeleted({section: deleted})) =>
     Ok({
       id,
-      data: Some({
-        ...data,
-        sections: data.sections->Belt.Array.keep(id => id != deleted),
+      state: Some({
+        ...state,
+        sections: state.sections->Belt.Array.keep(id => id != deleted),
       }),
     })
-  | ({id, data: Some(data)}, ResponsibilityAssigned({responsibility})) =>
+  | ({id, state: Some(state)}, ResponsibilityAssigned({responsibility})) =>
     Ok({
       id,
-      data: Some({
-        ...data,
+      state: Some({
+        ...state,
         responsibility,
       }),
     })
-  | ({id, data: Some(data)}, TagsModified({tags})) =>
+  | ({id, state: Some(state)}, TagsModified({tags})) =>
     Ok({
       id,
-      data: Some({
-        ...data,
+      state: Some({
+        ...state,
         tags,
       }),
     })
-  | ({id, data: None}, _) => Error(Uninitialized(id))
+  | ({id, state: None}, _) => Error(Uninitialized(id))
   }
 
 module Command = {
-  let create = (t, ~date, ~data) => {
-    let event = Created({date, data})
+  let create = (t, ~date, ~state) => {
+    let event = Created({date, state})
     (t->transition(event), [event])
   }
   let addSection = (t, ~date, ~section) => {
