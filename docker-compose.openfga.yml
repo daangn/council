@@ -44,7 +44,7 @@ services:
       - OPENFGA_DATASTORE_URI=postgres://openfga:openfga@openfga-db:5432/openfga
       - OPENFGA_LOG_FORMAT=json
       - OPENFGA_AUTHN_METHOD=preshared
-      - OPENFGA_AUTHN_PRESHARED_KEYS=${OPENFGA_API_KEY}
+      - OPENFGA_AUTHN_PRESHARED_KEYS=${OPENFGA_API_TOKEN}
     command: run
     depends_on:
       db:
