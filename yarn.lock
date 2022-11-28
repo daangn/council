@@ -96,6 +96,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@auth0/auth0-spa-js@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@auth0/auth0-spa-js@npm:2.0.0"
+  checksum: 978035c158f5e0a02e9bc8f6e14af9e4b1a5aa5c6e8684cc44137759a5dfb0f6f99389e0799027174558c48d716d1c8a22cf76e08d949cf0b41fc468446d74d5
+  languageName: node
+  linkType: hard
+
 "@babel/cli@npm:7.19.3":
   version: 7.19.3
   resolution: "@babel/cli@npm:7.19.3"
@@ -23350,6 +23357,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "web@workspace:web"
   dependencies:
+    "@auth0/auth0-spa-js": ^2.0.0
+    "@redwoodjs/auth": 3.5.0
     "@redwoodjs/forms": ^3.5.0
     "@redwoodjs/router": ^3.5.0
     "@redwoodjs/testing": ^3.5.0
