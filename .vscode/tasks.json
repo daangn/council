@@ -6,7 +6,7 @@
     {
       "type": "shell",
       "label": "compose-up-db",
-      "command": "docker-compose -f docker-compose.db.yml up",
+      "command": "docker compose -f docker-compose.db.yml up",
       "runOptions": {
         "runOn": "folderOpen"
       },
@@ -18,7 +18,28 @@
     {
       "type": "shell",
       "label": "compose-down-db",
-      "command": "docker-compose -f docker-compose.db.yml down",
+      "command": "docker compose -f docker-compose.db.yml down",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "new"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "compose-up-openfga",
+      "command": "docker compose -f docker-compose.openfga.yml up",
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "compose-down-openfga",
+      "command": "docker compose -f docker-compose.openfga.yml down",
       "presentation": {
         "reveal": "silent",
         "panel": "new"

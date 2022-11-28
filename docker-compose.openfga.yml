@@ -1,0 +1,64 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15.1-alpine
+    environment:
+      POSTGRES_USER: openfga
+      POSTGRES_PASSWORD: openfga
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - openfga:/var/lib/postgresql/data:rw
+    networks:
+      - openfga
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U openfga" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pause:
+    image: alpine
+    command: sleep 5
+    depends_on:
+      db:
+        condition: service_started
+
+  migrate:
+    image: openfga/openfga
+    depends_on:
+      pause:
+        condition: service_completed_successfully
+    command: |
+      migrate
+    environment:
+      - OPENFGA_DATASTORE_ENGINE=postgres
+      - OPENFGA_DATASTORE_URI=postgres://openfga:openfga@db:5432/openfga
+    networks:
+      - openfga
+
+  openfga:
+    image: openfga/openfga
+    environment:
+      - OPENFGA_DATASTORE_ENGINE=postgres
+      - OPENFGA_DATASTORE_URI=postgres://openfga:openfga@db:5432/openfga
+      - OPENFGA_LOG_FORMAT=json
+      - OPENFGA_AUTHN_METHOD=preshared
+      - OPENFGA_AUTHN_PRESHARED_KEYS=${OPENFGA_API_KEY}
+    command: run
+    depends_on:
+      db:
+        condition: service_started
+      migrate:
+        condition: service_completed_successfully
+    networks:
+      - openfga
+    ports:
+      - "8080:8080"
+      - "3000:3000"
+
+networks:
+  openfga:
+
+volumes:
+  openfga:
