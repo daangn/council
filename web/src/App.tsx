@@ -1,4 +1,6 @@
 import { Auth0Client } from '@auth0/auth0-spa-js';
+import { MantineProvider } from '@mantine/core';
+import * as theme from 'config/mantine.config';
 
 import { AuthProvider } from '@redwoodjs/auth';
 import { FatalErrorBoundary, RedwoodProvider } from '@redwoodjs/web';
@@ -34,11 +36,13 @@ const auth0 = new Auth0Client({
 const App = () => (
   <FatalErrorBoundary page={FatalErrorPage}>
     <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
-      <AuthProvider client={auth0} type="auth0">
-        <RedwoodApolloProvider>
-          <Routes />
-        </RedwoodApolloProvider>
-      </AuthProvider>
+      <MantineProvider theme={theme}>
+        <AuthProvider client={auth0} type="auth0">
+          <RedwoodApolloProvider>
+            <Routes />
+          </RedwoodApolloProvider>
+        </AuthProvider>
+      </MantineProvider>
     </RedwoodProvider>
   </FatalErrorBoundary>
 );
