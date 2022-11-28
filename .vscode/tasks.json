@@ -5,7 +5,7 @@
   "tasks": [
     {
       "type": "shell",
-      "label": "compose-up-db",
+      "label": "Up DB",
       "command": "docker compose -f docker-compose.db.yml up",
       "runOptions": {
         "runOn": "folderOpen"
@@ -17,8 +17,8 @@
     },
     {
       "type": "shell",
-      "label": "compose-down-db",
-      "command": "docker compose -f docker-compose.db.yml down",
+      "label": "Clean DB",
+      "command": "docker compose -f docker-compose.db.yml down -v",
       "presentation": {
         "reveal": "silent",
         "panel": "new"
@@ -26,7 +26,7 @@
     },
     {
       "type": "shell",
-      "label": "compose-up-openfga",
+      "label": "Up OpenFGA",
       "command": "docker compose -f docker-compose.openfga.yml up",
       "runOptions": {
         "runOn": "folderOpen"
@@ -38,8 +38,8 @@
     },
     {
       "type": "shell",
-      "label": "compose-down-openfga",
-      "command": "docker compose -f docker-compose.openfga.yml down",
+      "label": "Clean OpenFGA",
+      "command": "docker compose -f docker-compose.openfga.yml down -v",
       "presentation": {
         "reveal": "silent",
         "panel": "new"
