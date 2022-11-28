@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  db:
+  openfga-db:
     image: postgres:15.1-alpine
     environment:
       POSTGRES_USER: openfga
@@ -33,7 +33,7 @@ services:
       migrate
     environment:
       - OPENFGA_DATASTORE_ENGINE=postgres
-      - OPENFGA_DATASTORE_URI=postgres://openfga:openfga@db:5432/openfga
+      - OPENFGA_DATASTORE_URI=postgres://openfga:openfga@openfga-db:5432/openfga
     networks:
       - openfga
 
@@ -41,7 +41,7 @@ services:
     image: openfga/openfga
     environment:
       - OPENFGA_DATASTORE_ENGINE=postgres
-      - OPENFGA_DATASTORE_URI=postgres://openfga:openfga@db:5432/openfga
+      - OPENFGA_DATASTORE_URI=postgres://openfga:openfga@openfga-db:5432/openfga
       - OPENFGA_LOG_FORMAT=json
       - OPENFGA_AUTHN_METHOD=preshared
       - OPENFGA_AUTHN_PRESHARED_KEYS=${OPENFGA_API_KEY}
