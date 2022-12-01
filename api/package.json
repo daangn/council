@@ -2,12 +2,16 @@
   "name": "api",
   "version": "0.0.0",
   "private": true,
+  "scripts": {
+    "res:build": "rescript build",
+    "res:clean": "rescript clean"
+  },
   "dependencies": {
     "@redwoodjs/api": "^3.5.0",
     "@redwoodjs/auth": "^3.5.0",
     "@redwoodjs/graphql-server": "^3.5.0",
     "aws-lambda": "^1.0.7",
-    "core": "workspace:^"
+    "rescript": "^10.0.1"
   },
   "devDependencies": {
     "@redwoodjs/testing": "^3.5.0",

@@ -8,10 +8,10 @@ import { type SupportedAuthTypes } from '@redwoodjs/auth';
 import { AuthenticationError } from '@redwoodjs/graphql-server';
 
 import {
+  sessionIdFromToken,
   databaseToSessionEvent,
   Session,
   SessionId,
-  sessionIdFromToken,
 } from 'src/coreUtils';
 
 import { db } from './db';
@@ -28,28 +28,38 @@ type RedwoodUser = {
   sessionId: SessionId.t;
 };
 
-export const getCurrentUser: GetCurrentUser = async (decoded, ...other) => {
+export const getCurrentUser: GetCurrentUser = async decoded => {
   if (!decoded) {
     return null;
   }
 
   const sessionId = sessionIdFromToken(decoded);
-  const session = Session.make(sessionId, null);
   const dbEvents = await db.councilEvent.findMany({
+    select: {
+      data: true,
+    },
     where: {
       stream_id: SessionId.toString(sessionId),
+      tags: {
+        has: 'entity=session',
+      },
       is_deleted: false,
     },
+    orderBy: {
+      sequence: 'asc',
+    },
   });
-  const events = dbEvents.map(databaseToSessionEvent);
-  const result = Session.restore(session, events);
+
+  const result = Session.restore(
+    Session.make(sessionId, null),
+    dbEvents.map(databaseToSessionEvent),
+  );
+
   if (result.tag === 'Error') {
     return null;
   }
 
-  console.log(result);
-
-  return { ...decoded };
+  return { sessionId };
 };
 
 /**

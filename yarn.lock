@@ -7790,9 +7790,9 @@ __metadata:
     "@redwoodjs/testing": ^3.5.0
     "@types/node": ^18.11.9
     aws-lambda: ^1.0.7
-    core: "workspace:^"
     jest: ^29.3.1
     jest-watch-typeahead: ^2.2.0
+    rescript: ^10.0.1
     typescript: ^4.9.3
   languageName: unknown
   linkType: soft
@@ -10258,14 +10258,6 @@ __metadata:
   checksum: 90a0e40abbddfd7618f8ccd63a74d88deea94e77d0e8dbbea059fa7ebebb8fbb4e2909667fe26f3a467073de1a542ebe6ae4c73a73745ac5833786759cd906c9
   languageName: node
   linkType: hard
-
-"core@workspace:^, core@workspace:core":
-  version: 0.0.0-use.local
-  resolution: "core@workspace:core"
-  dependencies:
-    rescript: ^10.0.1
-  languageName: unknown
-  linkType: soft
 
 "cosmiconfig-toml-loader@npm:1.0.0":
   version: 1.0.0

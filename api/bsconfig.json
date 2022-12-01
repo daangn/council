@@ -1,0 +1,19 @@
+{
+  "name": "core",
+  "version": "0.1.0",
+  "sources": {
+    "dir" : "src/core",
+    "subdirs" : true
+  },
+  "package-specs": {
+    "module": "commonjs",
+    "in-source": true
+  },
+  "suffix": ".bs.js",
+  "gentypeconfig": {
+    "language": "typescript",
+    "shims": {},
+    "generatedFileExtension": ".gen.ts",
+    "module": "commonjs"
+  }
+}
