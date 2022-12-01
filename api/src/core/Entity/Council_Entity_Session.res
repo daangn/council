@@ -27,8 +27,8 @@ type error =
 
 @genType
 type event =
-  | Created({date: Js.Date.t, data: data})
-  | UserConnected({date: Js.Date.t, user: UserId.t})
+  | Created({date: Date.t, data: data})
+  | UserConnected({date: Date.t, user: UserId.t})
 
 let transition: Transition.t<t, event, error> = (t, event) =>
   switch (t, event) {

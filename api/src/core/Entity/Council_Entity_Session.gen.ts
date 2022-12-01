@@ -42,8 +42,8 @@ export type error =
 
 // tslint:disable-next-line:interface-over-type-literal
 export type event = 
-    { tag: "Created"; value: { readonly date: Date; readonly data: data } }
-  | { tag: "UserConnected"; value: { readonly date: Date; readonly user: Council_Entity_User_Id_t } };
+    { tag: "Created"; value: { readonly date: Date_t; readonly data: data } }
+  | { tag: "UserConnected"; value: { readonly date: Date_t; readonly user: Council_Entity_User_Id_t } };
 
 export const make: (id:Council_Entity_Section_Id_t, data:(null | undefined | data)) => t = function (Arg1: any, Arg2: any) {
   const result = Curry._2(Council_Entity_SessionBS.make, Arg1, (Arg2 == null ? undefined : Arg2));
@@ -71,7 +71,7 @@ export const restore: (t:t, events:event[]) =>
     : {tag:"AlreadyConnected", value:result._0}}
 };
 
-export const Command_create: (t:t, _2:{ readonly date: Date; readonly data: data }) => [
+export const Command_create: (t:t, _2:{ readonly date: Date_t; readonly data: data }) => [
     { tag: "Ok"; value: t }
   | { tag: "Error"; value: error }, event[]] = function (Arg1: any, Arg2: any) {
   const result = Curry._3(Council_Entity_SessionBS.Command.create, {id:Arg1.id, state:(Arg1.state == null ? undefined : Arg1.state.tag==="User"
@@ -91,7 +91,7 @@ export const Command_create: (t:t, _2:{ readonly date: Date; readonly data: data
 };
 
 export const Command_createWithUser: (t:t, _2:{
-  readonly date: Date; 
+  readonly date: Date_t; 
   readonly data: data; 
   readonly user: Council_Entity_User_Id_t
 }) => [
@@ -113,7 +113,7 @@ export const Command_createWithUser: (t:t, _2:{
     : {tag:"UserConnected", value:ArrayItem}})]
 };
 
-export const Command_connectUser: (t:t, _2:{ readonly date: Date; readonly user: Council_Entity_User_Id_t }) => [
+export const Command_connectUser: (t:t, _2:{ readonly date: Date_t; readonly user: Council_Entity_User_Id_t }) => [
     { tag: "Ok"; value: t }
   | { tag: "Error"; value: error }, event[]] = function (Arg1: any, Arg2: any) {
   const result = Curry._3(Council_Entity_SessionBS.Command.connectUser, {id:Arg1.id, state:(Arg1.state == null ? undefined : Arg1.state.tag==="User"
