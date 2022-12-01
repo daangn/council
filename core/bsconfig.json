@@ -13,7 +13,7 @@
   "gentypeconfig": {
     "language": "typescript",
     "shims": {},
-    "generatedFileExtension": ".gen.tsx",
+    "generatedFileExtension": ".gen.ts",
     "module": "es6"
   }
 }

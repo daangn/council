@@ -27,13 +27,13 @@ let make = (id, data) => {
 }
 
 type event =
-  | Created({date: Js.Date.t, state: state})
-  | EditingStarted({date: Js.Date.t, by: UserId.t})
-  | EditingEnded({date: Js.Date.t, by: UserId.t})
-  | HeadingModified({date: Js.Date.t, heading: string, by: UserId.t})
-  | BodyModified({date: Js.Date.t, body: string, by: UserId.t})
-  | TagsModified({date: Js.Date.t, tags: array<string>, by: UserId.t})
-  | Locked({date: Js.Date.t, by: UserId.t})
+  | Created({date: Date.t, state: state})
+  | EditingStarted({date: Date.t, by: UserId.t})
+  | EditingEnded({date: Date.t, by: UserId.t})
+  | HeadingModified({date: Date.t, heading: string, by: UserId.t})
+  | BodyModified({date: Date.t, body: string, by: UserId.t})
+  | TagsModified({date: Date.t, tags: array<string>, by: UserId.t})
+  | Locked({date: Date.t, by: UserId.t})
 
 type error =
   | Uninitialized(Id.t)

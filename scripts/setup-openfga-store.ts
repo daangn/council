@@ -2,6 +2,15 @@ import { CredentialsMethod, OpenFgaApi } from '@openfga/sdk';
 import dedent from 'string-dedent';
 
 export default async () => {
+  if (process.env.OPENFGA_STORE_ID) {
+    console.log(
+      'Skipped since store already set in your environment variable.',
+    );
+    console.log('Store ID: ' + process.env.OPENFGA_STORE_ID);
+
+    return;
+  }
+
   const openFga = new OpenFgaApi({
     apiScheme: process.env.OPENFGA_API_SCHEME,
     apiHost: process.env.OPENFGA_API_HOST,
@@ -25,7 +34,7 @@ export default async () => {
         yarn rw exec setup-openfga-model --storeId "${storeId}"
 
     Also, you can add this line to your local \`.env\` file for development.
-    
+
         OPENFGA_STORE_ID=${storeId}
 
   `);

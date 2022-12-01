@@ -4,7 +4,10 @@
   "private": true,
   "dependencies": {
     "@redwoodjs/api": "^3.5.0",
-    "@redwoodjs/graphql-server": "^3.5.0"
+    "@redwoodjs/auth": "^3.5.0",
+    "@redwoodjs/graphql-server": "^3.5.0",
+    "aws-lambda": "^1.0.7",
+    "core": "workspace:^"
   },
   "devDependencies": {
     "@redwoodjs/testing": "^3.5.0",

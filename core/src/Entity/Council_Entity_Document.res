@@ -29,12 +29,12 @@ let make = (id: Id.t, data) => {
 }
 
 type event =
-  | Created({date: Js.Date.t, data: data})
-  | SectionAdded({date: Js.Date.t, section: SectionId.t})
-  | SectionDeleted({date: Js.Date.t, section: SectionId.t})
-  | ResponsibilityAssigned({date: Js.Date.t, responsibility: UserId.t})
-  | TagsModified({date: Js.Date.t, tags: array<string>})
-  | Locked({date: Js.Date.t, by: UserId.t})
+  | Created({date: Date.t, data: data})
+  | SectionAdded({date: Date.t, section: SectionId.t})
+  | SectionDeleted({date: Date.t, section: SectionId.t})
+  | ResponsibilityAssigned({date: Date.t, responsibility: UserId.t})
+  | TagsModified({date: Date.t, tags: array<string>})
+  | Locked({date: Date.t, by: UserId.t})
 
 type error =
   | Uninitialized(Id.t)

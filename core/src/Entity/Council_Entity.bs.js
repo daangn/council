@@ -15,6 +15,8 @@ var Version;
 
 var Webhook;
 
+var Session;
+
 export {
   $$Document ,
   Orginization ,
@@ -23,5 +25,6 @@ export {
   User ,
   Version ,
   Webhook ,
+  Session ,
 }
 /* No side effect */
