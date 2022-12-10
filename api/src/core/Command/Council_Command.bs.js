@@ -3,28 +3,16 @@
 
 var $$Document;
 
-var Orginization;
-
-var Revision;
-
-var Section;
-
 var Member;
 
-var Version;
-
-var Webhook;
+var Section;
 
 var Session;
 
 export {
   $$Document ,
-  Orginization ,
-  Revision ,
-  Section ,
   Member ,
-  Version ,
-  Webhook ,
+  Section ,
   Session ,
 }
 /* No side effect */

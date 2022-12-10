@@ -3,9 +3,10 @@
 
 
 // @ts-ignore: Implicit any on import
-const Council_Entity_Session_IdBS = require('./Council_Entity_Session_Id.bs');
+import * as Council_Entity_Session_IdBS__Es6Import from './Council_Entity_Session_Id.bs';
+const Council_Entity_Session_IdBS: any = Council_Entity_Session_IdBS__Es6Import;
 
-// tslint:disable-next-line:max-classes-per-file
+// tslint:disable-next-line:max-classes-per-file 
 // tslint:disable-next-line:class-name
 export abstract class t { protected opaque!: any }; /* simulate opaque types */
 

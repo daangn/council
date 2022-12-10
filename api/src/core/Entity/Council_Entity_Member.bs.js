@@ -4,17 +4,17 @@
 function make(id, data) {
   return {
           id: id,
-          state: data !== undefined ? ({
-                TAG: /* Anonymous */1,
-                data: data
-              }) : undefined
+          data: data
         };
 }
 
 var Id;
 
+var OrganizationId;
+
 export {
   Id ,
+  OrganizationId ,
   make ,
 }
 /* No side effect */

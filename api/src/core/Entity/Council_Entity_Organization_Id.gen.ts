@@ -3,7 +3,8 @@
 
 
 // @ts-ignore: Implicit any on import
-const Council_Entity_Organization_IdBS = require('./Council_Entity_Organization_Id.bs');
+import * as Council_Entity_Organization_IdBS__Es6Import from './Council_Entity_Organization_Id.bs';
+const Council_Entity_Organization_IdBS: any = Council_Entity_Organization_IdBS__Es6Import;
 
 // tslint:disable-next-line:max-classes-per-file 
 // tslint:disable-next-line:class-name
