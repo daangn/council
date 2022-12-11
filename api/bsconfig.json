@@ -6,14 +6,18 @@
     "subdirs" : true
   },
   "package-specs": {
-    "module": "commonjs",
+    "module": "es6",
     "in-source": true
   },
   "suffix": ".bs.js",
   "gentypeconfig": {
     "language": "typescript",
-    "shims": {},
+    "shims": {
+      "Js": "Js"
+    },
     "generatedFileExtension": ".gen.ts",
-    "module": "commonjs"
-  }
+    "module": "es6"
+  },
+  "bs-dependencies": [
+  ]
 }

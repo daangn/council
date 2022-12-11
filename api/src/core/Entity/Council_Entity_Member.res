@@ -1,9 +1,8 @@
-module Id = Council_Entity_Member_Id
-
-module OrganizationId = Council_Entity_Organization_Id
+@genType
+type id = string
 
 @genType
-type id = Id.t
+type organizationId = string
 
 @genType
 type data = {

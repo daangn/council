@@ -8,13 +8,7 @@ function make(id, data) {
         };
 }
 
-var Id;
-
-var MemberId;
-
 export {
-  Id ,
-  MemberId ,
   make ,
 }
 /* No side effect */

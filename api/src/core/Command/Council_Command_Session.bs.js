@@ -4,9 +4,7 @@ import * as Curry from "rescript/lib/es6/curry.js";
 import * as Framework from "../Framework.bs.js";
 import * as Council_Entity_Session from "../Entity/Council_Entity_Session.bs.js";
 
-var Transition = Framework.Transition.Make({
-      make: Council_Entity_Session.make
-    });
+var Transition = Framework.Transition.Make(Council_Entity_Session);
 
 function transition(t, $$event) {
   var match = t.state;
@@ -98,10 +96,7 @@ function connectUser(t, date, member) {
             });
 }
 
-var Session;
-
 export {
-  Session ,
   Transition ,
   transition ,
   create ,

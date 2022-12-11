@@ -15,6 +15,7 @@ module Entity = {
 
 module Transition = {
   module Make = (Entity: Entity.Type) => {
+    @genType
     type t = (Entity.t, Entity.event) => result<Entity.t, Entity.error>
 
     let run = (t: t, entity, event) => {
@@ -30,8 +31,10 @@ module Transition = {
 
 module Repository = {
   module Make = (Entity: Entity.Type) => {
+    @genType
     type t = {
-      eventStream: Entity.id => Promise.t<array<Entity.event>>,
+      eventStream: (~id: Entity.id, ~seq: int=?) => Js.Promise2.t<(array<Entity.event>, int)>,
+      save: (~id: Entity.id, ~events: array<Entity.event>, ~seq: int) => Js.Promise2.t<unit>,
     }
   }
 }

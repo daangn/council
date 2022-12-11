@@ -3,9 +3,7 @@
 import * as Framework from "../Framework.bs.js";
 import * as Council_Entity_Member from "../Entity/Council_Entity_Member.bs.js";
 
-var Transition = Framework.Transition.Make({
-      make: Council_Entity_Member.make
-    });
+var Transition = Framework.Transition.Make(Council_Entity_Member);
 
 function transition(t, $$event) {
   return {

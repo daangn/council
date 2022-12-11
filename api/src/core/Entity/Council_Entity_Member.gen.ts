@@ -10,12 +10,13 @@ const Curry: any = Curry__Es6Import;
 import * as Council_Entity_MemberBS__Es6Import from './Council_Entity_Member.bs';
 const Council_Entity_MemberBS: any = Council_Entity_MemberBS__Es6Import;
 
-import type {t as Council_Entity_Member_Id_t} from './Council_Entity_Member_Id.gen';
-
 import type {t as Date_t} from '../../../src/core/Date.gen';
 
 // tslint:disable-next-line:interface-over-type-literal
-export type id = Council_Entity_Member_Id_t;
+export type id = string;
+
+// tslint:disable-next-line:interface-over-type-literal
+export type organizationId = string;
 
 // tslint:disable-next-line:interface-over-type-literal
 export type data = {

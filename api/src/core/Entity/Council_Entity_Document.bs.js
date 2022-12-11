@@ -11,10 +11,7 @@ function make(id, data) {
         };
 }
 
-var Id;
-
 export {
-  Id ,
   make ,
 }
 /* No side effect */

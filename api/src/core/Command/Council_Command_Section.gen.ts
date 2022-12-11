@@ -22,6 +22,11 @@ import type {t as Council_Entity_Section_t} from '../../../src/core/Entity/Counc
 
 import type {t as Date_t} from '../../../src/core/Date.gen';
 
+// tslint:disable-next-line:interface-over-type-literal
+export type Transition_t = (_1:Council_Entity_Section_t, _2:Council_Entity_Section_event) => 
+    { tag: "Ok"; value: Council_Entity_Section_t }
+  | { tag: "Error"; value: Council_Entity_Section_error };
+
 export const create: (t:Council_Entity_Section_t, _2:{ readonly date: Date_t; readonly state: Council_Entity_Section_state }) => [
     { tag: "Ok"; value: Council_Entity_Section_t }
   | { tag: "Error"; value: Council_Entity_Section_error }, Council_Entity_Section_event[]] = function (Arg1: any, Arg2: any) {

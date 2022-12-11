@@ -1,6 +1,4 @@
-module Session = Council_Entity_Session
-
-module Transition = Framework.Transition.Make(Session)
+module Transition = Framework.Transition.Make(Council_Entity_Session)
 
 let transition: Transition.t = (t, event) =>
   switch (t, event) {
@@ -20,7 +18,7 @@ let transition: Transition.t = (t, event) =>
     Error(AlreadyConnected({id, exist, newed}))
   }
 
-open Session
+open Council_Entity_Session
 
 @genType
 let create = (t, ~date, ~data) => {

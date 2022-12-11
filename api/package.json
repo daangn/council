@@ -7,11 +7,13 @@
     "res:clean": "rescript clean"
   },
   "dependencies": {
+    "@cometjs/core": "^2.1.0",
     "@redwoodjs/api": "^3.5.0",
     "@redwoodjs/auth": "^3.5.0",
     "@redwoodjs/graphql-server": "^3.5.0",
     "aws-lambda": "^1.0.7",
-    "rescript": "^10.0.1"
+    "cuid": "^2.1.8",
+    "rescript": "^10.1.0"
   },
   "devDependencies": {
     "@redwoodjs/testing": "^3.5.0",

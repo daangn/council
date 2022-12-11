@@ -1,15 +1,14 @@
-module Id = Council_Entity_Organization_Id
-
-module MemberId = Council_Entity_Member_Id
+@genType
+type id = string
 
 @genType
-type id = Id.t
+type memberId = string
 
 @genType
 type data = {
   name: string,
-  owner: MemberId.t,
-  members: array<MemberId.t>,
+  owner: memberId,
+  members: array<memberId>,
 }
 
 @genType
@@ -20,8 +19,8 @@ type t = {
 
 @genType
 type event =
-  | Created({date: Date.t, owner: MemberId.t})
-  | MemberAdded({date: Date.t, actor: MemberId.t, member: MemberId.t})
+  | Created({date: Date.t, owner: memberId})
+  | MemberAdded({date: Date.t, actor: memberId, member: memberId})
 
 @genType
 let make = (id, data) => {

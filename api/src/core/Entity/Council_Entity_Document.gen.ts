@@ -10,34 +10,28 @@ const Curry: any = Curry__Es6Import;
 import * as Council_Entity_DocumentBS__Es6Import from './Council_Entity_Document.bs';
 const Council_Entity_DocumentBS: any = Council_Entity_DocumentBS__Es6Import;
 
-import type {t as Council_Entity_Document_Id_t} from './Council_Entity_Document_Id.gen';
-
-import type {t as Council_Entity_Member_Id_t} from './Council_Entity_Member_Id.gen';
-
-import type {t as Council_Entity_Section_Id_t} from './Council_Entity_Section_Id.gen';
-
 import type {t as Date_t} from '../../../src/core/Date.gen';
 
 // tslint:disable-next-line:interface-over-type-literal
-export type id = Council_Entity_Document_Id_t;
+export type id = string;
 
 // tslint:disable-next-line:interface-over-type-literal
-export type sectionId = Council_Entity_Section_Id_t;
+export type sectionId = string;
 
 // tslint:disable-next-line:interface-over-type-literal
-export type memberId = Council_Entity_Member_Id_t;
+export type memberId = string;
 
 // tslint:disable-next-line:interface-over-type-literal
 export type data = {
-  readonly title: string;
-  readonly sections: sectionId[];
-  readonly tags: string[];
-  readonly owner: memberId;
+  readonly title: string; 
+  readonly sections: sectionId[]; 
+  readonly tags: string[]; 
+  readonly owner: memberId; 
   readonly responsibility: memberId
 };
 
 // tslint:disable-next-line:interface-over-type-literal
-export type state =
+export type state = 
     { tag: "Free"; value: data }
   | { tag: "Locked"; value: { readonly by: memberId; readonly data: data } };
 
@@ -45,7 +39,7 @@ export type state =
 export type t = { readonly id: id; readonly state?: state };
 
 // tslint:disable-next-line:interface-over-type-literal
-export type event =
+export type event = 
     { tag: "Created"; value: { readonly date: Date_t; readonly data: data } }
   | { tag: "SectionAdded"; value: { readonly date: Date_t; readonly section: sectionId } }
   | { tag: "SectionDeleted"; value: { readonly date: Date_t; readonly section: sectionId } }
@@ -54,7 +48,7 @@ export type event =
   | { tag: "Locked"; value: { readonly date: Date_t; readonly by: memberId } };
 
 // tslint:disable-next-line:interface-over-type-literal
-export type error =
+export type error = 
     { tag: "Uninitialized"; value: id }
   | { tag: "Locked"; value: id };
 

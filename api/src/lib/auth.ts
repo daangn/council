@@ -7,59 +7,62 @@ import { type Decoded } from '@redwoodjs/api';
 import { type SupportedAuthTypes } from '@redwoodjs/auth';
 import { AuthenticationError } from '@redwoodjs/graphql-server';
 
-import {
-  sessionIdFromToken,
-  databaseToSessionEvent,
-  Session,
-  SessionId,
-} from 'src/coreUtils';
+import { Member, Session, SessionCommand, SessionRepository } from 'src/core';
 
-import { db } from './db';
+import { sessionRepo } from './repos';
 
 interface GetCurrentUser {
   (
     decoded: Decoded,
-    tokenInfo: { type: SupportedAuthTypes; token: string },
-    contextInfo: { event: APIGatewayProxyEvent; context: LambdaContext },
+    raw: { type: SupportedAuthTypes; token: string },
+    request: { event: APIGatewayProxyEvent; context: LambdaContext },
   ): Promise<RedwoodUser | null>;
 }
 
 type RedwoodUser = {
-  sessionId: SessionId.t;
+  authProvider: string;
+  sessionId: Session.id;
+  memberId?: Member.id;
 };
 
-export const getCurrentUser: GetCurrentUser = async decoded => {
+export const getCurrentUser: GetCurrentUser = async (decoded, raw, request) => {
   if (!decoded) {
     return null;
   }
 
-  const sessionId = sessionIdFromToken(decoded);
-  const dbEvents = await db.councilEvent.findMany({
-    select: {
-      data: true,
-    },
-    where: {
-      stream_id: SessionId.toString(sessionId),
-      tags: {
-        has: 'entity=session',
+  const token = parseToken(decoded);
+  const sessionId = tokenToSessionId(token);
+
+  let session = await SessionRepository.find(sessionRepo, { id: sessionId });
+  if (!session) {
+    const [result, events] = SessionCommand.create(
+      Session.make(sessionId, null),
+      {
+        date: Date.now(),
+        data: {
+          subject: token.subject,
+          issuedAt: token.issuedAt,
+          expiredAt: token.expiredAt,
+          userAgent: request.event.headers['user-agent'] || '',
+        },
       },
-      is_deleted: false,
-    },
-    orderBy: {
-      sequence: 'asc',
-    },
-  });
-
-  const result = Session.restore(
-    Session.make(sessionId, null),
-    dbEvents.map(databaseToSessionEvent),
-  );
-
-  if (result.tag === 'Error') {
-    return null;
+    );
+    if (result.tag === 'Ok') {
+      await sessionRepo.save({ id: sessionId, seq: 0, events });
+      session = result.value;
+    }
   }
 
-  return { sessionId };
+  let memberId: RedwoodUser['memberId'] = undefined;
+  if (session?.state?.tag === 'Member') {
+    memberId = session.state.value.member;
+  }
+
+  return {
+    authProvider: token.subject,
+    sessionId,
+    memberId,
+  };
 };
 
 /**
@@ -90,3 +93,20 @@ export const requireAuth = () => {
     throw new AuthenticationError("You don't have permission to do that.");
   }
 };
+
+type ParsedToken = {
+  subject: string;
+  issuedAt: number;
+  expiredAt: number;
+};
+
+function parseToken(decoded: NonNullable<Decoded>): ParsedToken {
+  const subject = (decoded['sub'] as string).replace('|', '-');
+  const issuedAt = decoded['iat'] as number;
+  const expiredAt = decoded['exp'] as number;
+  return { subject, issuedAt, expiredAt };
+}
+
+function tokenToSessionId({ subject, issuedAt }: ParsedToken): Session.id {
+  return `session-${subject}-${issuedAt}`;
+}
