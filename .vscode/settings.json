@@ -7,5 +7,17 @@
   },
   "[prisma]": {
     "editor.formatOnSave": true
-  }
+  },
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "askForPassword": true,
+      "driver": "PostgreSQL",
+      "name": "Council Dev",
+      "database": "council",
+      "username": "council"
+    }
+  ]
 }
