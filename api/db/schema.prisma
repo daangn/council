@@ -4,20 +4,21 @@ datasource db {
 }
 
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = "native"
+  provider        = "prisma-client-js"
+  binaryTargets   = "native"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 // Define your own datamodels here and run `yarn redwood prisma migrate dev`
 
 model CouncilEvent {
   order      BigInt   @id @default(autoincrement())
-  created_at DateTime
   stream_id  String
   sequence   BigInt
+  date       DateTime
   data       Json
-  is_deleted Boolean
-  tags       String[]
+  is_deleted Boolean  @default(false)
+  tags       String[] @default([])
 
   @@unique([stream_id, sequence])
 }

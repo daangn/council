@@ -2,16 +2,22 @@ module Transition = Framework.Transition.Make(Council_Entity_Session)
 
 let transition: Transition.t = (t, event) =>
   switch (t, event) {
-  | ({id, state: None}, Created({data})) =>
+  | ({_RE, id, seq, events, state: None}, Created({data})) =>
     Ok({
+      _RE,
       id,
+      seq,
+      events: Belt.Array.concat(events, [event]),
       state: Some(Anonymous({data: data})),
     })
   | ({id, state: None}, _) => Error(Uninitialized({id: id}))
   | ({id, state: Some(_)}, Created(_)) => Error(AlreadyInitialized({id: id}))
-  | ({id, state: Some(Anonymous({data}))}, MemberConnected({member})) =>
+  | ({_RE, id, seq, events, state: Some(Anonymous({data}))}, MemberConnected({member})) =>
     Ok({
+      _RE,
       id,
+      seq,
+      events: Belt.Array.concat(events, [event]),
       state: Some(Member({member, data})),
     })
   | ({id, state: Some(Member({member: exist}))}, MemberConnected({member: newed})) =>

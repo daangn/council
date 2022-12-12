@@ -4,15 +4,19 @@ module Transition = Framework.Transition.Make(Section)
 
 let transition: Transition.t = (t, event) =>
   switch (t, event) {
-  | ({id}, Created({state})) =>
+  | ({_RE, id, seq}, Created({state})) =>
     Ok({
+      _RE,
       id,
+      seq: seq + 1,
       state: Some(state),
     })
 
-  | ({id, state: Some(Free(data))}, EditingStarted({by})) =>
+  | ({_RE, id, seq, state: Some(Free(data))}, EditingStarted({by})) =>
     Ok({
+      _RE,
       id,
+      seq: seq + 1,
       state: Some(
         Editing({
           by,
@@ -21,15 +25,19 @@ let transition: Transition.t = (t, event) =>
       ),
     })
 
-  | ({id, state: Some(Free(data))}, EditingEnded(_)) =>
+  | ({_RE, id, seq, state: Some(Free(data))}, EditingEnded(_)) =>
     Ok({
+      _RE,
       id,
+      seq,
       state: Some(Free(data)),
     })
 
-  | ({id, state: Some(Free(data))}, HeadingModified({heading, by})) =>
+  | ({_RE, id, seq, state: Some(Free(data))}, HeadingModified({heading, by})) =>
     Ok({
+      _RE,
       id,
+      seq,
       state: Some(
         Editing({
           by,
@@ -41,10 +49,12 @@ let transition: Transition.t = (t, event) =>
       ),
     })
 
-  | ({id, state: Some(Editing({data, by: editBy}))}, HeadingModified({heading, by}))
+  | ({_RE, id, seq, state: Some(Editing({data, by: editBy}))}, HeadingModified({heading, by}))
     if editBy == by =>
     Ok({
+      _RE,
       id,
+      seq: seq + 1,
       state: Some(
         Editing({
           by,
@@ -56,9 +66,11 @@ let transition: Transition.t = (t, event) =>
       ),
     })
 
-  | ({id, state: Some(Free(data))}, BodyModified({body, by})) =>
+  | ({_RE, id, seq, state: Some(Free(data))}, BodyModified({body, by})) =>
     Ok({
+      _RE,
       id,
+      seq: seq + 1,
       state: Some(
         Editing({
           by,
@@ -70,9 +82,12 @@ let transition: Transition.t = (t, event) =>
       ),
     })
 
-  | ({id, state: Some(Editing({data, by: editBy}))}, BodyModified({body, by})) if editBy == by =>
+  | ({_RE, id, seq, state: Some(Editing({data, by: editBy}))}, BodyModified({body, by}))
+    if editBy == by =>
     Ok({
+      _RE,
       id,
+      seq: seq + 1,
       state: Some(
         Editing({
           by,
@@ -84,9 +99,11 @@ let transition: Transition.t = (t, event) =>
       ),
     })
 
-  | ({id, state: Some(Free(data))}, TagsModified({tags, by})) =>
+  | ({_RE, id, seq, state: Some(Free(data))}, TagsModified({tags, by})) =>
     Ok({
+      _RE,
       id,
+      seq: seq + 1,
       state: Some(
         Editing({
           by,
@@ -98,9 +115,12 @@ let transition: Transition.t = (t, event) =>
       ),
     })
 
-  | ({id, state: Some(Editing({data, by: editBy}))}, TagsModified({tags, by})) if editBy == by =>
+  | ({_RE, id, seq, state: Some(Editing({data, by: editBy}))}, TagsModified({tags, by}))
+    if editBy == by =>
     Ok({
+      _RE,
       id,
+      seq: seq + 1,
       state: Some(
         Editing({
           by,
@@ -112,9 +132,11 @@ let transition: Transition.t = (t, event) =>
       ),
     })
 
-  | ({id, state: Some(Free(data))}, Locked({by})) =>
+  | ({_RE, id, seq, state: Some(Free(data))}, Locked({by})) =>
     Ok({
+      _RE,
       id,
+      seq: seq + 1,
       state: Some(
         Locked({
           by,
@@ -123,9 +145,12 @@ let transition: Transition.t = (t, event) =>
       ),
     })
 
-  | ({id, state: Some(Editing({data, by: editBy}))}, Locked({by: lockBy})) if editBy == lockBy =>
+  | ({_RE, id, seq, state: Some(Editing({data, by: editBy}))}, Locked({by: lockBy}))
+    if editBy == lockBy =>
     Ok({
+      _RE,
       id,
+      seq: seq + 1,
       state: Some(
         Locked({
           by: lockBy,
@@ -134,9 +159,12 @@ let transition: Transition.t = (t, event) =>
       ),
     })
 
-  | ({id, state: Some(Editing({data, by: editBy}))}, EditingEnded({by})) if editBy == by =>
+  | ({_RE, id, seq, state: Some(Editing({data, by: editBy}))}, EditingEnded({by}))
+    if editBy == by =>
     Ok({
+      _RE,
       id,
+      seq: seq + 1,
       state: Some(Free(data)),
     })
 

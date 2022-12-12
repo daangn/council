@@ -7,15 +7,19 @@ import { type Decoded } from '@redwoodjs/api';
 import { type SupportedAuthTypes } from '@redwoodjs/auth';
 import { AuthenticationError } from '@redwoodjs/graphql-server';
 
-import { Member, Session, SessionCommand, SessionRepository } from 'src/core';
+import { Member, Session, SessionService } from 'src/core';
 
-import { sessionRepo } from './repos';
+import { db } from './db';
+import { createEventStoreImpl } from './impls/EventStoreImpl';
+import { createSessionRepositoryImpl } from './impls/SessionRepositoryImpl';
 
-interface GetCurrentUser {
+export interface GetCurrentUser {
   (
     decoded: Decoded,
     raw: { type: SupportedAuthTypes; token: string },
-    request: { event: APIGatewayProxyEvent; context: LambdaContext },
+    request:
+      | { event: APIGatewayProxyEvent; context: LambdaContext }
+      | undefined,
   ): Promise<RedwoodUser | null>;
 }
 
@@ -33,29 +37,28 @@ export const getCurrentUser: GetCurrentUser = async (decoded, raw, request) => {
   const token = parseToken(decoded);
   const sessionId = tokenToSessionId(token);
 
-  let session = await SessionRepository.find(sessionRepo, { id: sessionId });
-  if (!session) {
-    const [result, events] = SessionCommand.create(
-      Session.make(sessionId, null),
-      {
-        date: Date.now(),
-        data: {
-          subject: token.subject,
-          issuedAt: token.issuedAt,
-          expiredAt: token.expiredAt,
-          userAgent: request.event.headers['user-agent'] || '',
-        },
-      },
-    );
-    if (result.tag === 'Ok') {
-      await sessionRepo.save({ id: sessionId, seq: 0, events });
-      session = result.value;
-    }
+  const eventStore = createEventStoreImpl({ db });
+  const sessionRepository = createSessionRepositoryImpl({ db });
+
+  const sessionService = SessionService.make({ eventStore, sessionRepository });
+  const session = await SessionService.findOrCreateSession(sessionService, {
+    id: sessionId,
+    date: Date.now(),
+    data: {
+      subject: token.subject,
+      issuedAt: token.issuedAt,
+      expiredAt: token.expiredAt,
+      userAgent: request?.event.headers['user-agent'] || '',
+    },
+  });
+
+  if (session.tag === 'Error') {
+    return null;
   }
 
   let memberId: RedwoodUser['memberId'] = undefined;
-  if (session?.state?.tag === 'Member') {
-    memberId = session.state.value.member;
+  if (session?.value.state?.tag === 'Member') {
+    memberId = session.value.state.value.member;
   }
 
   return {

@@ -3,12 +3,10 @@
 
 
 // @ts-ignore: Implicit any on import
-import * as Curry__Es6Import from 'rescript/lib/es6/curry.js';
-const Curry: any = Curry__Es6Import;
+const Curry = require('rescript/lib/js/curry.js');
 
 // @ts-ignore: Implicit any on import
-import * as Council_Entity_OrganizationBS__Es6Import from './Council_Entity_Organization.bs';
-const Council_Entity_OrganizationBS: any = Council_Entity_OrganizationBS__Es6Import;
+const Council_Entity_OrganizationBS = require('./Council_Entity_Organization.bs');
 
 import type {t as Date_t} from '../../../src/core/Date.gen';
 
@@ -26,7 +24,13 @@ export type data = {
 };
 
 // tslint:disable-next-line:interface-over-type-literal
-export type t = { readonly id: id; readonly data?: data };
+export type t = {
+  readonly _RE: 
+    "Organization"; 
+  readonly id: id; 
+  readonly seq: number; 
+  readonly data?: data
+};
 
 // tslint:disable-next-line:interface-over-type-literal
 export type event = 

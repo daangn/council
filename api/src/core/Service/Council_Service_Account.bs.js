@@ -2,12 +2,10 @@
 'use strict';
 
 
-function make(id, data) {
+function make(memberRepo, sessionRepo) {
   return {
-          _RE: "Organization",
-          id: id,
-          seq: 0,
-          data: data
+          memberRepo: memberRepo,
+          sessionRepo: sessionRepo
         };
 }
 

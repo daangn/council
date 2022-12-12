@@ -4,14 +4,18 @@ module Transition = Framework.Transition.Make(Document)
 
 let transition: Transition.t = (t, event) =>
   switch (t, event) {
-  | ({id}, Created({data})) =>
+  | ({_RE, id, seq}, Created({data})) =>
     Ok({
+      _RE,
       id,
+      seq: seq + 1,
       state: Some(Free(data)),
     })
-  | ({id, state: Some(Free(data))}, SectionAdded({section})) =>
+  | ({_RE, id, seq, state: Some(Free(data))}, SectionAdded({section})) =>
     Ok({
+      _RE,
       id,
+      seq: seq + 1,
       state: Some(
         Free({
           ...data,
@@ -19,9 +23,11 @@ let transition: Transition.t = (t, event) =>
         }),
       ),
     })
-  | ({id, state: Some(Free(data))}, SectionDeleted({section: deleted})) =>
+  | ({_RE, id, seq, state: Some(Free(data))}, SectionDeleted({section: deleted})) =>
     Ok({
+      _RE,
       id,
+      seq: seq + 1,
       state: Some(
         Free({
           ...data,
@@ -29,9 +35,11 @@ let transition: Transition.t = (t, event) =>
         }),
       ),
     })
-  | ({id, state: Some(Free(data))}, ResponsibilityAssigned({responsibility})) =>
+  | ({_RE, id, seq, state: Some(Free(data))}, ResponsibilityAssigned({responsibility})) =>
     Ok({
+      _RE,
       id,
+      seq: seq + 1,
       state: Some(
         Free({
           ...data,
@@ -39,9 +47,11 @@ let transition: Transition.t = (t, event) =>
         }),
       ),
     })
-  | ({id, state: Some(Free(data))}, TagsModified({tags})) =>
+  | ({_RE, id, seq, state: Some(Free(data))}, TagsModified({tags})) =>
     Ok({
+      _RE,
       id,
+      seq: seq + 1,
       state: Some(
         Free({
           ...data,
@@ -49,9 +59,11 @@ let transition: Transition.t = (t, event) =>
         }),
       ),
     })
-  | ({id, state: Some(Free(data))}, Locked({by})) =>
+  | ({_RE, id, seq, state: Some(Free(data))}, Locked({by})) =>
     Ok({
+      _RE,
       id,
+      seq: seq + 1,
       state: Some(
         Locked({
           by,

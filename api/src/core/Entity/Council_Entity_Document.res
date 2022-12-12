@@ -23,7 +23,9 @@ type state =
 
 @genType
 type t = {
+  _RE: [#Document],
   id: id,
+  seq: int,
   state: option<state>,
 }
 
@@ -42,10 +44,9 @@ type error =
   | Locked(id)
 
 @genType
-let make = (id, data) => {
+let make = (id, ~state=?, ~seq=0, ()) => {
+  _RE: #Document,
   id,
-  state: switch data {
-  | Some(data) => Some(Free(data))
-  | None => None
-  },
+  seq,
+  state,
 }

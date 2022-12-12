@@ -1,11 +1,11 @@
 module Entity = {
   module type Type = {
     type id
-    type data
+    type state
     type t
     type event
     type error
-    let make: (id, option<data>) => t
+    let make: (id, ~state: state=?, ~seq: int=?, unit) => t
   }
 
   module Make = (Type: Type) => {
@@ -19,22 +19,30 @@ module Transition = {
     type t = (Entity.t, Entity.event) => result<Entity.t, Entity.error>
 
     let run = (t: t, entity, event) => {
-      (t(entity, event), [event])
+      t(entity, event)
     }
 
-    let runMany = (t: t, entity, event) => {
-      let next = event->Belt.Array.reduce(Ok(entity), (prev, event) => prev->Belt.Result.flatMap(t(_, event)))
-      (next, event)
+    let runMany = (t: t, entity, events) => {
+      events->Belt.Array.reduce(Ok(entity), (prev, event) => prev->Belt.Result.flatMap(t(_, event)))
     }
   }
 }
 
 module Repository = {
-  module Make = (Entity: Entity.Type) => {
+  module Make = (
+    Config: {
+      module Entity: Entity.Type
+      type queryOptions
+    },
+  ) => {
     @genType
     type t = {
-      eventStream: (~id: Entity.id, ~seq: int=?) => Js.Promise2.t<(array<Entity.event>, int)>,
-      save: (~id: Entity.id, ~events: array<Entity.event>, ~seq: int) => Js.Promise2.t<unit>,
+      find: Config.Entity.id => Js.Promise2.t<option<Config.Entity.t>>,
+      findBy: Config.queryOptions => Js.Promise2.t<option<Config.Entity.t>>,
+      findAll: unit => Js.Promise2.t<array<Config.Entity.t>>,
+      findAllBy: Config.queryOptions => Js.Promise2.t<array<Config.Entity.t>>,
+      count: unit => Js.Promise2.t<int>,
+      countBy: Config.queryOptions => Js.Promise2.t<int>,
     }
   }
 }

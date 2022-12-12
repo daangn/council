@@ -1,24 +1,22 @@
-/* TypeScript file generated from Council_Command_Section.res by genType. */
+/* TypeScript file generated from Council_Entity_Section_Logic.res by genType. */
 /* eslint-disable import/first */
 
 
 // @ts-ignore: Implicit any on import
-import * as Curry__Es6Import from 'rescript/lib/es6/curry.js';
-const Curry: any = Curry__Es6Import;
+const Curry = require('rescript/lib/js/curry.js');
 
 // @ts-ignore: Implicit any on import
-import * as Council_Command_SectionBS__Es6Import from './Council_Command_Section.bs';
-const Council_Command_SectionBS: any = Council_Command_SectionBS__Es6Import;
+const Council_Entity_Section_LogicBS = require('./Council_Entity_Section_Logic.bs');
 
-import type {error as Council_Entity_Section_error} from '../../../src/core/Entity/Council_Entity_Section.gen';
+import type {error as Council_Entity_Section_error} from './Council_Entity_Section.gen';
 
-import type {event as Council_Entity_Section_event} from '../../../src/core/Entity/Council_Entity_Section.gen';
+import type {event as Council_Entity_Section_event} from './Council_Entity_Section.gen';
 
-import type {memberId as Council_Entity_Section_memberId} from '../../../src/core/Entity/Council_Entity_Section.gen';
+import type {memberId as Council_Entity_Section_memberId} from './Council_Entity_Section.gen';
 
-import type {state as Council_Entity_Section_state} from '../../../src/core/Entity/Council_Entity_Section.gen';
+import type {state as Council_Entity_Section_state} from './Council_Entity_Section.gen';
 
-import type {t as Council_Entity_Section_t} from '../../../src/core/Entity/Council_Entity_Section.gen';
+import type {t as Council_Entity_Section_t} from './Council_Entity_Section.gen';
 
 import type {t as Date_t} from '../../../src/core/Date.gen';
 
@@ -30,7 +28,7 @@ export type Transition_t = (_1:Council_Entity_Section_t, _2:Council_Entity_Secti
 export const create: (t:Council_Entity_Section_t, _2:{ readonly date: Date_t; readonly state: Council_Entity_Section_state }) => [
     { tag: "Ok"; value: Council_Entity_Section_t }
   | { tag: "Error"; value: Council_Entity_Section_error }, Council_Entity_Section_event[]] = function (Arg1: any, Arg2: any) {
-  const result = Curry._3(Council_Command_SectionBS.create, {id:Arg1.id, state:(Arg1.state == null ? undefined : Arg1.state.tag==="Free"
+  const result = Curry._3(Council_Entity_Section_LogicBS.create, {_RE:Arg1._RE, id:Arg1.id, seq:Arg1.seq, state:(Arg1.state == null ? undefined : Arg1.state.tag==="Free"
     ? {TAG: 0, _0:Arg1.state.value} as any
     : Arg1.state.tag==="Editing"
     ? Object.assign({TAG: 1}, Arg1.state.value)
@@ -40,7 +38,7 @@ export const create: (t:Council_Entity_Section_t, _2:{ readonly date: Date_t; re
     ? Object.assign({TAG: 1}, Arg2.state.value)
     : Object.assign({TAG: 2}, Arg2.state.value));
   return [result[0].TAG===0
-    ? {tag:"Ok", value:{id:result[0]._0.id, state:(result[0]._0.state == null ? result[0]._0.state : result[0]._0.state.TAG===0
+    ? {tag:"Ok", value:{_RE:result[0]._0._RE, id:result[0]._0.id, seq:result[0]._0.seq, state:(result[0]._0.state == null ? result[0]._0.state : result[0]._0.state.TAG===0
     ? {tag:"Free", value:result[0]._0.state._0}
     : result[0]._0.state.TAG===1
     ? {tag:"Editing", value:result[0]._0.state}
@@ -75,13 +73,13 @@ export const modifyHeading: (t:Council_Entity_Section_t, _2:{
 }) => [
     { tag: "Ok"; value: Council_Entity_Section_t }
   | { tag: "Error"; value: Council_Entity_Section_error }, Council_Entity_Section_event[]] = function (Arg1: any, Arg2: any) {
-  const result = Curry._4(Council_Command_SectionBS.modifyHeading, {id:Arg1.id, state:(Arg1.state == null ? undefined : Arg1.state.tag==="Free"
+  const result = Curry._4(Council_Entity_Section_LogicBS.modifyHeading, {_RE:Arg1._RE, id:Arg1.id, seq:Arg1.seq, state:(Arg1.state == null ? undefined : Arg1.state.tag==="Free"
     ? {TAG: 0, _0:Arg1.state.value} as any
     : Arg1.state.tag==="Editing"
     ? Object.assign({TAG: 1}, Arg1.state.value)
     : Object.assign({TAG: 2}, Arg1.state.value))}, Arg2.date, Arg2.heading, Arg2.by);
   return [result[0].TAG===0
-    ? {tag:"Ok", value:{id:result[0]._0.id, state:(result[0]._0.state == null ? result[0]._0.state : result[0]._0.state.TAG===0
+    ? {tag:"Ok", value:{_RE:result[0]._0._RE, id:result[0]._0.id, seq:result[0]._0.seq, state:(result[0]._0.state == null ? result[0]._0.state : result[0]._0.state.TAG===0
     ? {tag:"Free", value:result[0]._0.state._0}
     : result[0]._0.state.TAG===1
     ? {tag:"Editing", value:result[0]._0.state}
@@ -116,13 +114,13 @@ export const modifyBody: (t:Council_Entity_Section_t, _2:{
 }) => [
     { tag: "Ok"; value: Council_Entity_Section_t }
   | { tag: "Error"; value: Council_Entity_Section_error }, Council_Entity_Section_event[]] = function (Arg1: any, Arg2: any) {
-  const result = Curry._4(Council_Command_SectionBS.modifyBody, {id:Arg1.id, state:(Arg1.state == null ? undefined : Arg1.state.tag==="Free"
+  const result = Curry._4(Council_Entity_Section_LogicBS.modifyBody, {_RE:Arg1._RE, id:Arg1.id, seq:Arg1.seq, state:(Arg1.state == null ? undefined : Arg1.state.tag==="Free"
     ? {TAG: 0, _0:Arg1.state.value} as any
     : Arg1.state.tag==="Editing"
     ? Object.assign({TAG: 1}, Arg1.state.value)
     : Object.assign({TAG: 2}, Arg1.state.value))}, Arg2.date, Arg2.body, Arg2.by);
   return [result[0].TAG===0
-    ? {tag:"Ok", value:{id:result[0]._0.id, state:(result[0]._0.state == null ? result[0]._0.state : result[0]._0.state.TAG===0
+    ? {tag:"Ok", value:{_RE:result[0]._0._RE, id:result[0]._0.id, seq:result[0]._0.seq, state:(result[0]._0.state == null ? result[0]._0.state : result[0]._0.state.TAG===0
     ? {tag:"Free", value:result[0]._0.state._0}
     : result[0]._0.state.TAG===1
     ? {tag:"Editing", value:result[0]._0.state}
@@ -157,13 +155,13 @@ export const modifyTags: (t:Council_Entity_Section_t, _2:{
 }) => [
     { tag: "Ok"; value: Council_Entity_Section_t }
   | { tag: "Error"; value: Council_Entity_Section_error }, Council_Entity_Section_event[]] = function (Arg1: any, Arg2: any) {
-  const result = Curry._4(Council_Command_SectionBS.modifyTags, {id:Arg1.id, state:(Arg1.state == null ? undefined : Arg1.state.tag==="Free"
+  const result = Curry._4(Council_Entity_Section_LogicBS.modifyTags, {_RE:Arg1._RE, id:Arg1.id, seq:Arg1.seq, state:(Arg1.state == null ? undefined : Arg1.state.tag==="Free"
     ? {TAG: 0, _0:Arg1.state.value} as any
     : Arg1.state.tag==="Editing"
     ? Object.assign({TAG: 1}, Arg1.state.value)
     : Object.assign({TAG: 2}, Arg1.state.value))}, Arg2.date, Arg2.tags, Arg2.by);
   return [result[0].TAG===0
-    ? {tag:"Ok", value:{id:result[0]._0.id, state:(result[0]._0.state == null ? result[0]._0.state : result[0]._0.state.TAG===0
+    ? {tag:"Ok", value:{_RE:result[0]._0._RE, id:result[0]._0.id, seq:result[0]._0.seq, state:(result[0]._0.state == null ? result[0]._0.state : result[0]._0.state.TAG===0
     ? {tag:"Free", value:result[0]._0.state._0}
     : result[0]._0.state.TAG===1
     ? {tag:"Editing", value:result[0]._0.state}
@@ -194,13 +192,13 @@ export const modifyTags: (t:Council_Entity_Section_t, _2:{
 export const lock: (t:Council_Entity_Section_t, _2:{ readonly date: Date_t; readonly by: Council_Entity_Section_memberId }) => [
     { tag: "Ok"; value: Council_Entity_Section_t }
   | { tag: "Error"; value: Council_Entity_Section_error }, Council_Entity_Section_event[]] = function (Arg1: any, Arg2: any) {
-  const result = Curry._3(Council_Command_SectionBS.lock, {id:Arg1.id, state:(Arg1.state == null ? undefined : Arg1.state.tag==="Free"
+  const result = Curry._3(Council_Entity_Section_LogicBS.lock, {_RE:Arg1._RE, id:Arg1.id, seq:Arg1.seq, state:(Arg1.state == null ? undefined : Arg1.state.tag==="Free"
     ? {TAG: 0, _0:Arg1.state.value} as any
     : Arg1.state.tag==="Editing"
     ? Object.assign({TAG: 1}, Arg1.state.value)
     : Object.assign({TAG: 2}, Arg1.state.value))}, Arg2.date, Arg2.by);
   return [result[0].TAG===0
-    ? {tag:"Ok", value:{id:result[0]._0.id, state:(result[0]._0.state == null ? result[0]._0.state : result[0]._0.state.TAG===0
+    ? {tag:"Ok", value:{_RE:result[0]._0._RE, id:result[0]._0.id, seq:result[0]._0.seq, state:(result[0]._0.state == null ? result[0]._0.state : result[0]._0.state.TAG===0
     ? {tag:"Free", value:result[0]._0.state._0}
     : result[0]._0.state.TAG===1
     ? {tag:"Editing", value:result[0]._0.state}

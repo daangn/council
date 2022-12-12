@@ -2,10 +2,10 @@
 'use strict';
 
 var Framework = require("../Framework.bs.js");
-var Council_Entity_Session = require("../Entity/Council_Entity_Session.bs.js");
+var Council_Entity_Member = require("../Entity/Council_Entity_Member.bs.js");
 
 Framework.Repository.Make({
-      Entity: Council_Entity_Session
+      Entity: Council_Entity_Member
     });
 
 var Entity;

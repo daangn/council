@@ -13,19 +13,32 @@ type data = {
 }
 
 @genType
+type state = data
+
+@genType
+type event =
+  | Created({date: Date.t, data: data})
+  | DO_NOT_USE({date: Date.t})
+
+@genType
+type error =
+  | Invariant
+  | IOError({id: id, exn: Js.Exn.t})
+
+@genType
 type t = {
+  _RE: [#Member],
   id: id,
-  data: option<data>,
+  seq: int,
+  events: array<event>,
+  state: option<state>,
 }
 
 @genType
-type event = Created({date: Date.t, data: data})
-
-@genType
-type error = unit
-
-@genType
-let make = (id, data) => {
+let make = (id, ~state=?, ~seq=0, ()) => {
+  _RE: #Member,
   id,
-  data,
+  seq,
+  events: [],
+  state,
 }

@@ -6,7 +6,7 @@
     "subdirs" : true
   },
   "package-specs": {
-    "module": "es6",
+    "module": "commonjs",
     "in-source": true
   },
   "suffix": ".bs.js",
@@ -16,7 +16,7 @@
       "Js": "Js"
     },
     "generatedFileExtension": ".gen.ts",
-    "module": "es6"
+    "module": "commonjs"
   },
   "bs-dependencies": [
   ]

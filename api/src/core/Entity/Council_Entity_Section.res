@@ -19,7 +19,9 @@ type state =
 
 @genType
 type t = {
+  _RE: [#Section],
   id: id,
+  seq: int,
   state: option<state>,
 }
 
@@ -40,10 +42,9 @@ type error =
   | Editing({id: id, by: memberId})
 
 @genType
-let make = (id, data) => {
+let make = (id, ~state=?, ~seq=0, ()) => {
+  _RE: #Section,
   id,
-  state: switch data {
-  | Some(data) => Some(Free(data))
-  | None => None
-  },
+  seq,
+  state,
 }

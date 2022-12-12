@@ -13,7 +13,9 @@ type data = {
 
 @genType
 type t = {
+  _RE: [#Organization],
   id: id,
+  seq: int,
   data: option<data>,
 }
 
@@ -24,6 +26,8 @@ type event =
 
 @genType
 let make = (id, data) => {
+  _RE: #Organization,
   id,
+  seq: 0,
   data,
 }
