@@ -22,3 +22,13 @@ model CouncilEvent {
 
   @@unique([stream_id, sequence])
 }
+
+model CouncilSnapshot {
+  aggregate_name String
+  stream_id      String
+  sequence       BigInt
+  data           Json
+  created_at     DateTime @default(now())
+
+  @@unique([stream_id, sequence])
+}
