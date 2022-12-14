@@ -2,3 +2,5 @@
 .yarn/releases/*  binary
 
 .vscode/*.json    language=JSON5
+
+*.typegen.ts      linguist-generated
