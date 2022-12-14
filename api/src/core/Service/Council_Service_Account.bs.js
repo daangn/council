@@ -9,5 +9,29 @@ function make(memberRepo, sessionRepo) {
         };
 }
 
+function validateSignup(t, name, email) {
+  var validateEmail = function (email) {
+    var re = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+    return re.test(email);
+  };
+  var match = name.length >= 2;
+  var match$1 = validateEmail(email);
+  if (match && match$1) {
+    return {
+            TAG: /* Ok */0,
+            _0: undefined
+          };
+  } else {
+    return {
+            TAG: /* Error */1,
+            _0: /* InvalidSignup */{
+              name: match,
+              email: match$1
+            }
+          };
+  }
+}
+
 exports.make = make;
+exports.validateSignup = validateSignup;
 /* No side effect */
