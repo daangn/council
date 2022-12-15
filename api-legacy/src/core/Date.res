@@ -1,2 +1,0 @@
-@genType
-type t = float
