@@ -4,15 +4,8 @@
   "workspaces": {
     "packages": [
       "api",
-      "web",
       "packages/*"
     ]
-  },
-  "scripts": {
-    "lint:check": "rw lint",
-    "lint:format": "rw lint --fix",
-    "type-check": "rw type-check",
-    "test": "rw test"
   },
   "resolutions": {
     "typescript": "4.9.3"
@@ -22,21 +15,12 @@
     "string-dedent": "^3.0.1"
   },
   "devDependencies": {
-    "@redwoodjs/core": "^3.6.1",
     "graphql-config": "^4.3.6",
-    "jest": "^29.3.1",
+    "rome": "^11.0.0",
     "typescript": "^4.9.3"
   },
-  "eslintConfig": {
-    "extends": "@redwoodjs/eslint-config",
-    "root": true
-  },
   "engines": {
-    "node": ">=14.19 <=16.x",
-    "yarn": ">=1.15"
-  },
-  "prisma": {
-    "seed": "yarn rw exec seed"
+    "node": ">=18.0.0"
   },
   "packageManager": "yarn@3.2.4"
 }

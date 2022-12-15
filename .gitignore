@@ -1,17 +1,15 @@
-.idea
 .DS_Store
 .env
-.netlify
-.redwood
-dev.db*
 dist
-dist-babel
-node_modules
-yarn-error.log
+node_modules/
+*.log
+
+# TODO: delete
 web/public/mockServiceWorker.js
 web/types/graphql.d.ts
 api/types/graphql.d.ts
 api/src/lib/generateGraphiQLHeader.*
+
 .pnp.*
 .yarn/*
 !.yarn/patches

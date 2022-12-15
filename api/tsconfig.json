@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "downlevelIteration": true,
+    "strict": true,
+    "types": [
+      "vite/client"
+    ],
+    "baseUrl": "src",
+    "paths": {
+      "~/*": ["./*"]
+    }
+  },
+  "include": [
+    "vite.config.ts",
+    "src/**/*"
+  ],
+  "exclude": [
+  ]
+}

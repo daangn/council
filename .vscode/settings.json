@@ -1,13 +1,24 @@
 {
   "editor.tabSize": 2,
-  "files.trimTrailingWhitespace": true,
-  "editor.formatOnSave": false,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "rome.rome",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports.rome": true
+    }
+  },
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "rome.rome",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports.rome": true
+    }
   },
   "[prisma]": {
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "Prisma.prisma"
   },
+  "files.trimTrailingWhitespace": true,
   "sqltools.connections": [
     {
       "previewLimit": 50,

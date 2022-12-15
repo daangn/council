@@ -45,38 +45,5 @@
         "panel": "new"
       }
     },
-    {
-      "type": "shell",
-      "label": "Prisma Migrate",
-      "command": "yarn rw prisma migrate dev",
-      "presentation": {
-        "reveal": "silent",
-        "panel": "new"
-      }
-    },
-    {
-      "type": "shell",
-      "label": "Prisma Studio",
-      "command": "yarn rw prisma studio",
-      "runOptions": {
-        "runOn": "folderOpen"
-      },
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
-    {
-      "type": "shell",
-      "label": "ReScript Build",
-      "command": "yarn workspace api res:build -w",
-      "runOptions": {
-        "runOn": "folderOpen"
-      },
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
   ]
 }

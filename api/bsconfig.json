@@ -1,0 +1,22 @@
+{
+  "name": "core",
+  "sources": {
+    "dir" : "src/core",
+    "subdirs" : true
+  },
+  "package-specs": {
+    "module": "es6",
+    "in-source": true
+  },
+  "suffix": ".bs.js",
+  "gentypeconfig": {
+    "language": "typescript",
+    "shims": {
+      "Js": "Js"
+    },
+    "generatedFileExtension": ".gen.ts",
+    "module": "es6"
+  },
+  "bs-dependencies": [
+  ]
+}
