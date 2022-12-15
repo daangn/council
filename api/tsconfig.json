@@ -5,7 +5,13 @@
     "moduleResolution": "Node",
     "downlevelIteration": true,
     "strict": true,
+    "typeRoots": [
+      "./",
+      "../node_modules/@types"
+    ],
     "types": [
+      "env",
+      "@types/node",
       "vite/client"
     ],
     "baseUrl": "src",

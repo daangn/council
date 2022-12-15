@@ -18,6 +18,10 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "Prisma.prisma"
   },
+  "[rescript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "chenglou92.rescript-vscode"
+  },
   "files.trimTrailingWhitespace": true,
   "sqltools.connections": [
     {

@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "esModuleInterop": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "typeRoots": [
+      "../",
+      "../../node_modules/@types"
+    ],
+    "types": [
+      "env",
+      "@types/node",
+      "vite/client"
+    ]
+  }
+}

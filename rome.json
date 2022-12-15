@@ -18,5 +18,13 @@
       "semicolons": "always",
       "trailingComma": "all"
     }
+  },
+  "files": {
+    "ignore": [
+      "api/dist/*",
+      "api/lib/**/*",
+      "*.gen.ts",
+      "*.bs.js"
+    ]
   }
 }
