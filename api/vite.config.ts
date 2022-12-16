@@ -7,6 +7,7 @@ const serverPath = path.resolve(__dirname, 'src/server.ts');
 export default defineConfig(() => {
   process.env = {
     ...loadEnv('defaults', process.cwd()),
+    ...loadEnv('', process.cwd()),
     ...process.env,
   };
 

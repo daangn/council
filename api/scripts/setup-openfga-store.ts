@@ -9,7 +9,7 @@ if (import.meta.env.VITE_OPENFGA_STORE_ID) {
 }
 
 const openFga = new OpenFgaApi({
-  apiScheme: import.meta.env.VITE_OPENFGA_API_HOST,
+  apiScheme: import.meta.env.VITE_OPENFGA_API_SCHEME,
   apiHost: import.meta.env.VITE_OPENFGA_API_HOST,
   credentials: {
     method: CredentialsMethod.ApiToken,
@@ -28,7 +28,7 @@ console.log();
 console.log(dedent`
   Next, you can run this to complete setup.
 
-      yarn rw exec setup-openfga-model --storeId "${storeId}"
+      yarn workspace api vite:exec scripts/setup-openfga-model.ts --storeId "${storeId}"
 
   Also, you can add this line to your local \`.env\` file for development.
 
