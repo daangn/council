@@ -1,17 +1,26 @@
-import { makeApp } from './app';
+import { makeApp } from '~/app';
+import { entryPath } from '~/common';
 
-const app = makeApp({
-  dev: import.meta.env.DEV,
-});
-
-app.listen({ port: 3000 });
-
-if (import.meta.hot) {
-  import.meta.hot.on('vite:beforeFullReload', () => {
-    app.close();
+if (import.meta.env.DEV || process.argv[1] === entryPath) {
+  const app = await makeApp({
+    dev: import.meta.env.DEV,
   });
 
-  import.meta.hot.dispose(() => {
-    app.close();
-  });
+  await app.listen({ port: 3000 });
+
+  if (import.meta.hot) {
+    import.meta.hot.on('vite:beforeFullReload', async () => {
+      // @ts-ignore
+      await app.vite.devServer.close();
+      await app.close();
+    });
+
+    import.meta.hot.dispose(async () => {
+      // @ts-ignore
+      await app.vite.devServer.close();
+      await app.close();
+    });
+  }
 }
+
+export * from './client';

@@ -13,6 +13,7 @@ export default defineConfig(() => {
 
   return {
     build: {
+      target: 'esnext',
       ssr: serverPath,
       rollupOptions: {
         input: serverPath,

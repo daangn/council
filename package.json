@@ -8,7 +8,7 @@
     ]
   },
   "resolutions": {
-    "typescript": "4.9.3"
+    "@fastify/vite": "patch:@fastify/vite@npm%3A3.0.3#./.yarn/patches/@fastify-vite-npm-3.0.3-cf89bc0c9d.patch"
   },
   "dependencies": {
     "@openfga/sdk": "^0.1.1",
@@ -17,7 +17,7 @@
   "devDependencies": {
     "graphql-config": "^4.3.6",
     "rome": "^11.0.0",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.4"
   },
   "engines": {
     "node": ">=18.0.0"

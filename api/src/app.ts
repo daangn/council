@@ -1,21 +1,35 @@
-import fastify, { FastifyReply, FastifyRequest } from 'fastify';
+// @ts-ignore
+import FastifyVite from '@fastify/vite';
+import fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 import { createYoga } from 'graphql-yoga';
+import { renderToString } from 'react-dom/server';
 
-import { builder } from './builder';
-import { type Context, makeContextFactory } from './context';
+import { builder } from '~/builder';
+import * as client from '~/client';
+import { clientPath, entryPath } from '~/common';
+import { type Context, makeContextFactory } from '~/context';
 
-export function makeApp(options: {
+export async function makeApp(options: {
   dev: boolean;
 }) {
   const app = fastify({
-    logger: options.dev && {
-      transport: {
-        target: 'pino-pretty',
-      },
-      level: 'debug',
-    },
+    logger: options.dev
+      ? {
+          transport: {
+            target: 'pino-pretty',
+          },
+          level: 'debug',
+        }
+      : true,
   });
 
+  await setupYoga(app);
+  await setupClient(app);
+
+  return app;
+}
+
+async function setupYoga(app: FastifyInstance) {
   const graphQLServer = createYoga<
     {
       req: FastifyRequest;
@@ -48,6 +62,29 @@ export function makeApp(options: {
       return reply;
     },
   });
+}
 
-  return app;
+async function setupClient(app: FastifyInstance) {
+  await app.register(FastifyVite, {
+    dev: import.meta.env.DEV,
+    client,
+    clientPath,
+    entryPath,
+    // rome-ignore lint/suspicious/noExplicitAny: @fastify/vite doesn't provide type definitions
+    createRenderFunction({ createApp }: any) {
+      return () => {
+        return {
+          element: renderToString(createApp()),
+        };
+      };
+    },
+  });
+
+  app.get('/', (req, reply) => {
+    // @ts-ignore
+    reply.html(reply.render());
+  });
+
+  // @ts-ignore
+  await app.vite.ready();
 }

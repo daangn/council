@@ -20,8 +20,8 @@
     }
   },
   "include": [
-    "vite.config.ts",
-    "src/**/*"
+    "src",
+    "vite.config.ts"
   ],
   "exclude": [
   ]

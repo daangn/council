@@ -1,0 +1,239 @@
+diff --git a/config.js b/config.js
+index 85e9b9b1214a6f3ea4494a94a1c83a04bf7316e8..724ddffe2ed4a0c49154ffc8eb61f7dd121498b3 100644
+--- a/config.js
++++ b/config.js
+@@ -1,22 +1,20 @@
+ const { resolveConfig } = require('vite')
+-const { fileURLToPath } = require('url')
+-const { dirname, join, resolve, exists, stat, read } = require('./ioutils')
++const { dirname, join, resolve, exists, read } = require('./ioutils')
+ const { createHtmlTemplateFunction } = require('./html')
+ 
+ const DefaultConfig = {
+   // Whether or not to enable Vite's Dev Server
+   dev: process.argv.includes('--dev'),
+ 
+-  // Vite's configuration file location
+-  root: null,
++  entryPath: null,
++
++  clientPath: null,
++
++  client: null,
+ 
+   // Vite's resolved config
+   vite: null,
+ 
+-  // Vite's config path.
+-  // Automatically computed from root after resolveConfig()
+-  viteConfig: null,
+-
+   // Vite's distribution bundle info.
+   // Automatically computed from Vite's default settings
+   bundle: {
+@@ -44,7 +42,7 @@ const DefaultConfig = {
+     if (!clientModule) {
+       return null
+     }
+-    const routes = typeof clientModule.routes === 'function' 
++    const routes = typeof clientModule.routes === 'function'
+       ? await clientModule.routes()
+       : clientModule.routes
+     return Object.assign({}, clientModule, { routes })
+@@ -103,14 +101,17 @@ const DefaultConfig = {
+ 
+ async function configure (options = {}) {
+   const defaultConfig = { ...DefaultConfig }
+-  const root = resolveRoot(options.root)
++  const { entryPath, clientPath } = options;
++  const serverPath = dirname(entryPath)
+   const dev = typeof options.dev === 'boolean' ? options.dev : defaultConfig.dev
+-  const [vite, viteConfig] = await resolveViteConfig(root, dev)
++  const vite = await resolveViteConfig(clientPath, dev) ?? { root: clientPath };
+   const bundle = await resolveBundle({ dev, vite })
+   const config = Object.assign(defaultConfig, {
+     ...options,
++    entryPath,
++    serverPath,
++    clientPath,
+     vite,
+-    viteConfig,
+     bundle,
+   })
+   for (const setting of [
+@@ -143,17 +144,6 @@ function resolveClientModule (root) {
+   return null
+ }
+ 
+-function resolveRoot (root) {
+-  if (root.startsWith('file:')) {
+-    root = fileURLToPath(root)
+-  }
+-  if (stat(root).isFile()) {
+-    return dirname(root)
+-  } else {
+-    return root
+-  }
+-}
+-
+ async function resolveViteConfig (root, dev) {
+   for (const ext of ['js', 'mjs', 'ts']) {
+     const configFile = join(root, `vite.config.${ext}`)
+@@ -165,47 +155,42 @@ async function resolveViteConfig (root, dev) {
+       if (userConfig.default) {
+         userConfig = userConfig.default
+       }
+-      return [
+-        Object.assign(userConfig, {
+-          build: {
+-            assetsDir: resolvedConfig.build.assetsDir,
+-            outDir: resolvedConfig.build.outDir
+-          },
+-        }),
+-        configFile,
+-      ]
++      if (typeof userConfig === 'function') {
++        userConfig = await userConfig({
++          command: 'serve',
++          mode: dev ? 'development' : 'proudction',
++          ssrBuild: false,
++        });
++      }
++      return Object.assign(userConfig, {
++        build: {
++          assetsDir: resolvedConfig.build.assetsDir,
++          outDir: resolvedConfig.build.outDir
++        },
++      })
+     }
+   }
+-  return [null, null]
++  return null
+ }
+ 
+ async function resolveBundle ({ dev, vite }) {
+   const bundle = {}
+   if (!dev) {
+-    bundle.dir = resolve(vite.root, vite.build.outDir)
+-    const indexHtmlPath = resolve(bundle.dir, 'client/index.html')
++    bundle.dir = vite.root
++    const indexHtmlPath = resolve(bundle.dir, 'index.html')
+     if (!exists(indexHtmlPath)) {
+-      return
++      throw new Error('index.html does not exist')
+     }
+     bundle.indexHtml = await read(indexHtmlPath, 'utf8')
+-    bundle.manifest = require(resolve(bundle.dir, 'client/ssr-manifest.json'))
++    bundle.manifest = require(resolve(bundle.dir, 'ssr-manifest.json'))
+   } else {
+     bundle.manifest = []
+   }
+   return bundle
+ }
+ 
+-async function resolveBuildCommands (root, renderer) {
+-  const [vite] = await resolveViteConfig(root)
+-  return [
+-    ['build', '--outDir', `${vite.build.outDir}/client`, '--ssrManifest'],
+-    ['build', '--ssr', renderer.serverEntryPoint, '--outDir', `${vite.build.outDir}/server`],
+-  ]
+-}
+-
+ module.exports = {
+   configure,
+   resolveBundle,
+-  resolveBuildCommands,
+ }
+ module.exports.default = module.exports
+diff --git a/index.js b/index.js
+index 5fac8d7d627d039f36204c18eb3468f0b2cdc17b..7f647ec53992a70e55ece2dc3441d41916870bf4 100644
+--- a/index.js
++++ b/index.js
+@@ -3,7 +3,7 @@
+ const fp = require('fastify-plugin')
+ 
+ const { ensureConfigFile, ejectBlueprint } = require('./setup')
+-const { configure, resolveBuildCommands } = require('./config')
++const { configure } = require('./config')
+ const { createHtmlTemplateFunction } = require('./html')
+ const { ensureESMBuild } = require('./vite')
+ 
+@@ -50,5 +50,4 @@ module.exports.ensureESMBuild = ensureESMBuild
+ module.exports.createHtmlTemplateFunction = createHtmlTemplateFunction
+ module.exports.ensureConfigFile = ensureConfigFile
+ module.exports.ejectBlueprint = ejectBlueprint
+-module.exports.resolveBuildCommands = resolveBuildCommands
+ module.exports.default = module.exports
+diff --git a/mode/production.js b/mode/production.js
+index 4403526ff2320c1df353dd4794a180845dfd315c..b6329b8eb2693c01ce88fa8aa2ae2a6511834a6b 100644
+--- a/mode/production.js
++++ b/mode/production.js
+@@ -1,4 +1,4 @@
+-const { parse, resolve, join, exists } = require('../ioutils')
++const { resolve, exists } = require('../ioutils')
+ const FastifyStatic = require('@fastify/static')
+ 
+ function fileUrl (str) {
+@@ -20,27 +20,23 @@ async function setup (config) {
+   if (!config.bundle) {
+     throw new Error('No distribution bundle found.')
+   }
+-  // For production you get the distribution version of the render function
+-  const { assetsDir } = config.vite.build
+-
+-  const clientDist = resolve(config.bundle.dir, 'client')
+-  const serverDist = resolve(config.bundle.dir, 'server')
++  const clientDist = config.clientPath
++  const serverDist = config.serverPath
+   if (!exists(clientDist) || !exists(serverDist)) {
+     throw new Error('No distribution bundle found.')
+   }
+   // We also register fastify-static to serve all static files
+   // in production (dev server takes of this)
+   await this.scope.register(FastifyStatic, {
+-    root: resolve(clientDist, assetsDir),
+-    prefix: `/${assetsDir}`,
++    root: resolve(clientDist, 'assets'),
++    prefix: `/assets`,
+   })
+   // Note: this is just to ensure it works, for a real world
+   // production deployment, you'll want to capture those paths in
+   // Nginx or just serve them from a CDN instead
+ 
+   // Load routes from client module (server entry point)
+-  const clientModule = await loadClient()
+-  const client = await config.prepareClient(clientModule)
++  const client = await config.prepareClient(config.client)
+ 
+   // Create route handler and route error handler functions
+   const handler = await config.createRouteHandler(client, this.scope, config)
+@@ -61,29 +57,6 @@ async function setup (config) {
+   ))
+ 
+   return { client, routes: client.routes, handler, errorHandler }
+-
+-  // Loads the Vite application server entry point for the client
+-  async function loadClient () {
+-    if (config.spa) {
+-      return {}
+-    }
+-    const serverFiles = [
+-      join('server', `${parse(config.clientModule).name}.js`),
+-      join('server', `${parse(config.clientModule).name}.mjs`)
+-    ]
+-    let serverBundlePath
+-    for (const serverFile of serverFiles) {
+-      // Use file path on Windows
+-      serverBundlePath = process.platform === 'win32'
+-        ? fileUrl(resolve(config.bundle.dir, serverFile))
+-        : resolve(config.bundle.dir, serverFile)
+-      if (await exists(serverBundlePath)) {
+-        break
+-      }
+-    }
+-    const serverBundle = await import(serverBundlePath)
+-    return serverBundle.default ?? serverBundle
+-  }
+ }
+ 
+ module.exports = setup
