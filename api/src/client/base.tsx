@@ -1,5 +1,7 @@
+import Test from './components/Test.gen';
+
 export function createApp() {
   return (
-    <p>Hello world!!</p>
+    <Test />
   )
 }

@@ -1088,6 +1088,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rescript/react@npm:^0.11.0":
+  version: 0.11.0
+  resolution: "@rescript/react@npm:0.11.0"
+  peerDependencies:
+    react: ">=18.0.0"
+    react-dom: ">=18.0.0"
+  checksum: e4f7a276d0d6b5b44f68724f9ef4231c604521db97ab77176352d94c687fe807d92f18697e369ac2544b07a79d741efa8d5f4381eae84add839c160d27e37ad5
+  languageName: node
+  linkType: hard
+
 "@rometools/cli-darwin-arm64@npm:11.0.0":
   version: 11.0.0
   resolution: "@rometools/cli-darwin-arm64@npm:11.0.0"
@@ -1406,6 +1416,7 @@ __metadata:
     "@fastify/vite": ^3.0.3
     "@pothos/core": ^3.23.1
     "@prisma/client": ^4.7.1
+    "@rescript/react": ^0.11.0
     "@types/node": ^18.11.15
     "@types/react": ^18.0.26
     "@types/react-dom": ^18.0.9
@@ -1419,7 +1430,7 @@ __metadata:
     prisma: ^4.7.1
     react: ^18.2.0
     react-dom: ^18.2.0
-    rescript: ^10.0.1
+    rescript: ^10.1.0
     typescript: ^4.9.4
     vite: ^4.0.1
     vite-node: ^0.25.8
@@ -3890,7 +3901,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rescript@npm:^10.0.1":
+"rescript@npm:^10.1.0":
   version: 10.1.0
   resolution: "rescript@npm:10.1.0"
   bin:
