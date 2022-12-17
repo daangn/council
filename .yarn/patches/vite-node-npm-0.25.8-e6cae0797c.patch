@@ -1,0 +1,32 @@
+diff --git a/dist/client.cjs b/dist/client.cjs
+index f044e962ba83094234f72e0bafdc91454316ac37..60a035952d3e8fcc4289cebebe285cd4ae04107b 100644
+--- a/dist/client.cjs
++++ b/dist/client.cjs
+@@ -282,7 +282,10 @@ ${getStack()}`), 2e3);
+           var _a, _b;
+           hotContext || (hotContext = (_b = (_a = this.options).createHotContext) == null ? void 0 : _b.call(_a, this, `/@fs/${fsPath}`));
+           return hotContext;
+-        }
++        },
++        set: (value) => {
++          hotContext = value;
++        },
+       });
+     }
+     const context = this.prepareContext({
+diff --git a/dist/client.mjs b/dist/client.mjs
+index c8dede06d9e466c3a5d97e7bee80270456e4b891..2ede1b822b8dde6f4f83d4907aaf114607da3900 100644
+--- a/dist/client.mjs
++++ b/dist/client.mjs
+@@ -255,7 +255,10 @@ ${getStack()}`), 2e3);
+           var _a, _b;
+           hotContext || (hotContext = (_b = (_a = this.options).createHotContext) == null ? void 0 : _b.call(_a, this, `/@fs/${fsPath}`));
+           return hotContext;
+-        }
++        },
++        set: (value) => {
++          hotContext = value;
++        },
+       });
+     }
+     const context = this.prepareContext({

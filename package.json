@@ -8,7 +8,8 @@
     ]
   },
   "resolutions": {
-    "@fastify/vite": "patch:@fastify/vite@npm%3A3.0.3#./.yarn/patches/@fastify-vite-npm-3.0.3-cf89bc0c9d.patch"
+    "@fastify/vite": "patch:@fastify/vite@npm%3A3.0.3#./.yarn/patches/@fastify-vite-npm-3.0.3-cf89bc0c9d.patch",
+    "vite-node": "patch:vite-node@npm%3A0.25.8#./.yarn/patches/vite-node-npm-0.25.8-e6cae0797c.patch"
   },
   "dependencies": {
     "@openfga/sdk": "^0.1.1",
