@@ -5,8 +5,9 @@
     "moduleResolution": "Node",
     "downlevelIteration": true,
     "strict": true,
+    "jsx": "react-jsx",
     "typeRoots": [
-      "./",
+      "./@types",
       "../node_modules/@types"
     ],
     "types": [

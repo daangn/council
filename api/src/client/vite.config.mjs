@@ -8,7 +8,7 @@ const distPath = path.resolve(basePath, '../../dist/client');
 
 export default defineConfig({
   root: basePath,
-  plugins: [react()],
+  plugins: [react({ jsxRuntime: 'automatic' })],
   build: {
     rollupOptions: {
       output: {

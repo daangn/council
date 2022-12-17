@@ -14,6 +14,8 @@
     "@fastify/vite": "^3.0.3",
     "@pothos/core": "^3.23.1",
     "@prisma/client": "^4.7.1",
+    "dotenv": "^16.0.3",
+    "envalid": "^7.3.1",
     "fastify": "^4.10.2",
     "graphql": "^16.6.0",
     "graphql-yoga": "^3.1.1",

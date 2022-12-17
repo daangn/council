@@ -13,14 +13,12 @@ export async function makeApp(options: {
   dev: boolean;
 }) {
   const app = fastify({
-    logger: options.dev
-      ? {
-          transport: {
-            target: 'pino-pretty',
-          },
-          level: 'debug',
-        }
-      : true,
+    logger: !options.dev || {
+      transport: {
+        target: 'pino-pretty',
+      },
+      level: 'debug',
+    },
   });
 
   await setupYoga(app);

@@ -1410,6 +1410,8 @@ __metadata:
     "@types/react": ^18.0.26
     "@types/react-dom": ^18.0.9
     "@vitejs/plugin-react": ^3.0.0
+    dotenv: ^16.0.3
+    envalid: ^7.3.1
     fastify: ^4.10.2
     graphql: ^16.6.0
     graphql-yoga: ^3.1.1
@@ -1914,6 +1916,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:^16.0.3":
+  version: 16.0.3
+  resolution: "dotenv@npm:16.0.3"
+  checksum: 109457ac5f9e930ca8066ea33887b6f839ab24d647a7a8b49ddcd1f32662e2c35591c5e5b9819063e430148a664d0927f0cbe60cf9575d89bc524f47ff7e78f0
+  languageName: node
+  linkType: hard
+
 "dset@npm:3.1.2, dset@npm:^3.1.1":
   version: 3.1.2
   resolution: "dset@npm:3.1.2"
@@ -1971,6 +1980,15 @@ __metadata:
   version: 2.2.1
   resolution: "env-paths@npm:2.2.1"
   checksum: 285325677bf00e30845e330eec32894f5105529db97496ee3f598478e50f008c5352a41a30e5e72ec9de8a542b5a570b85699cd63bd2bc646dbcb9f311d83bc4
+  languageName: node
+  linkType: hard
+
+"envalid@npm:^7.3.1":
+  version: 7.3.1
+  resolution: "envalid@npm:7.3.1"
+  dependencies:
+    tslib: 2.3.1
+  checksum: ad264c969cc15951e4fc6b9fa30913065126fcd944e6143fe0a295c9f55403c72824c6afe9fe3c23396c2b36ca33ab3d28cea6c9a54548ab526666d3b0ad7902
   languageName: node
   linkType: hard
 
@@ -4447,6 +4465,13 @@ __metadata:
   bin:
     tsconfck: bin/tsconfck.js
   checksum: 6827a6c3e48977ac1761f3bdb50799499ae389075bd4ccc0bce259340be14ce659e66698b442d79a2ea78b76e538ef56d48585057a96ab01daf4588e1aad611a
+  languageName: node
+  linkType: hard
+
+"tslib@npm:2.3.1":
+  version: 2.3.1
+  resolution: "tslib@npm:2.3.1"
+  checksum: 4efd888895bdb3b987086b2b7793ad1013566f882b0eb7a328384e5ecc0d71cafb16bbeab3196200cbf7f01a73ccc25acc2f131d4ea6ee959be7436a8a306482
   languageName: node
   linkType: hard
 

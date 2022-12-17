@@ -1,4 +1,5 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
     "noEmit": true,
     "esModuleInterop": true,
@@ -7,7 +8,7 @@
     "moduleResolution": "Node",
     "strict": true,
     "typeRoots": [
-      "../",
+      "../@types",
       "../../node_modules/@types"
     ],
     "types": [
@@ -15,5 +16,10 @@
       "@types/node",
       "vite/client"
     ]
-  }
+  },
+  "include": [
+    "."
+  ],
+  "exclude": [
+  ]
 }

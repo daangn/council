@@ -1,7 +1,8 @@
 import { CredentialsMethod, OpenFgaApi } from '@openfga/sdk';
 import dedent from 'string-dedent';
+import { env } from '~/env';
 
-if (import.meta.env.VITE_OPENFGA_STORE_ID) {
+if (env.OPENFGA_STORE_ID) {
   console.log('Skipped since store already set in your environment variable.');
   console.log(`Store ID: ${import.meta.env.VITE_OPENFGA_STORE_ID}`);
 
@@ -9,12 +10,12 @@ if (import.meta.env.VITE_OPENFGA_STORE_ID) {
 }
 
 const openFga = new OpenFgaApi({
-  apiScheme: import.meta.env.VITE_OPENFGA_API_SCHEME,
-  apiHost: import.meta.env.VITE_OPENFGA_API_HOST,
+  apiScheme: env.OPENFGA_API_SCHEME,
+  apiHost: env.OPENFGA_API_HOST,
   credentials: {
     method: CredentialsMethod.ApiToken,
     config: {
-      token: import.meta.env.VITE_OPENFGA_API_TOKEN,
+      token: env.OPENFGA_API_TOKEN,
     },
   },
 });
@@ -32,6 +33,6 @@ console.log(dedent`
 
   Also, you can add this line to your local \`.env\` file for development.
 
-      VITE_OPENFGA_STORE_ID=${storeId}
+      OPENFGA_STORE_ID=${storeId}
 
 `);

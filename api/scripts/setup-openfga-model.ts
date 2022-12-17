@@ -1,5 +1,6 @@
 import { CredentialsMethod, OpenFgaApi } from '@openfga/sdk';
 import { parseArgs } from 'node:util';
+import { env } from '~/env';
 
 const args = parseArgs({
   options: {
@@ -9,7 +10,7 @@ const args = parseArgs({
   },
 });
 
-const storeId = args.values.storeId || import.meta.env.VITE_OPENFGA_STORE_ID;
+const storeId = args.values.storeId || env.OPENFGA_STORE_ID;
 if (!storeId) {
   throw new Error(
     'No --storeId param or OPENFGA_STORE_ID env provided. Did you forgot to run `yarn rw exec setup-openfga-store` first?',
@@ -18,12 +19,12 @@ if (!storeId) {
 
 const openFga = new OpenFgaApi({
   storeId,
-  apiScheme: import.meta.env.VITE_OPENFGA_API_SCHEME,
-  apiHost: import.meta.env.VITE_OPENFGA_API_HOST,
+  apiScheme: env.OPENFGA_API_SCHEME,
+  apiHost: env.OPENFGA_API_HOST,
   credentials: {
     method: CredentialsMethod.ApiToken,
     config: {
-      token: import.meta.env.VITE_OPENFGA_API_TOKEN,
+      token: env.OPENFGA_API_TOKEN,
     },
   },
 });

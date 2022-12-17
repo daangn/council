@@ -24,5 +24,17 @@
         "panel": "new"
       }
     },
+    {
+      "type": "shell",
+      "label": "ReScript Build",
+      "command": "yarn workspace api rescript build -w",
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
   ]
 }
