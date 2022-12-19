@@ -2,12 +2,12 @@
 import FastifyVite from '@fastify/vite';
 import fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 import { createYoga } from 'graphql-yoga';
-import { renderToString } from 'react-dom/server';
 
 import { builder } from '~/builder';
 import * as client from '~/client';
 import { clientPath, entryPath } from '~/common';
 import { type Context, makeContextFactory } from '~/context';
+import * as renderer from '~/renderer';
 
 export async function makeApp(options: {
   dev: boolean;
@@ -68,19 +68,7 @@ async function setupClient(app: FastifyInstance) {
     client,
     clientPath,
     entryPath,
-    // rome-ignore lint/suspicious/noExplicitAny: @fastify/vite doesn't provide type definitions
-    createRenderFunction({ createApp }: any) {
-      return () => {
-        return {
-          element: renderToString(createApp()),
-        };
-      };
-    },
-  });
-
-  app.get('/', (req, reply) => {
-    // @ts-ignore
-    reply.html(reply.render());
+    renderer,
   });
 
   // @ts-ignore
