@@ -25,7 +25,8 @@
     "react-dom": "^18.2.0",
     "react-router": "^6.5.0",
     "react-router-dom": "^6.5.0",
-    "rescript": "^10.1.0"
+    "rescript": "^10.1.0",
+    "vite-plugin-preload": "^0.1.8"
   },
   "devDependencies": {
     "@tailwindcss/jit": "^0.1.18",
