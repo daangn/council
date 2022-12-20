@@ -11,6 +11,10 @@
     "vite:exec": "vite-node"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^1.12.0",
+    "@cometjs/core": "^2.1.0",
+    "@fastify/auth": "^4.2.0",
+    "@fastify/cookie": "^8.3.0",
     "@fastify/vite": "^3.0.3",
     "@pothos/core": "^3.23.1",
     "@prisma/client": "^4.7.1",

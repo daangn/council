@@ -1,33 +1,10 @@
-// @ts-ignore
-import FastifyVite from '@fastify/vite';
-import fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
+import { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 import { createYoga } from 'graphql-yoga';
 
-import { builder } from '~/builder';
-import * as client from '~/client';
-import { clientPath, entryPath } from '~/common';
-import { type Context, makeContextFactory } from '~/context';
-import * as renderer from '~/renderer';
+import { builder } from './builder';
+import { type Context, contextFactory } from './context';
 
-export async function makeApp(options: {
-  dev: boolean;
-}) {
-  const app = fastify({
-    logger: !options.dev || {
-      transport: {
-        target: 'pino-pretty',
-      },
-      level: 'debug',
-    },
-  });
-
-  await setupYoga(app);
-  await setupClient(app);
-
-  return app;
-}
-
-async function setupYoga(app: FastifyInstance) {
+export async function setupYoga(app: FastifyInstance): Promise<void> {
   const graphQLServer = createYoga<
     {
       req: FastifyRequest;
@@ -35,7 +12,7 @@ async function setupYoga(app: FastifyInstance) {
     },
     Context
   >({
-    context: makeContextFactory({ logger: app.log }),
+    context: contextFactory,
     schema: builder.toSchema(),
     logging: {
       debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
@@ -60,17 +37,4 @@ async function setupYoga(app: FastifyInstance) {
       return reply;
     },
   });
-}
-
-async function setupClient(app: FastifyInstance) {
-  await app.register(FastifyVite, {
-    dev: import.meta.env.DEV,
-    client,
-    clientPath,
-    entryPath,
-    renderer,
-  });
-
-  // @ts-ignore
-  await app.vite.ready();
 }
