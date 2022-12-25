@@ -3,21 +3,27 @@ import * as devalue from 'devalue';
 import { PassThrough, Readable } from 'node:stream';
 import * as ReactDOM from 'react-dom/server';
 
-export function createRoute({ handler, errorHandler, route }, scope, config) {
-  scope.get(`/_getPageProps${route.path}`, async (req, reply) => {
+export function createRoute({ handler, errorHandler, route }, app, config) {
+  app.get(`/_getPageProps${route.path}`, async (req, reply) => {
     if (route.getPageProps) {
-      reply.send(await route.getPageProps({ req }));
+      const pageProps = await route.getPageProps({ app, req, reply });
+      if (!reply.sent) {
+        reply.send(pageProps);
+      }
     } else {
       reply.send(null);
     }
   });
-  scope.get(route.path, {
+  app.get(route.path, {
     handler,
     errorHandler,
     ...route,
-    async preHandler(req, reply) {
+    async preHandler(req, reply, done) {
       if (route.getPageProps) {
-        req.pageProps = await route.getPageProps({ req });
+        req.pageProps = await route.getPageProps({ app, req, reply });
+        if (reply.sent) {
+          done();
+        }
       } else {
         req.pageProps = null;
       }
@@ -25,7 +31,7 @@ export function createRoute({ handler, errorHandler, route }, scope, config) {
   });
 }
 
-export function createHtmlFunction(source, scope, config) {
+export function createHtmlFunction(source, app, config) {
   const [headSource, footer] = source.split('<!-- _ELEMENT_ -->');
   const headTemplate = createHtmlTemplateFunction(headSource);
   return function ({ pageProps, stream }) {
@@ -33,7 +39,7 @@ export function createHtmlFunction(source, scope, config) {
       _SSR_: `<script>window._SSR_ = ${devalue.uneval({ pageProps })}</script>`,
     });
     this.type('text/html');
-    const readable = Readable.from(streamHtml(head, stream, footer)).on('error', scope.log.error);
+    const readable = Readable.from(streamHtml(head, stream, footer)).on('error', app.log.error);
     this.send(readable);
   };
 }

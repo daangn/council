@@ -10,13 +10,13 @@ generator client {
 }
 
 model CouncilEvent {
-  order      BigInt   @id @default(autoincrement())
-  stream_id  String
-  sequence   BigInt
-  date       DateTime
-  data       Json
-  is_deleted Boolean  @default(false)
-  tags       String[] @default([])
+  order          BigInt   @id @default(autoincrement())
+  aggregate_name String
+  stream_id      String
+  sequence       BigInt
+  date           DateTime
+  data           Json
+  is_deleted     Boolean  @default(false)
 
   @@unique([stream_id, sequence])
 }
@@ -25,8 +25,8 @@ model CouncilSnapshot {
   aggregate_name String
   stream_id      String
   sequence       BigInt
-  data           Json
-  created_at     DateTime @default(now())
+  state          Json
+  is_deleted     Boolean @default(false)
 
-  @@unique([stream_id, sequence])
+  @@unique([aggregate_name, stream_id])
 }

@@ -17,4 +17,4 @@ export function createApp(ctx: SSRContext, url: string) {
       </React.Suspense>
     </React.StrictMode>
   );
-};
+}

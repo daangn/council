@@ -4,3 +4,4 @@ node_modules
 lib/bs
 *.bs.js
 *.gen.ts
+.bsb.lock

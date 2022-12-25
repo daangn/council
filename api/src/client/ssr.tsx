@@ -1,3 +1,4 @@
+import { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 import * as React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
@@ -5,7 +6,11 @@ export type SSRContext = {
   pageProps?: unknown;
 };
 
-export type PageContext = {};
+export type PageContext = {
+  app: FastifyInstance,
+  req: FastifyRequest,
+  reply: FastifyReply,
+};
 
 export type PageRoute = {
   path: string;
