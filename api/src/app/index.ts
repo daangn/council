@@ -5,8 +5,10 @@ import { env } from '~/env';
 
 import { setupAuth } from './auth';
 import { setupClient } from './client';
+import { setupEventStore } from './eventStore';
+import { setupGraphQL } from './graphql';
 import { setupPrisma } from './prisma';
-import { setupYoga } from './yoga';
+import { setupRepo } from './repo';
 
 export async function makeApp(options: {
   dev: boolean;
@@ -19,6 +21,7 @@ export async function makeApp(options: {
       level: 'debug',
     },
   });
+
   const secrets = env.COOKIE_SECRETS.split(';');
   await app.register(FastifyCookie, {
     secret: secrets,
@@ -26,8 +29,10 @@ export async function makeApp(options: {
   });
 
   await setupPrisma(app);
+  await setupEventStore(app);
+  await setupRepo(app);
   await setupAuth(app);
-  await setupYoga(app);
+  await setupGraphQL(app);
   await setupClient(app);
 
   return app;

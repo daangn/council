@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { type FastifyInstance } from 'fastify';
 
-export async function setupPrisma(app: FastifyInstance): Promise<void> {
+export async function setupPrisma(app: FastifyInstance) {
   const prisma = new PrismaClient({
     log: import.meta.env.DEV ? ['info', 'warn', 'error', 'query'] : ['info', 'warn', 'error'],
   });
@@ -11,9 +11,8 @@ export async function setupPrisma(app: FastifyInstance): Promise<void> {
   app
     .decorate('prisma', prisma)
     .decorateRequest('prisma', { getter: () => prisma })
-    .addHook('onClose', async (_app, done) => {
+    .addHook('onClose', async () => {
       await prisma.$disconnect();
-      done();
     });
 }
 

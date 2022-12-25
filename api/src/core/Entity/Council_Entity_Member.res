@@ -1,8 +1,7 @@
-@genType
-type id = string
+type organizationId = string
 
 @genType
-type organizationId = string
+type id = string
 
 @genType
 type data = {
@@ -16,14 +15,10 @@ type data = {
 type state = data
 
 @genType
-type event =
-  | Created({date: Date.t, data: data})
-  | DO_NOT_USE({date: Date.t})
+type event = Created({date: Date.t, data: data})
 
 @genType
-type error =
-  | Invariant
-  | IOError({id: id, exn: Js.Exn.t})
+type error = unit
 
 @genType
 type t = {
@@ -41,4 +36,39 @@ let make = (id, ~state=?, ~seq=0, ()) => {
   seq,
   events: [],
   state,
+}
+
+module Logic = Abstract.Logic.Make({
+  type id = id
+  type state = state
+  type t = t
+  type event = event
+  type error = error
+  let make = make
+})
+
+let logic: Logic.t = (t, event) => {
+  open Belt
+  switch (t, event) {
+  | ({_RE, id, seq, events}, Created({data})) =>
+    Ok({
+      _RE,
+      id,
+      seq,
+      events: Array.concat(events, [event]),
+      state: Some(data),
+    })
+  }
+}
+
+@genType
+let restore = (id, events) => {
+  let member = make(id, ~seq=events->Js.Array.length, ())
+  logic->Logic.runMany(member, events)
+}
+
+@genType
+let create = (t, ~date, ~data) => {
+  let event = Created({date, data})
+  logic->Logic.run(t, event)
 }

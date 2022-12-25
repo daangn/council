@@ -17,4 +17,7 @@ export const env = envalid.cleanEnv(process.env, {
   OPENFGA_API_TOKEN: envalid.str(),
   OPENFGA_STORE_ID: envalid.str({ default: '' }),
   COOKIE_SECRETS: envalid.str(),
+
+  AUTH0_CLIENT_SECRET: envalid.str(),
+  AUTH0_REDIRECT_URI: envalid.str(),
 });
