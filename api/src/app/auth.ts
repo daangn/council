@@ -1,43 +1,15 @@
 import { type Callable } from '@cometjs/core';
-import FastifyAuth from '@fastify/auth';
+import FastifyAuth, { type FastifyAuthFunction } from '@fastify/auth';
 import { createDecoder } from 'fast-jwt';
 import { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 
-import { SessionService } from '~/core';
+import { Session, SessionService } from '~/core';
 import { env } from '~/env';
 
 export async function setupAuth(app: FastifyInstance): Promise<void> {
   await app.register(FastifyAuth);
 
   const decode = createDecoder();
-
-  app.decorate('verifySession', async (req: FastifyRequest, reply: FastifyReply, done: Callable) => {
-    const result = await SessionService.verifySession({
-      sessionId: req.cookies.sessionId,
-      findSession: app.repo.findSession,
-    });
-    if (result.tag === 'Error') {
-      req.log.error(result.value);
-      done(result.value);
-    } else {
-      done();
-    }
-  });
-
-  app.decorate('verifyMemberSession', async (req: FastifyRequest, reply: FastifyReply, done: Callable) => {
-    const result = await SessionService.verifyMemberSession({
-      sessionId: req.cookies.sessionId,
-      memberId: req.cookies.memberId,
-      findSession: app.repo.findSession,
-      findMember: app.repo.findMember,
-    });
-    if (result.tag === 'Error') {
-      req.log.error(result.value);
-      done(result.value);
-    } else {
-      done();
-    }
-  });
 
   app.route({
     method: 'GET',
@@ -119,4 +91,55 @@ export async function setupAuth(app: FastifyInstance): Promise<void> {
       reply.redirect('/admin/signup');
     },
   });
+
+  app.decorate('verifySession', async (req: FastifyRequest, reply: FastifyReply, done: Callable) => {
+    const result = await SessionService.verifySession({
+      sessionId: req.cookies.sessionId,
+      findSession: app.repo.findSession,
+    });
+    if (result.tag === 'Error') {
+      req.log.error(result.value);
+      done(result.value);
+    } else {
+      done();
+    }
+  });
+
+  app.decorate('verifyMemberSession', async (req: FastifyRequest, reply: FastifyReply, done: Callable) => {
+    const result = await SessionService.verifyMemberSession({
+      sessionId: req.cookies.sessionId,
+      memberId: req.cookies.memberId,
+      findSession: app.repo.findSession,
+      findMember: app.repo.findMember,
+    });
+    if (result.tag === 'Error') {
+      req.log.error(result.value);
+      done(result.value);
+    } else {
+      done();
+    }
+  });
+
+  app.decorateRequest('currentSession', null);
+  app.addHook('onRequest', async (req) => {
+    const result = await SessionService.verifySession({
+      sessionId: req.cookies.sessionId,
+      findSession: app.repo.findSession,
+    });
+    if (result.tag === 'Ok') {
+      req.currentSession = result.value;
+    } else {
+      req.currentSession = null;
+    }
+  });
+}
+
+declare module 'fastify' {
+  interface FastifyInstance {
+    verifySession: FastifyAuthFunction;
+    verifyMemberSession: FastifyAuthFunction;
+  }
+  interface FastifyRequest {
+    currentSession: Session.t | null;
+  }
 }

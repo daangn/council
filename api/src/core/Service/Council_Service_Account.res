@@ -1,6 +1,6 @@
 @genType
 type error =
-  | IOError
+  | IOError({exn: Js.Exn.t})
   | InvalidSignup({name: bool, email: bool})
 
 @genType

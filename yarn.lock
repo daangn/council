@@ -1076,12 +1076,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pothos/core@npm:^3.23.1":
-  version: 3.23.1
-  resolution: "@pothos/core@npm:3.23.1"
+"@pothos/core@npm:^3.24.0":
+  version: 3.24.0
+  resolution: "@pothos/core@npm:3.24.0"
   peerDependencies:
     graphql: ">=15.1.0"
-  checksum: a16bc116381e26ce1a8e46d8d47fbbe5bac19030c0a4c242dea1e356997a0bee7fb0c00869da161a50f5a302cb524580b7d851d61269fec30a77aa6eab714bd0
+  checksum: 4032772f35bdec4fee30b60c2b3442cb580e2b4f89f225a917fed804f496cff23d95cd0194cf081ee58d5612a6498621da8800f35d67f0ddf04405971e196285
+  languageName: node
+  linkType: hard
+
+"@pothos/plugin-dataloader@npm:^3.13.0":
+  version: 3.13.0
+  resolution: "@pothos/plugin-dataloader@npm:3.13.0"
+  peerDependencies:
+    "@pothos/core": "*"
+    dataloader: 2
+    graphql: ">=15.1.0"
+  checksum: 0e0b2dd30ae0144f90c7e0f31a825dba15fe4aa415365b095bea061e1b47bc4e449949b2b27f9369509b8592cb8942bcb6fbcd1ee8f11c27fdde811f608c4a96
   languageName: node
   linkType: hard
 
@@ -1541,7 +1552,8 @@ __metadata:
     "@fastify/cookie": ^8.3.0
     "@fastify/vite": ^3.0.3
     "@graphql-typed-document-node/core": ^3.1.1
-    "@pothos/core": ^3.23.1
+    "@pothos/core": ^3.24.0
+    "@pothos/plugin-dataloader": ^3.13.0
     "@prisma/client": ^4.8.0
     "@rescript/react": ^0.11.0
     "@tailwindcss/jit": ^0.1.18
@@ -1550,6 +1562,7 @@ __metadata:
     "@types/react-dom": ^18.0.9
     "@vitejs/plugin-react": ^3.0.0
     autoprefixer: ^10.4.13
+    dataloader: ^2.1.0
     devalue: ^4.2.0
     dotenv: ^16.0.3
     envalid: ^7.3.1
@@ -2095,7 +2108,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dataloader@npm:2.1.0":
+"dataloader@npm:2.1.0, dataloader@npm:^2.1.0":
   version: 2.1.0
   resolution: "dataloader@npm:2.1.0"
   checksum: 91749b97c6cf218874aecc57116defbe28eb5dd102a2a6e292e084939f725d123dd49c186796069492a77eb105ff2aabae9c8b144cf82f92c1f673eb1abff7da

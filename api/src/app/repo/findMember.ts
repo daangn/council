@@ -4,24 +4,26 @@ import { Member } from '~/core';
 
 export default (app: FastifyInstance) => {
   async function findMember(memberId: string): Promise<Member.t | null> {
-    const councilSnapshot = await app.prisma.councilSnapshot.findFirst({
+    const snapshot = await app.prisma.councilSnapshot.findUnique({
       select: {
         state: true,
         sequence: true,
       },
       where: {
-        aggregate_name: 'Member',
-        stream_id: memberId,
+        aggregate_name_stream_id: {
+          aggregate_name: 'Member',
+          stream_id: memberId,
+        },
       },
     });
 
-    if (!councilSnapshot) {
+    if (!snapshot) {
       return null;
     }
 
     const member = Member.make(memberId, {
-      state: councilSnapshot.state as Member.state,
-      seq: Number(councilSnapshot.sequence),
+      state: snapshot.state as Member.state,
+      seq: Number(snapshot.sequence),
     });
 
     if (!member.state) {

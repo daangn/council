@@ -1,28 +1,10 @@
 import { type TypedDocumentNode } from '@graphql-typed-document-node/core';
-import { type OpenFgaApi } from '@openfga/sdk';
-import SchemaBuilder from '@pothos/core';
 import { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 import { type DocumentNode } from 'graphql';
-import { type YogaInitialContext, createYoga } from 'graphql-yoga';
+import { createYoga } from 'graphql-yoga';
 
-export type GraphQLContext = {
-  fga: OpenFgaApi;
-};
-
-export async function contextFactory(
-  serverContext: YogaInitialContext & {
-    req: FastifyRequest;
-    reply: FastifyReply;
-  },
-): Promise<GraphQLContext> {
-  return {
-    fga: serverContext.req.fga,
-  };
-}
-
-export const builder = new SchemaBuilder<{
-  Context: GraphQLContext;
-}>({});
+import { type GraphQLContext, contextFactory } from './context';
+import { schema } from './schema';
 
 export async function setupGraphQL(app: FastifyInstance): Promise<void> {
   const graphQLServer = createYoga<
@@ -32,8 +14,8 @@ export async function setupGraphQL(app: FastifyInstance): Promise<void> {
     },
     GraphQLContext
   >({
-    context: contextFactory,
-    schema: builder.toSchema(),
+    schema,
+    context: contextFactory(app),
     logging: {
       debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
       info: (...args) => args.forEach((arg) => app.log.info(arg)),
