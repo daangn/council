@@ -1,11 +1,8 @@
-open Council_Domain
-
 module Session = Council_Entity_Session
 module Member = Council_Entity_Member
 
 @genType
 type error =
-  | Invariant
   | IOError({exn: Js.Exn.t})
   | InvalidSession({session: option<Session.id>})
   | InvalidMember({member: option<Member.id>})
@@ -13,28 +10,19 @@ type error =
   | MemberError({error: Member.error})
 
 @genType
-let createSession = async (~eventStore, ~sessionId, ~date, ~data) => {
+let createSession = (~sessionId, ~date, ~data) => {
   let session = Session.make(sessionId, ())
   switch Session.create(session, ~date, ~data) {
-  | Ok(session) =>
-    switch await eventStore.persist(. #Session(session)) {
-    | #Session(session) => Ok(session)
-    | _ => Error(Invariant)
-    | exception Js.Exn.Error(exn) => Error(IOError({exn: exn}))
-    }
+  | Ok(_) as result => result
   | Error(error) => Error(SessionError({error: error}))
   }
 }
 
 @genType
-let findOrCreateSession = async (~eventStore, ~findSession, ~sessionId, ~date, ~data) => {
+let findOrCreateSession = async (~findSession, ~sessionId, ~date, ~data) => {
   switch await findSession(. sessionId) {
   | Some(session) => Ok(session)
-  | None =>
-    switch await createSession(~eventStore, ~sessionId, ~date, ~data) {
-    | Ok(session) => Ok(session)
-    | error => error
-    }
+  | None => createSession(~sessionId, ~date, ~data)
   | exception Js.Exn.Error(exn) => Error(IOError({exn: exn}))
   }
 }
@@ -44,12 +32,8 @@ let verifySession = async (~findSession, ~sessionId) => {
   switch sessionId {
   | Some(sessionId) =>
     switch await findSession(. sessionId) {
-    | Some(session) =>
-      switch session {
-      | {Session.state: Some(_)} => Ok(session)
-      | _ => Error(InvalidSession({session: Some(sessionId)}))
-      }
-    | None => Error(InvalidSession({session: Some(sessionId)}))
+    | Some({Session.state: Some(_)} as session) => Ok(session)
+    | _ => Error(InvalidSession({session: Some(sessionId)}))
     | exception Js.Exn.Error(exn) => Error(IOError({exn: exn}))
     }
   | None => Error(InvalidSession({session: None}))

@@ -67,7 +67,6 @@ export async function setupAuth(app: FastifyInstance): Promise<void> {
       const decoded: IdTokenClaims = decode(data.id_token);
 
       const result = await SessionService.findOrCreateSession({
-        eventStore: app.eventStore,
         findSession: app.repo.findSession,
         sessionId: decoded.sid,
         date: Date.now(),
@@ -86,7 +85,7 @@ export async function setupAuth(app: FastifyInstance): Promise<void> {
         throw new Error('Failed to authorize');
       }
 
-      const session = result.value;
+      const session = await app.eventStore.publish(result.value);
       reply.setCookie('sessionId', session.id, { path: '/admin' });
       reply.redirect('/admin/signup');
     },
