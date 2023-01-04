@@ -41,12 +41,34 @@ export async function setupGraphQL(app: FastifyInstance): Promise<void> {
   });
 
   function makeGraphQLExecutor(req: FastifyRequest, reply: FastifyReply) {
-    const { execute, schema } = graphQLServer.getEnveloped({ req, reply });
-    return <TData = unknown, TVariables = Record<string, unknown>>(props: {
-      document: string | DocumentNode | TypedDocumentNode<TData, TVariables>;
-      variables?: TVariables;
-    }): Promise<TData> => {
-      return execute({ schema, document: props.document, variableValues: props.variables });
+    const { execute, schema, parse, validate } = graphQLServer.getEnveloped({ req, reply });
+    return async <TData = unknown, TVariables = Record<string, unknown>>(
+      document: string | DocumentNode | TypedDocumentNode<TData, TVariables>,
+      variables?: TVariables,
+    ): Promise<TData> => {
+      const context = contextFactory(app);
+      if (typeof document === 'string') {
+        const parsedDocument = parse(document);
+        const validationErrors = validate(schema, parsedDocument);
+        if (validationErrors.length > 0) {
+          return reply.send(JSON.stringify({ errors: validationErrors }));
+        }
+        return execute({
+          schema,
+          document: parsedDocument,
+          variableValues: variables,
+          // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+          contextValue: await context({ req, reply } as any),
+        });
+      } else {
+        return execute({
+          schema,
+          document,
+          variableValues: variables,
+          // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+          contextValue: await context({ req, reply } as any),
+        });
+      }
     };
   }
   app.decorateRequest('executeGraphQL', null);
@@ -57,9 +79,9 @@ export async function setupGraphQL(app: FastifyInstance): Promise<void> {
 
 declare module 'fastify' {
   interface FastifyRequest {
-    executeGraphQL<TData = unknown, TVariables = Record<string, unknown>>(props: {
-      document: string | DocumentNode | TypedDocumentNode<TData, TVariables>;
-      variables?: TVariables;
-    }): Promise<TData>;
+    executeGraphQL<TData = unknown, TVariables = Record<string, unknown>>(
+      document: string | DocumentNode | TypedDocumentNode<TData, TVariables>,
+      variables?: TVariables,
+    ): Promise<TData>;
   }
 }

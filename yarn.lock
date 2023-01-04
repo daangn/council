@@ -278,15 +278,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cometjs/core@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "@cometjs/core@npm:2.1.0"
+"@cometjs/core@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "@cometjs/core@npm:2.1.1"
+  dependencies:
+    tsconfck: ^2.0.1
   peerDependencies:
     typescript: ^4.5.0
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 9d72aaef2dd16b4f4fe0004c8b45f72827c0e0498fe03adbac215dc557a344152cf4127fbd415e29aeaf0c0e9dc47ce5732d0bce3d39112e887182a20950415d
+  checksum: 5ce3cffdab12b9ceca02c690dca03e7934061eccc68a089f5b2008c10052abbd0e7cc9b55dbbc6487610281dc9336ce7bc21a989e78350bd910c7c9638abe986
   languageName: node
   linkType: hard
 
@@ -570,6 +572,16 @@ __metadata:
   dependencies:
     fast-json-stringify: ^5.0.0
   checksum: ad42482a58f6f438e335067e8d36a3b498b84945a3d2a8820b3ec7be67e31da3686278c566f8fb5d88d19b7672ab1f166001890a72bb4baf9819aec9f3ff113d
+  languageName: node
+  linkType: hard
+
+"@fastify/formbody@npm:^7.4.0":
+  version: 7.4.0
+  resolution: "@fastify/formbody@npm:7.4.0"
+  dependencies:
+    fast-querystring: ^1.0.0
+    fastify-plugin: ^4.0.0
+  checksum: 128aa7c2a4e975242bf40f18519cb7a26e768478e56754423ba99cbc05946fcb98f53d87c65eafab7ef2ed68e4b95f4d7e1d14e31355e346d9c717dd689e1fa8
   languageName: node
   linkType: hard
 
@@ -1547,9 +1559,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "api@workspace:api"
   dependencies:
-    "@cometjs/core": ^2.1.0
+    "@cometjs/core": ^2.1.1
     "@fastify/auth": ^4.2.0
     "@fastify/cookie": ^8.3.0
+    "@fastify/formbody": ^7.4.0
     "@fastify/vite": ^3.0.3
     "@graphql-typed-document-node/core": ^3.1.1
     "@pothos/core": ^3.24.0
@@ -1570,6 +1583,7 @@ __metadata:
     fastify: ^4.10.2
     graphql: ^16.6.0
     graphql-yoga: ^3.1.1
+    nanoid: ^4.0.0
     pino-pretty: ^9.1.1
     postcss: ^8.4.20
     prisma: ^4.8.0
@@ -3995,6 +4009,15 @@ __metadata:
   bin:
     nanoid: bin/nanoid.cjs
   checksum: a0747d5c6021828fe8d38334e5afb05d3268d7d4b06024058ec894ccc47070e4e81d268a6b75488d2ff3485fa79a75c251d4b7c6f31051bb54bb662b6fd2a27d
+  languageName: node
+  linkType: hard
+
+"nanoid@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "nanoid@npm:4.0.0"
+  bin:
+    nanoid: bin/nanoid.js
+  checksum: 9612134022f5b1e408c487fdc3acf804d8c5a876afcb469ab984ef8bbffcfff7c8f36eed091c4744e207b2c954f913d9cfe90aab8d3e8953ac72f238fc6aea7b
   languageName: node
   linkType: hard
 

@@ -11,9 +11,10 @@
     "vite:exec": "vite-node"
   },
   "dependencies": {
-    "@cometjs/core": "^2.1.0",
+    "@cometjs/core": "^2.1.1",
     "@fastify/auth": "^4.2.0",
     "@fastify/cookie": "^8.3.0",
+    "@fastify/formbody": "^7.4.0",
     "@fastify/vite": "^3.0.3",
     "@pothos/core": "^3.24.0",
     "@pothos/plugin-dataloader": "^3.13.0",
@@ -27,6 +28,7 @@
     "fastify": "^4.10.2",
     "graphql": "^16.6.0",
     "graphql-yoga": "^3.1.1",
+    "nanoid": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^6.5.0",

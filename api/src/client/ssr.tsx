@@ -17,6 +17,7 @@ export type PageRoute = {
   layoutPath: string;
   component: React.ComponentType;
   getPageProps?: (ctx: PageContext) => unknown;
+  postAction?: (ctx: PageContext) => unknown;
 };
 
 export type LayoutRoute = {

@@ -1,11 +1,9 @@
 import { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 import { type YogaInitialContext } from 'graphql-yoga';
 
-import { Session } from '~/core';
-
 export type GraphQLContext = {
   app: FastifyInstance;
-  currentSession: Session.t | null;
+  req: FastifyRequest;
 };
 
 export function contextFactory(app: FastifyInstance) {
@@ -17,7 +15,7 @@ export function contextFactory(app: FastifyInstance) {
   ): Promise<GraphQLContext> => {
     return {
       app,
-      currentSession: serverContext.req.currentSession,
+      req: serverContext.req,
     };
   };
 }

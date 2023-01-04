@@ -29,6 +29,12 @@ export function createRoute({ handler, errorHandler, route }, app, config) {
       }
     },
   });
+
+  if (route.postAction) {
+    app.post(route.path, (req, reply) => {
+      return route.postAction({ app, req, reply });
+    });
+  }
 }
 
 export function createHtmlFunction(source, app, config) {

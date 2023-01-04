@@ -22,11 +22,13 @@ function toServerRoutes(pagesMap: Record<string, any>): PageRoute[] {
       const layoutPath = staticLayouts.find((layout) => layout.path === path)?.path ?? '/';
       const component = pagesMap[pageComponentPath].default;
       const getPageProps = pagesMap[pageComponentPath].getPageProps;
+      const postAction = pagesMap[pageComponentPath].postAction;
       return {
         path,
         layoutPath,
         component,
         getPageProps,
+        postAction,
       };
     });
 }

@@ -3,19 +3,20 @@ import { Member } from '~/core';
 import { type Injectable } from './_inject';
 
 const repo: Injectable<{
-  findMember(memberId: string): Promise<Member.t | null>;
+  findMemberByName(name: string): Promise<Member.t | null>;
 }> = (app) => {
   return {
-    async findMember(memberId) {
-      const snapshot = await app.prisma.councilSnapshot.findUnique({
+    async findMemberByName(name) {
+      const snapshot = await app.prisma.councilSnapshot.findFirst({
         select: {
+          stream_id: true,
           state: true,
           sequence: true,
         },
         where: {
-          aggregate_name_stream_id: {
-            aggregate_name: 'Member',
-            stream_id: memberId,
+          state: {
+            path: ['name'],
+            equals: name,
           },
         },
       });
@@ -24,7 +25,7 @@ const repo: Injectable<{
         return null;
       }
 
-      const member = Member.make(memberId, {
+      const member = Member.make(snapshot.stream_id, {
         state: snapshot.state as Member.state,
         seq: Number(snapshot.sequence),
       });

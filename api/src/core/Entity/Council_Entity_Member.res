@@ -5,10 +5,10 @@ type id = string
 
 @genType
 type data = {
-  username: string,
   name: string,
-  email: option<string>,
+  email: string,
   authProviders: array<string>,
+  approved: bool,
 }
 
 @genType
