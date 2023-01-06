@@ -52,10 +52,12 @@ const ValidateSingupOutputSchema = builder
 const RequestSignupOutputSchema = builder
   .objectRef<{
     member: Member.t;
+    isAdmin: boolean;
   }>('RequestSignupOutput')
   .implement({
     fields: (t) => ({
       member: t.expose('member', { type: MemberSchema }),
+      isAdmin: t.exposeBoolean('isAdmin'),
     }),
   });
 
@@ -73,6 +75,7 @@ builder.mutationType({
           name: args.input.name,
           email: args.input.email,
         });
+
         if (result.tag === 'Error') {
           switch (result.value.tag) {
             case 'InvalidSignup': {
@@ -83,6 +86,7 @@ builder.mutationType({
             }
           }
         }
+
         return {
           name: true,
           email: true,
@@ -96,39 +100,38 @@ builder.mutationType({
         input: t.arg({ type: SignupInputSchema, required: true }),
       },
       async resolve(root, args, ctx) {
-        const signupResult = await AccountService.requestSignup({
+        const result = await AccountService.requestSignup({
           findMemberByEmail: ctx.app.repo.findMemberByEmail,
           findMemberByName: ctx.app.repo.findMemberByName,
+          countAllMembers: () => {
+            return ctx.app.prisma.councilSnapshot.count({
+              where: {
+                aggregate_name: 'Member',
+              },
+            });
+          },
           session: ctx.req.currentSession,
           memberId: ctx.app.genId(),
           date: Date.now(),
           name: args.input.name,
           email: args.input.email,
         });
-        if (signupResult.tag === 'Error') {
-          throw signupResult.value;
+
+        if (result.tag === 'Error') {
+          throw result.value;
         }
 
-        const countResult = await AccountService.hasNoAccounts({
-          countAllMembers: () =>
-            ctx.app.prisma.councilSnapshot.count({
-              where: {
-                aggregate_name: 'Member',
-              },
-            }),
+        await ctx.app.fga.write({
+          writes: {
+            tuple_keys: [
+              result.value.isAdmin
+                ? CommonKeys.siteAdmin(`member:${result.value.member.id}`)
+                : CommonKeys.siteMember(`member:${result.value.member.id}`),
+            ],
+          },
         });
-        if (countResult.tag === 'Error') {
-          throw countResult.value;
-        }
-        if (countResult.value) {
-          await ctx.app.fga.write({
-            writes: {
-              tuple_keys: [CommonKeys.siteAdmin(`member:${signupResult.value.member.id}`)],
-            },
-          });
-        }
 
-        return ctx.app.eventStore.publishAny(signupResult.value);
+        return ctx.app.eventStore.publishAny(result.value);
       },
     }),
   }),

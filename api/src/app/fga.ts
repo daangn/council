@@ -29,6 +29,13 @@ declare module 'fastify' {
 }
 
 export const CommonKeys = {
+  siteMember(user: string): TupleKey {
+    return {
+      user,
+      relation: 'member',
+      object: 'site:all',
+    };
+  },
   siteAdmin(user: string): TupleKey {
     return {
       user,

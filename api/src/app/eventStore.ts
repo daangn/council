@@ -32,8 +32,8 @@ export async function setupEventStore(app: FastifyInstance) {
         aggregate_name: aggregate._RE,
         stream_id: aggregate.id,
         sequence: aggregate.seq + i + 1,
-        data: event.data,
-        date: new Date(event.date),
+        data: event,
+        date: new Date('value' in event ? event.value.date : event.date),
       })),
     });
 

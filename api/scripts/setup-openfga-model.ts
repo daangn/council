@@ -32,14 +32,6 @@ const openFga = new OpenFgaApi({
 const { authorization_model_id: id } = await openFga.writeAuthorizationModel({
   type_definitions: [
     {
-      type: 'site',
-      relations: {
-        admin: {
-          this: {},
-        },
-      },
-    },
-    {
       type: 'organization',
       relations: {
         admin: {
@@ -47,7 +39,31 @@ const { authorization_model_id: id } = await openFga.writeAuthorizationModel({
         },
       },
     },
+    {
+      type: 'site',
+      relations: {
+        admin: {
+          this: {},
+        },
+        member: {
+          union: {
+            child: [
+              {
+                this: {},
+              },
+              {
+                computedUserset: {
+                  object: '',
+                  relation: 'admin',
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
   ],
+  schema_version: '1.0',
 });
 
 console.log(`Authorization Model ID: ${id}`);

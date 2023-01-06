@@ -6,6 +6,7 @@ type error =
   | IOError({exn: Js.Exn.t})
   | InvalidSignup({name: bool, email: bool})
   | InvalidSession({session: option<Session.t>})
+  | InvalidMember({member: option<Member.t>})
   | MemberError({error: Member.error})
 
 @genType
@@ -29,9 +30,18 @@ let validateSignup = async (~findMemberByName, ~findMemberByEmail, ~name, ~email
 }
 
 @genType
+let hasNoAccounts = async (~countAllMembers) => {
+  switch await countAllMembers(.) {
+  | count => Ok(count == 0)
+  | exception Js.Exn.Error(exn) => Error(IOError({exn: exn}))
+  }
+}
+
+@genType
 let requestSignup = async (
   ~findMemberByName,
   ~findMemberByEmail,
+  ~countAllMembers,
   ~memberId,
   ~name,
   ~email,
@@ -41,30 +51,25 @@ let requestSignup = async (
   switch session {
   | Some({Session.state: Some(sessionState)}) =>
     switch await validateSignup(~findMemberByEmail, ~findMemberByName, ~name, ~email) {
-    | Ok() =>
-      switch Member.create(
-        Member.make(memberId, ()),
-        ~date,
-        ~data={
-          name,
-          email,
-          approved: false,
-          authProviders: [sessionState.subject],
-        },
-      ) {
-      | Ok(member) => Ok({"member": member})
-      | Error(error) => Error(MemberError({error: error}))
+    | Ok() => {
+        let member = Member.make(memberId, ())
+        switch await hasNoAccounts(~countAllMembers) {
+        | Ok(true) =>
+          switch Member.createAdmin(member, ~date, ~name, ~email, ~auth=sessionState.subject) {
+          | Ok(member) => Ok({"member": member, "isAdmin": true})
+          | Error(error) => Error(MemberError({error: error}))
+          }
+        | Ok(false) =>
+          switch Member.create(member, ~date, ~name, ~email, ~auth=sessionState.subject) {
+          | Ok(member) => Ok({"member": member, "isAdmin": false})
+          | Error(error) => Error(MemberError({error: error}))
+          }
+        | Error(_) as error => error
+        }
       }
+
     | Error(_) as error => error
     }
   | _ => Error(InvalidSession({session: session}))
-  }
-}
-
-@genType
-let hasNoAccounts = async (~countAllMembers) => {
-  switch await countAllMembers(.) {
-  | count => Ok(count == 0)
-  | exception Js.Exn.Error(exn) => Error(IOError({exn: exn}))
   }
 }

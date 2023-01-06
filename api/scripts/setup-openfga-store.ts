@@ -3,10 +3,8 @@ import dedent from 'string-dedent';
 import { env } from '~/env';
 
 if (env.OPENFGA_STORE_ID) {
-  console.log('Skipped since store already set in your environment variable.');
-  console.log(`Store ID: ${import.meta.env.VITE_OPENFGA_STORE_ID}`);
-
-  process.exit(0);
+  console.log('Store already set in your environment variable.');
+  process.exit(1);
 }
 
 const openFga = new OpenFgaApi({
