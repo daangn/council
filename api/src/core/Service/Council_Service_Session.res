@@ -49,7 +49,7 @@ let verifyMemberSession = async (~findSession, ~findMember, ~sessionId, ~memberI
       switch await findMember(. memberId) {
       | Some({Member.state: Some(memberState)} as member) =>
         switch memberState.authProviders->Js.Array2.includes(sessionState.subject) {
-        | true => Ok(session, member)
+        | true => Ok({"member": member, "session": session})
         | false => Error(InvalidMember({member: Some(memberId)}))
         }
       | _ => Error(InvalidMember({member: Some(memberId)}))

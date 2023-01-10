@@ -1,4 +1,4 @@
-import { CredentialsMethod, OpenFgaApi, type TupleKey } from '@openfga/sdk';
+import { CredentialsMethod, OpenFgaApi, type TupleKey as FgaTupleKey } from '@openfga/sdk';
 import { type FastifyInstance } from 'fastify';
 
 import { env } from '~/env';
@@ -28,18 +28,25 @@ declare module 'fastify' {
   }
 }
 
-export const CommonKeys = {
-  siteMember(user: string): TupleKey {
+export const TupleKey = {
+  siteMember(user: string): FgaTupleKey {
     return {
       user,
       relation: 'member',
       object: 'site:all',
     };
   },
-  siteAdmin(user: string): TupleKey {
+  siteAdmin(user: string): FgaTupleKey {
     return {
       user,
       relation: 'admin',
+      object: 'site:all',
+    };
+  },
+  canCreateOrganization(user: string): FgaTupleKey {
+    return {
+      user,
+      relation: 'can_create_organization',
       object: 'site:all',
     };
   },

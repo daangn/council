@@ -8,20 +8,10 @@ type PageProps = {
 };
 
 export async function getPageProps({ app, req, reply }: PageContext) {
-  const sessionId = req.cookies.sessionId;
-  if (!sessionId) {
-    return reply.redirect('/admin/login');
+  const session = req.sessionOrRedirect();
+  if (!session) {
+    return;
   }
-
-  const session = await app.repo.findSession(sessionId);
-  if (!session?.state) {
-    reply.clearCookie('sessionId');
-    reply.clearCookie('memberId');
-    return reply.redirect('/admin/login');
-  }
-
-  const member = await app.repo.findMemberByAuth(session.state.subject);
-  // TODO
 
   return {
     suggestedName: session.state.suggestedName,
@@ -30,7 +20,7 @@ export async function getPageProps({ app, req, reply }: PageContext) {
 }
 
 export async function postAction({ app, req, reply }: PageContext) {
-  const data = await req.executeGraphQL(/* GraphQL */`
+  const { data } = await req.executeGraphQL(/* GraphQL */`
     mutation RequestSignup($name: String!, $email: String!) {
       requestSignup(input: {
         name: $name,
@@ -43,7 +33,11 @@ export async function postAction({ app, req, reply }: PageContext) {
     }`,
     req.body,
   );
-  return data;
+
+  if (data) {
+    reply.setCookie('memberId', data.requestSignup.member.id);
+    return reply.redirect('/admin');
+  }
 }
 
 export default function SingupPage({ suggestedName, suggestedEmail }: PageProps) {

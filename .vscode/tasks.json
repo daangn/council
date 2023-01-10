@@ -36,5 +36,23 @@
         "panel": "new"
       }
     },
+    {
+      "type": "shell",
+      "label": "Prisma Studio",
+      "command": "yarn workspace api prisma studio",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "GraphQL Codegen",
+      "command": "yarn workspace api graphql-codegen -w",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
   ]
 }

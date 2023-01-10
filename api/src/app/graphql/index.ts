@@ -1,6 +1,6 @@
 import { type TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
-import { type DocumentNode } from 'graphql';
+import { type DocumentNode, type ExecutionResult } from 'graphql';
 import { createYoga } from 'graphql-yoga';
 
 import { type GraphQLContext, contextFactory } from './context';
@@ -45,7 +45,7 @@ export async function setupGraphQL(app: FastifyInstance): Promise<void> {
     return async <TData = unknown, TVariables = Record<string, unknown>>(
       document: string | DocumentNode | TypedDocumentNode<TData, TVariables>,
       variables?: TVariables,
-    ): Promise<TData> => {
+    ): Promise<ExecutionResult<TData>> => {
       const context = contextFactory(app);
       if (typeof document === 'string') {
         const parsedDocument = parse(document);
@@ -79,9 +79,10 @@ export async function setupGraphQL(app: FastifyInstance): Promise<void> {
 
 declare module 'fastify' {
   interface FastifyRequest {
-    executeGraphQL<TData = unknown, TVariables = Record<string, unknown>>(
+    // rome-ignore lint/suspicious/noExplicitAny: use any before codegen
+    executeGraphQL<TData = any, TVariables = any>(
       document: string | DocumentNode | TypedDocumentNode<TData, TVariables>,
       variables?: TVariables,
-    ): Promise<TData>;
+    ): Promise<ExecutionResult<TData>>;
   }
 }

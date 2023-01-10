@@ -3,7 +3,7 @@ import FastifyAuth, { type FastifyAuthFunction } from '@fastify/auth';
 import { createDecoder } from 'fast-jwt';
 import { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 
-import { Session, SessionService } from '~/core';
+import { type Member, type Session, SessionService } from '~/core';
 import { env } from '~/env';
 
 export async function setupAuth(app: FastifyInstance): Promise<void> {
@@ -86,15 +86,20 @@ export async function setupAuth(app: FastifyInstance): Promise<void> {
       }
 
       const session = await app.eventStore.publish(result.value);
-      reply.setCookie('sessionId', session.id, { path: '/admin' });
-      reply.redirect('/admin/signup');
+      reply.setCookie('sessionId', session.id, { path: '/' });
+
+      if (await app.repo.findMemberByAuth(decoded.sub)) {
+        reply.redirect('/admin');
+      } else {
+        reply.redirect('/admin/signup');
+      }
     },
   });
 
   app.decorate('verifySession', async (req: FastifyRequest, reply: FastifyReply, done: Callable) => {
     const result = await SessionService.verifySession({
-      sessionId: req.cookies.sessionId,
       findSession: app.repo.findSession,
+      sessionId: req.cookies.sessionId,
     });
     if (result.tag === 'Error') {
       req.log.error(result.value);
@@ -106,10 +111,10 @@ export async function setupAuth(app: FastifyInstance): Promise<void> {
 
   app.decorate('verifyMemberSession', async (req: FastifyRequest, reply: FastifyReply, done: Callable) => {
     const result = await SessionService.verifyMemberSession({
-      sessionId: req.cookies.sessionId,
-      memberId: req.cookies.memberId,
       findSession: app.repo.findSession,
       findMember: app.repo.findMember,
+      sessionId: req.cookies.sessionId,
+      memberId: req.cookies.memberId,
     });
     if (result.tag === 'Error') {
       req.log.error(result.value);
@@ -120,16 +125,42 @@ export async function setupAuth(app: FastifyInstance): Promise<void> {
   });
 
   app.decorateRequest('currentSession', null);
+  app.decorateRequest('currentMember', null);
   app.addHook('onRequest', async (req) => {
-    const result = await SessionService.verifySession({
-      sessionId: req.cookies.sessionId,
-      findSession: app.repo.findSession,
-    });
-    if (result.tag === 'Ok') {
-      req.currentSession = result.value;
-    } else {
-      req.currentSession = null;
+    if (!req.url.startsWith('/admin')) {
+      return;
     }
+    req.currentSession = (req.cookies.sessionId && (await app.repo.findSession(req.cookies.sessionId))) || null;
+    req.currentMember = (req.cookies.memberId && (await app.repo.findMember(req.cookies.memberId))) || null;
+  });
+
+  app.decorateRequest('sessionOrRedirect', null);
+  app.addHook('onRequest', async (req, reply) => {
+    req.sessionOrRedirect = function sessionOrRedirect<T>(redirectTo = '/admin/login'): T {
+      if (!req.currentSession?.state) {
+        reply.clearCookie('sessionId');
+        reply.clearCookie('memberId');
+        reply.redirect(redirectTo);
+        return null as T;
+      }
+      return req.currentSession as T;
+    };
+  });
+
+  app.decorateRequest('memberOrRedirect', null);
+  app.addHook('onRequest', async (req, reply) => {
+    req.memberOrRedirect = function memberOrRedirect<T>(): T {
+      if (!req.currentMember?.state) {
+        reply.clearCookie('memberId');
+        reply.redirect('/admin/signup');
+        return null as T;
+      }
+      if (!req.currentMember.state.approved) {
+        reply.redirect('/admin/signup_requested');
+        return null as T;
+      }
+      return req.currentMember as T;
+    };
   });
 }
 
@@ -138,7 +169,11 @@ declare module 'fastify' {
     verifySession: FastifyAuthFunction;
     verifyMemberSession: FastifyAuthFunction;
   }
+
   interface FastifyRequest {
     currentSession: Session.t | null;
+    currentMember: Member.t | null;
+    sessionOrRedirect: (redirectTo?: string) => (Session.t & { state: {} }) | null;
+    memberOrRedirect: (redirectTo?: string) => (Member.t & { state: {} }) | null;
   }
 }

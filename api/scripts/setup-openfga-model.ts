@@ -34,8 +34,26 @@ const { authorization_model_id: id } = await openFga.writeAuthorizationModel({
     {
       type: 'organization',
       relations: {
+        site: {
+          this: {},
+        },
         admin: {
           this: {},
+        },
+        member: {
+          union: {
+            child: [
+              {
+                this: {},
+              },
+              {
+                computedUserset: {
+                  object: '',
+                  relation: 'admin',
+                },
+              },
+            ],
+          },
         },
       },
     },
@@ -58,6 +76,18 @@ const { authorization_model_id: id } = await openFga.writeAuthorizationModel({
                 },
               },
             ],
+          },
+        },
+        can_access_backstage: {
+          computedUserset: {
+            object: '',
+            relation: 'member',
+          },
+        },
+        can_create_organization: {
+          computedUserset: {
+            object: '',
+            relation: 'admin',
           },
         },
       },

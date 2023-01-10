@@ -1,12 +1,26 @@
-import { CommonKeys } from '~/app/fga';
+import { TupleKey } from '~/app/fga';
 import { builder } from '~/app/graphql/builder';
 import { GraphQLContext } from '~/app/graphql/context';
 import { AccountService, type Member } from '~/core';
+
+const MemberRolesSchema = builder.objectRef<Member.t>('MemberRoles').implement({
+  fields: (t) => ({
+    canCreateOrganization: t.boolean({
+      async resolve(root, _args, ctx) {
+        const { allowed } = await ctx.app.fga.check({
+          tuple_key: TupleKey.canCreateOrganization(`member:${root.id}`),
+        });
+        return allowed ?? false;
+      },
+    }),
+  }),
+});
 
 const MemberSchema = builder.loadableObject('Member', {
   load: (ids: string[], context: GraphQLContext) => context.app.repo.loadeMembers(ids),
   fields: (t) => ({
     id: t.exposeID('id'),
+    roles: t.field({ type: MemberRolesSchema, resolve: (root) => root }),
   }),
 });
 
@@ -17,7 +31,7 @@ builder.queryType({
       args: {
         ids: t.arg.stringList({ required: true }),
       },
-      resolve: (_root, args, context) => [...args.ids],
+      resolve: (_root, args, ctx) => [...args.ids],
     }),
 
     member: t.field({
@@ -25,7 +39,7 @@ builder.queryType({
       args: {
         id: t.arg.string({ required: true }),
       },
-      resolve: (_root, args, context) => args.id,
+      resolve: (_root, args, ctx) => args.id,
     }),
   }),
 });
@@ -99,6 +113,9 @@ builder.mutationType({
       args: {
         input: t.arg({ type: SignupInputSchema, required: true }),
       },
+      authScopes: {
+        loggedIn: true,
+      },
       async resolve(root, args, ctx) {
         const result = await AccountService.requestSignup({
           findMemberByEmail: ctx.app.repo.findMemberByEmail,
@@ -125,8 +142,8 @@ builder.mutationType({
           writes: {
             tuple_keys: [
               result.value.isAdmin
-                ? CommonKeys.siteAdmin(`member:${result.value.member.id}`)
-                : CommonKeys.siteMember(`member:${result.value.member.id}`),
+                ? TupleKey.siteAdmin(`member:${result.value.member.id}`)
+                : TupleKey.siteMember(`member:${result.value.member.id}`),
             ],
           },
         });

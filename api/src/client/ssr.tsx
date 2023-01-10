@@ -110,8 +110,12 @@ function readPageProps(path: string): {} {
           if (response.status === 404) {
             loaders.set(path, { status: 'fulfilled', data: undefined });
           } else {
-            const data = await response.json();
-            loaders.set(path, { status: 'fulfilled', data });
+            try {
+              const data = await response.json();
+              loaders.set(path, { status: 'fulfilled', data });
+            } catch {
+              loaders.set(path, { status: 'fulfilled', data: undefined });
+            }
           }
         } catch (error: unknown) {
           loaders.set(path, { status: 'rejected', error });
