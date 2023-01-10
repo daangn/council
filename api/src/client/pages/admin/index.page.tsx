@@ -4,7 +4,7 @@ import { type ExecutionResult } from 'graphql';
 import { type IndexPageQuery } from '~/client/graphql.gen';
 import { type PageContext } from '~/client/ssr';
 
-export async function getPageProps({ app, req, reply }: PageContext) {
+export async function getPageProps({ req }: PageContext) {
   if (!req.sessionOrRedirect()) {
     return;
   }

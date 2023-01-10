@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { type PageContext } from '~/client/ssr';
 
 type PageProps = {
@@ -7,10 +5,15 @@ type PageProps = {
   suggestedEmail?: string,
 };
 
-export async function getPageProps({ app, req, reply }: PageContext) {
+export async function getPageProps({ req, reply }: PageContext) {
   const session = req.sessionOrRedirect();
   if (!session) {
     return;
+  }
+
+  const member = req.currentMember;
+  if (member) {
+    return reply.redirect('/admin');
   }
 
   return {
@@ -28,6 +31,7 @@ export async function postAction({ app, req, reply }: PageContext) {
       }) {
         member {
           id
+          isApproved
         }
       }
     }`,
@@ -35,8 +39,12 @@ export async function postAction({ app, req, reply }: PageContext) {
   );
 
   if (data) {
-    reply.setCookie('memberId', data.requestSignup.member.id);
-    return reply.redirect('/admin');
+    reply.setCookie('memberId', data.requestSignup.member.id, { path: '/' });
+    if (data.requestSignup.member.isApproved) {
+      return reply.redirect('/admin');
+    } else {
+      return reply.redirect('/admin/signup_requested');
+    }
   }
 }
 

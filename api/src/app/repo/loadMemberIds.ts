@@ -3,7 +3,7 @@ import { type FastifyInstance } from 'fastify';
 import { Member } from '~/core';
 
 export default (app: FastifyInstance) => {
-  async function loadeMembers(memberIds: string[]): Promise<Array<Member.t | Error>> {
+  async function loadeMemberIds(memberIds: string[]): Promise<Array<Member.t | Error>> {
     const snapshots = await app.prisma.councilSnapshot.findMany({
       select: {
         stream_id: true,
@@ -30,5 +30,5 @@ export default (app: FastifyInstance) => {
     return members;
   }
 
-  return { loadeMembers };
+  return { loadeMemberIds };
 };

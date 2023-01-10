@@ -127,10 +127,11 @@ export async function setupAuth(app: FastifyInstance): Promise<void> {
   app.decorateRequest('currentSession', null);
   app.decorateRequest('currentMember', null);
   app.addHook('onRequest', async (req) => {
-    if (!req.url.startsWith('/admin')) {
+    if (!(req.url.startsWith('/admin') || req.url.startsWith('/graphql'))) {
       return;
     }
     req.currentSession = (req.cookies.sessionId && (await app.repo.findSession(req.cookies.sessionId))) || null;
+    console.log('@@', req.cookies.memberId);
     req.currentMember = (req.cookies.memberId && (await app.repo.findMember(req.cookies.memberId))) || null;
   });
 
