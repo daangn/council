@@ -27,7 +27,7 @@ console.log();
 console.log(dedent`
   Next, you can run this to complete setup.
 
-      yarn workspace api vite:exec scripts/setup-openfga-model.ts --storeId "${storeId}"
+      yarn workspace api vite:exec scripts/setup-openfga-model.ts -- --storeId "${storeId}"
 
   Also, you can add this line to your local \`.env\` file for development.
 

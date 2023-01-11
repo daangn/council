@@ -1,8 +1,9 @@
 import { CredentialsMethod, OpenFgaApi } from '@openfga/sdk';
 import { parseArgs } from 'node:util';
+
 import { env } from '~/env';
 
-const args = parseArgs({
+const { values } = parseArgs({
   options: {
     storeId: {
       type: 'string',
@@ -10,10 +11,10 @@ const args = parseArgs({
   },
 });
 
-const storeId = args.values.storeId || env.OPENFGA_STORE_ID;
+const storeId = values.storeId || env.OPENFGA_STORE_ID;
 if (!storeId) {
   throw new Error(
-    'No --storeId param or OPENFGA_STORE_ID env provided. Did you forgot to run `yarn rw exec setup-openfga-store` first?',
+    'No --storeId param or OPENFGA_STORE_ID env provided. Did you forgot to run `yarn workspace api vite:exec scripts/setup-openfga-store.ts` first?',
   );
 }
 
