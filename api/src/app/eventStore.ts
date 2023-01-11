@@ -3,9 +3,13 @@ import { type FastifyInstance } from 'fastify';
 
 import { type Member, type Session } from '~/core';
 
-type Aggregate = Session.t | Member.t;
+export type Aggregate = Session.t | Member.t;
 
 interface EventStore {
+  pull<T extends Aggregate>(aggregateName: T['_RE'], id: string): Promise<T['events']>;
+  pullAll<T extends Aggregate>(aggregateName: T['_RE']): Promise<Record<string, T['events']>>;
+  pullStream<T extends Aggregate>(aggregateName: T['_RE']): AsyncGenerator<{ id: string; events: T['events'] }, void>;
+
   publish<T extends Aggregate>(aggregate: T): Promise<T>;
   publishAny<T extends { [key: string]: unknown }>(obj: T): Promise<T>;
 }
@@ -64,6 +68,76 @@ export async function setupEventStore(app: FastifyInstance) {
   }
 
   const eventStore: EventStore = {
+    async pull<T extends Aggregate>(aggregateName: T['_RE'], streamId: string) {
+      const councilEvents = await app.prisma.councilEvent.findMany({
+        select: {
+          data: true,
+        },
+        where: {
+          aggregate_name: aggregateName,
+          stream_id: streamId,
+          is_deleted: false,
+        },
+        orderBy: {
+          sequence: 'asc',
+        },
+      });
+      return councilEvents.map((event) => event.data) as T['events'];
+    },
+    async pullAll<T extends Aggregate>(aggregateName: T['_RE']) {
+      const councilEvents = await app.prisma.councilEvent.findMany({
+        select: {
+          stream_id: true,
+          data: true,
+        },
+        where: {
+          aggregate_name: aggregateName,
+          is_deleted: false,
+        },
+        orderBy: {
+          sequence: 'asc',
+        },
+      });
+      const eventsMap: Record<string, T['events']> = {};
+      for (const event of councilEvents) {
+        eventsMap[event.stream_id] ||= [];
+        // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+        eventsMap[event.stream_id].push(event.data as any);
+      }
+      return eventsMap;
+    },
+    async *pullStream<T extends Aggregate>(aggregateName: T['_RE']) {
+      const allStream = await app.prisma.councilEvent.findMany({
+        distinct: ['stream_id'],
+        select: {
+          stream_id: true,
+        },
+        where: {
+          aggregate_name: aggregateName,
+          is_deleted: false,
+        },
+        orderBy: {
+          sequence: 'asc',
+        },
+      });
+      for (const eventStream of allStream) {
+        const councilEvents = await app.prisma.councilEvent.findMany({
+          select: {
+            data: true,
+          },
+          where: {
+            stream_id: eventStream.stream_id,
+            is_deleted: false,
+          },
+          orderBy: {
+            sequence: 'asc',
+          },
+        });
+        const events = councilEvents.map((event) => event.data) as T['events'];
+        yield { id: eventStream.stream_id, events };
+      }
+      return;
+    },
     publish(aggregate) {
       return publishInTransaction(app.prisma, aggregate);
     },
