@@ -3,6 +3,8 @@ import { builder } from '~/app/graphql/builder';
 import { GraphQLContext } from '~/app/graphql/context';
 import { AccountService, type Member } from '~/core';
 
+import { OrganizationSchema } from './organization';
+
 export const MemberRolesSchema = builder.objectRef<Member.t>('MemberRoles').implement({
   fields: (t) => ({
     canCreateOrganization: t.boolean({
@@ -17,11 +19,17 @@ export const MemberRolesSchema = builder.objectRef<Member.t>('MemberRoles').impl
 });
 
 export const MemberSchema = builder.loadableObject('Member', {
-  load: (ids: string[], context: GraphQLContext) => context.app.repo.loadeMemberIds(ids),
+  load: (ids: string[], context: GraphQLContext) => context.app.repo.loadMembers(ids),
   fields: (t) => ({
     id: t.exposeID('id'),
     isApproved: t.boolean({
       resolve: (root, _args) => root.state?.approved ?? false,
+    }),
+    joinedOrganizations: t.field({
+      type: [OrganizationSchema],
+      resolve(root) {
+        return root.state?.joinedOrganizations ?? [];
+      },
     }),
     roles: t.field({ type: MemberRolesSchema, resolve: (root) => root }),
   }),
@@ -52,7 +60,7 @@ export const SignupInputSchema = builder.inputType('SignupInput', {
   }),
 });
 
-const ValidateSingupOutputSchema = builder
+export const ValidateSingupOutputSchema = builder
   .objectRef<{
     name: boolean;
     email: boolean;

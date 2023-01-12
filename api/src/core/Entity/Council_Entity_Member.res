@@ -11,6 +11,7 @@ type data = {
   authProviders: array<string>,
   admin: bool,
   approved: bool,
+  joinedOrganizations: array<organizationId>,
 }
 
 @genType
@@ -22,11 +23,15 @@ type event =
   | SingupApproved({date: Date.t, by: option<memberId>})
   | AdminGranted({date: Date.t, by: option<memberId>})
   | AdminRevoked({date: Date.t, by: option<memberId>})
+  | JoinedToOrganization({date: Date.t, organization: organizationId})
+  | LeaveFromOrganization({date: Date.t, organization: organizationId})
 
 @genType
 type error =
   | Uninitialized({id: id})
   | AlreadyInitialized({id: id})
+  | AlreadyJoined({id: id, organization: organizationId})
+  | HasNotJoined({id: id, organization: organizationId})
 
 @genType
 type t = {
@@ -63,21 +68,24 @@ let logic: Logic.t = (t, event) => {
       _RE,
       id,
       seq,
-      events: Array.concat(events, [event]),
+      events: events->Array.concat([event]),
       state: Some({
         name,
         email,
         authProviders: [auth],
         approved: false,
         admin: false,
+        joinedOrganizations: [],
       }),
     })
+  | ({id, state: None}, _) => Error(Uninitialized({id: id}))
+  | ({id, state: Some(_)}, Created(_)) => Error(AlreadyInitialized({id: id}))
   | ({_RE, id, seq, events, state: Some(state)}, SingupApproved(_)) =>
     Ok({
       _RE,
       id,
       seq,
-      events: Array.concat(events, [event]),
+      events: events->Array.concat([event]),
       state: Some({
         ...state,
         approved: true,
@@ -88,7 +96,7 @@ let logic: Logic.t = (t, event) => {
       _RE,
       id,
       seq,
-      events: Array.concat(events, [event]),
+      events: events->Array.concat([event]),
       state: Some({
         ...state,
         admin: true,
@@ -99,14 +107,42 @@ let logic: Logic.t = (t, event) => {
       _RE,
       id,
       seq,
-      events: Array.concat(events, [event]),
+      events: events->Array.concat([event]),
       state: Some({
         ...state,
         admin: false,
       }),
     })
-  | ({id, state: Some(_)}, Created(_)) => Error(AlreadyInitialized({id: id}))
-  | ({id, state: None}, _) => Error(Uninitialized({id: id}))
+  | ({id, state: Some(state)}, JoinedToOrganization({organization}))
+    if state.joinedOrganizations->Array.some(existing => existing == organization) =>
+    Error(AlreadyJoined({id, organization}))
+  | ({_RE, id, seq, events, state: Some(state)}, JoinedToOrganization({organization})) =>
+    Ok({
+      _RE,
+      id,
+      seq,
+      events: events->Array.concat([event]),
+      state: Some({
+        ...state,
+        joinedOrganizations: state.joinedOrganizations->Array.concat([organization]),
+      }),
+    })
+  | ({id, state: Some(state)}, LeaveFromOrganization({organization}))
+    if state.joinedOrganizations->Array.every(existing => existing != organization) =>
+    Error(HasNotJoined({id, organization}))
+  | ({_RE, id, seq, events, state: Some(state)}, LeaveFromOrganization({organization})) =>
+    Ok({
+      _RE,
+      id,
+      seq,
+      events: events->Array.concat([event]),
+      state: Some({
+        ...state,
+        joinedOrganizations: state.joinedOrganizations->Array.keep(existing =>
+          existing != organization
+        ),
+      }),
+    })
   }
 }
 
@@ -147,5 +183,17 @@ let createAdmin = (t, ~date, ~name, ~email, ~auth) => {
 @genType
 let approveSignup = (t, ~date, ~by) => {
   let event = SingupApproved({date, by})
+  logic->Logic.run(t, event)
+}
+
+@genType
+let joinToOrganization = (t, ~date, ~organization) => {
+  let event = JoinedToOrganization({date, organization})
+  logic->Logic.run(t, event)
+}
+
+@genType
+let leaveFromOrganization = (t, ~date, ~organization) => {
+  let event = LeaveFromOrganization({date, organization})
   logic->Logic.run(t, event)
 }

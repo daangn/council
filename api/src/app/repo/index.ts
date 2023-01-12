@@ -5,16 +5,22 @@ import findMember from './findMember';
 import findMemberByAuth from './findMemberByAuth';
 import findMemberByEmail from './findMemberByEmail';
 import findMemberByName from './findMemberByName';
+import findOrganization from './findOrganization';
+import findOrganizationByName from './findOrganizationByName';
 import findSession from './findSession';
-import loadMemberIds from './loadMemberIds';
+import loadMembers from './loadMembers';
+import loadOrganizations from './loadOrganizations';
 
 const injectAll = merge([
   findMember,
   findMemberByAuth,
   findMemberByEmail,
   findMemberByName,
+  findOrganization,
+  findOrganizationByName,
   findSession,
-  loadMemberIds,
+  loadMembers,
+  loadOrganizations,
 ] as const);
 type AppRepo = ReturnType<typeof injectAll>;
 
