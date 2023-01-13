@@ -61,6 +61,35 @@ let createOrganization = async (
 }
 
 @genType
+let addMemberToOrganization = async (
+  ~findMember,
+  ~findOrganization,
+  ~memberId,
+  ~organizationId,
+  ~by,
+  ~date,
+) => {
+  switch await findMember(. memberId) {
+  | Some({Member.state: Some(_)} as member) =>
+    switch await findOrganization(. organizationId) {
+    | Some({Organization.state: Some(_)} as organization) =>
+      switch organization->Organization.addMember(~member=member.id, ~by, ~date) {
+      | Ok(organization) =>
+        switch member->Member.joinToOrganization(~organization=organization.id, ~date) {
+        | Ok(member) => Ok({"organization": organization, "member": member})
+        | Error(error) => Error(MemberError({error: error}))
+        }
+      | Error(error) => Error(OrganizationError({error: error}))
+      }
+    | _ => Error(InvalidOrganization({organization: Some(organizationId)}))
+    | exception Js.Exn.Error(exn) => Error(IOError({exn: exn}))
+    }
+  | _ => Error(InvalidMember({member: Some(memberId)}))
+  | exception Js.Exn.Error(exn) => Error(IOError({exn: exn}))
+  }
+}
+
+@genType
 let removeMemberFromOrganization = async (
   ~findMember,
   ~findOrganization,

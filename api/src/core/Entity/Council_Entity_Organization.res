@@ -125,6 +125,16 @@ let create = (t, ~date, ~name, ~label, ~by) => {
 }
 
 @genType
+let addMember = (t, ~date, ~by, ~member) => {
+  let event = MemberAdded({
+    date,
+    by,
+    member,
+  })
+  logic->Logic.run(t, event)
+}
+
+@genType
 let removeMember = (t, ~date, ~by, ~member) => {
   let event = MemberRemoved({
     date,

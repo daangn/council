@@ -157,3 +157,54 @@ builder.mutationFields((t) => ({
     },
   }),
 }));
+
+export const AddMemberToOrganizationInputSchema = builder.inputType('AddMemberToOrganization', {
+  fields: (t) => ({
+    organizationId: t.string({ required: true }),
+    memberId: t.string({ required: true }),
+  }),
+});
+
+export const AddMemberToOrganizationOutputSchema = builder
+  .objectRef<{
+    organization: Organization.t;
+    member: Member.t;
+  }>('AddMemberToOrganizationOutput')
+  .implement({
+    fields: (t) => ({
+      organization: t.expose('organization', {
+        type: OrganizationSchema,
+      }),
+      member: t.expose('member', {
+        type: MemberSchema,
+      }),
+    }),
+  });
+
+builder.mutationFields((t) => ({
+  addMemberToOrganization: t.field({
+    type: AddMemberToOrganizationOutputSchema,
+    args: {
+      input: t.arg({ type: AddMemberToOrganizationInputSchema, required: true }),
+    },
+    authScopes: {
+      approvedMember: true,
+    },
+    async resolve(_root, args, ctx) {
+      const result = await OrganizationService.addMemberToOrganization({
+        findMember: ctx.app.repo.findMember,
+        findOrganization: ctx.app.repo.findOrganization,
+        memberId: args.input.memberId,
+        organizationId: args.input.organizationId,
+        by: ctx.req.currentMember?.id,
+        date: Date.now(),
+      });
+
+      if (result.tag === 'Error') {
+        throw result.value;
+      }
+
+      return ctx.app.eventStore.publishAny(result.value);
+    },
+  }),
+}));
