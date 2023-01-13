@@ -22,13 +22,13 @@ export const MemberSchema = builder.loadableObject('Member', {
   load: (ids: string[], context: GraphQLContext) => context.app.repo.loadMembers(ids),
   fields: (t) => ({
     id: t.exposeID('id'),
-    isApproved: t.boolean({
-      resolve: (root, _args) => root.state?.approved ?? false,
+    active: t.boolean({
+      resolve: (root, _args) => root.state?.tag === 'Active',
     }),
     joinedOrganizations: t.field({
       type: [OrganizationSchema],
       resolve(root) {
-        return root.state?.joinedOrganizations ?? [];
+        return root.state?.value.data.joinedOrganizations ?? [];
       },
     }),
     roles: t.field({ type: MemberRolesSchema, resolve: (root) => root }),

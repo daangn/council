@@ -33,21 +33,21 @@ export const TupleKey = {
     return {
       user,
       relation: 'member',
-      object: 'site:all',
+      object: 'site:default',
     };
   },
   siteAdmin(user: string): FgaTupleKey {
     return {
       user,
       relation: 'admin',
-      object: 'site:all',
+      object: 'site:default',
     };
   },
   canCreateOrganization(user: string): FgaTupleKey {
     return {
       user,
       relation: 'can_create_organization',
-      object: 'site:all',
+      object: 'site:default',
     };
   },
 };

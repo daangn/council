@@ -75,10 +75,9 @@ export async function setupAuth(app: FastifyInstance): Promise<void> {
           issuedAt: decoded.iat,
           expiredAt: decoded.exp,
           userAgent: req.headers['user-agent'] ?? '',
-          suggestedName: decoded.name,
-          suggestedEmail: decoded.email,
-          verifiedEmail: decoded.email_verified ? decoded.email : undefined,
         },
+        suggestedName: decoded.name,
+        suggestedEmail: decoded.email,
       });
       if (result.tag === 'Error') {
         app.log.error(result.value);
@@ -124,23 +123,25 @@ export async function setupAuth(app: FastifyInstance): Promise<void> {
     }
   });
 
-  app.decorateRequest('currentSession', null);
-  app.decorateRequest('currentMember', null);
-  app.addHook('onRequest', async (req) => {
-    if (!(req.url.startsWith('/admin') || req.url.startsWith('/graphql'))) {
-      return;
-    }
-    req.currentSession = (req.cookies.sessionId && (await app.repo.findSession(req.cookies.sessionId))) || null;
-    console.log('@@', req.cookies.memberId);
-    req.currentMember = (req.cookies.memberId && (await app.repo.findMember(req.cookies.memberId))) || null;
-  });
+  app
+    .decorateRequest('currentSession', null)
+    .decorateRequest('currentMemeber', null)
+    .addHook('onRequest', async (req) => {
+      if (!(req.url.startsWith('/admin') || req.url.startsWith('/graphql'))) {
+        return;
+      }
+      if (req.cookies.sessionId) {
+        req.currentSession = (await app.repo.findSession(req.cookies.sessionId)) || null;
+      }
+      if (req.currentSession?.state?.tag === 'Member') {
+        req.currentMember = (await app.repo.findMember(req.currentSession.state.value.member)) || null;
+      }
+    });
 
-  app.decorateRequest('sessionOrRedirect', null);
-  app.addHook('onRequest', async (req, reply) => {
+  app.decorateRequest('sessionOrRedirect', null).addHook('onRequest', async (req, reply) => {
     req.sessionOrRedirect = function sessionOrRedirect<T>(redirectTo = '/admin/login'): T {
       if (!req.currentSession?.state) {
         reply.clearCookie('sessionId');
-        reply.clearCookie('memberId');
         reply.redirect(redirectTo);
         return null as T;
       }
@@ -148,17 +149,35 @@ export async function setupAuth(app: FastifyInstance): Promise<void> {
     };
   });
 
-  app.decorateRequest('memberOrRedirect', null);
-  app.addHook('onRequest', async (req, reply) => {
+  app.decorateRequest('memberOrRedirect', null).addHook('onRequest', async (req, reply) => {
     req.memberOrRedirect = function memberOrRedirect<T>(): T {
       if (!req.currentMember?.state) {
-        reply.clearCookie('memberId');
         reply.redirect('/admin/signup');
         return null as T;
       }
-      if (!req.currentMember.state.approved) {
-        reply.redirect('/admin/signup_requested');
+      return req.currentMember as T;
+    };
+  });
+
+  app.decorateRequest('activeMemberOrRedirect', null).addHook('onRequest', async (req, reply) => {
+    req.memberOrRedirect = function memberOrRedirect<T>(): T {
+      if (!req.currentMember?.state) {
+        reply.redirect('/admin/signup');
         return null as T;
+      }
+      switch (req.currentMember.state.tag) {
+        case 'Requested': {
+          reply.redirect('/admin/signup_requested');
+          return null as T;
+        }
+        case 'Rejected': {
+          reply.redirect('/admin/signup_rejected');
+          return null as T;
+        }
+        case 'Inactive': {
+          reply.redirect('/admin/deactivated');
+          return null as T;
+        }
       }
       return req.currentMember as T;
     };
@@ -176,5 +195,6 @@ declare module 'fastify' {
     currentMember: Member.t | null;
     sessionOrRedirect: (redirectTo?: string) => (Session.t & { state: {} }) | null;
     memberOrRedirect: (redirectTo?: string) => (Member.t & { state: {} }) | null;
+    activeMemberOrRedirect: (redirectTo?: string) => (Member.t & { state: { tag: 'Active' } }) | null;
   }
 }

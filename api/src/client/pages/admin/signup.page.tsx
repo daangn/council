@@ -10,15 +10,12 @@ export async function getPageProps({ req, reply }: PageContext) {
   if (!session) {
     return;
   }
-
-  const member = req.currentMember;
-  if (member) {
+  if (session.state.tag === 'Member') {
     return reply.redirect('/admin');
   }
-
   return {
-    suggestedName: session.state.suggestedName,
-    suggestedEmail: session.state.verifiedEmail || session.state.suggestedEmail,
+    suggestedName: session.state.value.suggestedName,
+    suggestedEmail: session.state.value.suggestedEmail,
   };
 }
 
@@ -31,20 +28,16 @@ export async function postAction({ app, req, reply }: PageContext) {
       }) {
         member {
           id
-          isApproved
+          active
         }
       }
     }`,
     req.body,
   );
-
-  if (data) {
-    reply.setCookie('memberId', data.requestSignup.member.id, { path: '/' });
-    if (data.requestSignup.member.isApproved) {
-      return reply.redirect('/admin');
-    } else {
-      return reply.redirect('/admin/signup_requested');
-    }
+  if (data.requestSignup.member.active) {
+    return reply.redirect('/admin');
+  } else {
+    return reply.redirect('/admin/signup_requested');
   }
 }
 

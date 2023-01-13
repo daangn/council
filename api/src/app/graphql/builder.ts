@@ -7,13 +7,13 @@ import { type GraphQLContext } from './context';
 export const builder = new SchemaBuilder<{
   AuthScopes: {
     loggedIn: boolean;
-    approvedMember: boolean;
+    activeMember: boolean;
   };
   Context: GraphQLContext;
 }>({
   plugins: [DataloaderPlugin, ScopeAuthPlugin],
   authScopes: async (context) => ({
     loggedIn: !!context.req.currentSession,
-    approvedMember: !!context.req.currentMember?.state?.approved,
+    activeMember: context.req.currentMember?.state?.tag === 'Active',
   }),
 });

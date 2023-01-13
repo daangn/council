@@ -34,7 +34,7 @@ const repo: Injectable<{
         return null;
       }
 
-      if (session.state.expiredAt >= Date.now()) {
+      if (session.state.value.data.expiredAt >= Date.now()) {
         return null;
       }
 

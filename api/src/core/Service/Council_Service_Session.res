@@ -2,19 +2,26 @@ module Session = Council_Entity_Session
 module Member = Council_Entity_Member
 
 @genType
-let createSession = (~sessionId, ~date, ~data) => {
+let createAnonymousSession = (~sessionId, ~date, ~data, ~suggestedName, ~suggestedEmail) => {
   let session = Session.make(sessionId, ())
-  switch session->Session.create(~date, ~data) {
+  switch session->Session.createAnonymous(~date, ~data, ~suggestedName, ~suggestedEmail) {
   | Ok(_) as result => result
   | Error(error) => Error(#SessionError({"error": error}))
   }
 }
 
 @genType
-let findOrCreateSession = async (~findSession, ~sessionId, ~date, ~data) => {
+let findOrCreateSession = async (
+  ~findSession,
+  ~sessionId,
+  ~date,
+  ~data,
+  ~suggestedName,
+  ~suggestedEmail,
+) => {
   switch await findSession(. sessionId) {
   | Some(session) => Ok(session)
-  | None => createSession(~sessionId, ~date, ~data)
+  | None => createAnonymousSession(~sessionId, ~date, ~data, ~suggestedName, ~suggestedEmail)
   | exception Js.Exn.Error(exn) => Error(#IOError({"exn": exn}))
   }
 }
@@ -35,12 +42,12 @@ let verifySession = async (~findSession, ~sessionId) => {
 @genType
 let verifyMemberSession = async (~findSession, ~findMember, ~sessionId, ~memberId) => {
   switch await verifySession(~findSession, ~sessionId) {
-  | Ok({Session.state: Some(sessionState)} as session) =>
+  | Ok({Session.state: Some(Member({data}))} as session) =>
     switch memberId {
     | Some(memberId) =>
       switch await findMember(. memberId) {
-      | Some({Member.state: Some(memberState)} as member) =>
-        switch memberState.authProviders->Js.Array2.includes(sessionState.subject) {
+      | Some({Member.state: Some(Active(memberState))} as member) =>
+        switch memberState.data.authProviders->Js.Array2.includes(data.subject) {
         | true => Ok({"member": member, "session": session})
         | false => Error(#InvalidMember({"member": Some(memberId)}))
         }

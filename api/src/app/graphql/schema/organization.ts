@@ -53,7 +53,7 @@ builder.mutationFields((t) => ({
       input: t.arg({ type: CreateOrganizationInputSchema, required: true }),
     },
     authScopes: {
-      approvedMember: true,
+      activeMember: true,
     },
     async resolve(_root, args, ctx) {
       const result = await OrganizationService.validateCreateOrganization({
@@ -76,7 +76,7 @@ builder.mutationFields((t) => ({
       input: t.arg({ type: CreateOrganizationInputSchema, required: true }),
     },
     authScopes: {
-      approvedMember: true,
+      activeMember: true,
     },
     async resolve(_root, args, ctx) {
       const result = await OrganizationService.createOrganization({
@@ -127,7 +127,7 @@ builder.mutationFields((t) => ({
       input: t.arg({ type: RemoveMemberFromOrganizationInputSchema, required: true }),
     },
     authScopes: {
-      approvedMember: true,
+      activeMember: true,
     },
     async resolve(_root, args, ctx) {
       const result = await OrganizationService.removeMemberFromOrganization({
@@ -178,7 +178,7 @@ builder.mutationFields((t) => ({
       input: t.arg({ type: AddMemberToOrganizationInputSchema, required: true }),
     },
     authScopes: {
-      approvedMember: true,
+      activeMember: true,
     },
     async resolve(_root, args, ctx) {
       const result = await OrganizationService.addMemberToOrganization({

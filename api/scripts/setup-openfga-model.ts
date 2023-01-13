@@ -33,32 +33,6 @@ const openFga = new OpenFgaApi({
 const { authorization_model_id: id } = await openFga.writeAuthorizationModel({
   type_definitions: [
     {
-      type: 'organization',
-      relations: {
-        site: {
-          this: {},
-        },
-        admin: {
-          this: {},
-        },
-        member: {
-          union: {
-            child: [
-              {
-                this: {},
-              },
-              {
-                computedUserset: {
-                  object: '',
-                  relation: 'admin',
-                },
-              },
-            ],
-          },
-        },
-      },
-    },
-    {
       type: 'site',
       relations: {
         admin: {
@@ -89,6 +63,139 @@ const { authorization_model_id: id } = await openFga.writeAuthorizationModel({
           computedUserset: {
             object: '',
             relation: 'admin',
+          },
+        },
+      },
+    },
+    {
+      type: 'organization',
+      relations: {
+        site: {
+          this: {},
+        },
+        admin: {
+          this: {},
+        },
+        member: {
+          union: {
+            child: [
+              {
+                this: {},
+              },
+              {
+                computedUserset: {
+                  object: '',
+                  relation: 'admin',
+                },
+              },
+            ],
+          },
+        },
+        can_create_document: {
+          computedUserset: {
+            object: '',
+            relation: 'admin',
+          },
+        },
+      },
+    },
+    {
+      type: 'document',
+      relations: {
+        organization: {
+          this: {},
+        },
+        owner: {
+          this: {},
+        },
+        responsibility: {
+          this: {},
+        },
+        assignee: {
+          union: {
+            child: [
+              {
+                this: {},
+              },
+              {
+                computedUserset: {
+                  object: '',
+                  relation: 'responsibility',
+                },
+              },
+            ],
+          },
+        },
+        can_delete_draft: {
+          computedUserset: {
+            object: '',
+            relation: 'owner',
+          },
+        },
+        can_manage_responsibility: {
+          union: {
+            child: [
+              {
+                computedUserset: {
+                  object: '',
+                  relation: 'owner',
+                },
+              },
+              {
+                computedUserset: {
+                  object: '',
+                  relation: 'responsibility',
+                },
+              },
+            ],
+          },
+        },
+        can_manage_assignee: {
+          union: {
+            child: [
+              {
+                computedUserset: {
+                  object: '',
+                  relation: 'owner',
+                },
+              },
+              {
+                computedUserset: {
+                  object: '',
+                  relation: 'responsibility',
+                },
+              },
+            ],
+          },
+        },
+        can_manage_docuemnt: {
+          computedUserset: {
+            object: '',
+            relation: 'responsibility',
+          },
+        },
+        can_manage_content: {
+          union: {
+            child: [
+              {
+                computedUserset: {
+                  object: '',
+                  relation: 'assignee',
+                },
+              },
+              {
+                computedUserset: {
+                  object: '',
+                  relation: 'responsibility',
+                },
+              },
+            ],
+          },
+        },
+        can_publish_revision: {
+          computedUserset: {
+            object: '',
+            relation: 'responsibility',
           },
         },
       },

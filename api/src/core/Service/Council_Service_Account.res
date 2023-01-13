@@ -40,20 +40,28 @@ let requestSignup = async (
   ~date,
 ) => {
   switch session {
-  | Some({Session.state: Some(sessionState)}) =>
+  | Some({Session.state: Some(Anonymous({data}))} as session) =>
     switch await validateSignup(~findMemberByEmail, ~findMemberByName, ~name, ~email) {
     | Ok(result) if result["name"] && result["email"] => {
         let member = Member.make(memberId, ())
-        switch await hasNoAccounts(~countAllMembers) {
+        let memberResult = switch await hasNoAccounts(~countAllMembers) {
         | Ok(true) =>
-          switch member->Member.createAdmin(~date, ~name, ~email, ~auth=sessionState.subject) {
-          | Ok(member) => Ok({"member": member, "isAdmin": true})
+          switch member->Member.createAdmin(~date, ~name, ~email, ~auth=data.subject) {
+          | Ok(member) => Ok(member, true)
           | Error(error) => Error(#MemberError({"error": error}))
           }
         | Ok(false) =>
-          switch member->Member.create(~date, ~name, ~email, ~auth=sessionState.subject) {
-          | Ok(member) => Ok({"member": member, "isAdmin": false})
+          switch member->Member.create(~date, ~name, ~email, ~auth=data.subject) {
+          | Ok(member) => Ok(member, false)
           | Error(error) => Error(#MemberError({"error": error}))
+          }
+        | Error(_) as error => error
+        }
+        switch memberResult {
+        | Ok(member, isAdmin) =>
+          switch session->Session.connectMember(~date, ~member=member.id) {
+          | Ok(session) => Ok({"session": session, "member": member, "isAdmin": isAdmin})
+          | Error(error) => Error(#SessionError({"error": error}))
           }
         | Error(_) as error => error
         }
