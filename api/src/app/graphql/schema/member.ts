@@ -41,7 +41,7 @@ builder.queryFields((t) => ({
     args: {
       ids: t.arg.stringList({ required: true }),
     },
-    resolve: (_root, args, ctx) => [...args.ids],
+    resolve: (_root, args) => [...args.ids],
   }),
 
   member: t.field({
@@ -49,7 +49,7 @@ builder.queryFields((t) => ({
     args: {
       id: t.arg.string({ required: true }),
     },
-    resolve: (_root, args, ctx) => args.id,
+    resolve: (_root, args) => args.id,
   }),
 }));
 
@@ -90,7 +90,7 @@ builder.mutationFields((t) => ({
     args: {
       input: t.arg({ type: SignupInputSchema, required: true }),
     },
-    async resolve(root, args, ctx) {
+    async resolve(_root, args, ctx) {
       const result = await AccountService.validateSignup({
         findMemberByEmail: ctx.app.repo.findMemberByEmail,
         findMemberByName: ctx.app.repo.findMemberByName,
@@ -99,20 +99,10 @@ builder.mutationFields((t) => ({
       });
 
       if (result.tag === 'Error') {
-        switch (result.value.tag) {
-          case 'InvalidSignup': {
-            return result.value.value;
-          }
-          default: {
-            throw result.value;
-          }
-        }
+        throw result.value;
       }
 
-      return {
-        name: true,
-        email: true,
-      };
+      return result.value;
     },
   }),
 
@@ -124,7 +114,7 @@ builder.mutationFields((t) => ({
     authScopes: {
       loggedIn: true,
     },
-    async resolve(root, args, ctx) {
+    async resolve(_root, args, ctx) {
       const result = await AccountService.requestSignup({
         findMemberByEmail: ctx.app.repo.findMemberByEmail,
         findMemberByName: ctx.app.repo.findMemberByName,

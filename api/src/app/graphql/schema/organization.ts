@@ -63,20 +63,10 @@ builder.mutationFields((t) => ({
       });
 
       if (result.tag === 'Error') {
-        switch (result.value.tag) {
-          case 'InvalidCreateOrganization': {
-            return result.value.value;
-          }
-          default: {
-            throw result.value;
-          }
-        }
+        throw result.value;
       }
 
-      return {
-        name: true,
-        label: true,
-      };
+      return result.value;
     },
   }),
 
@@ -92,7 +82,7 @@ builder.mutationFields((t) => ({
       const result = await OrganizationService.createOrganization({
         findOrganizationByName: ctx.app.repo.findOrganizationByName,
         organizationId: ctx.app.genId(),
-        member: ctx.req.currentMember,
+        member: ctx.req.currentMember!,
         name: args.input.name,
         label: args.input.label,
         date: Date.now(),

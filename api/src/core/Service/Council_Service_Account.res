@@ -2,14 +2,6 @@ module Session = Council_Entity_Session
 module Member = Council_Entity_Member
 
 @genType
-type error =
-  | IOError({exn: Js.Exn.t})
-  | InvalidSignup({name: bool, email: bool})
-  | InvalidSession({session: option<Session.t>})
-  | InvalidMember({member: option<Member.t>})
-  | MemberError({error: Member.error})
-
-@genType
 let validateSignup = async (~findMemberByName, ~findMemberByEmail, ~name, ~email) => {
   let validateName = async name => {
     Js.String2.length(name) >= 2 && (await findMemberByName(. name)) == None
@@ -23,9 +15,8 @@ let validateSignup = async (~findMemberByName, ~findMemberByEmail, ~name, ~email
   }
 
   switch await Js.Promise2.all2((validateName(name), validateEmail(email))) {
-  | (true, true) => Ok()
-  | (name, email) => Error(InvalidSignup({name, email}))
-  | exception Js.Exn.Error(exn) => Error(IOError({exn: exn}))
+  | (name, email) => Ok({"name": name, "email": email})
+  | exception Js.Exn.Error(exn) => Error(#IOError({"exn": exn}))
   }
 }
 
@@ -33,7 +24,7 @@ let validateSignup = async (~findMemberByName, ~findMemberByEmail, ~name, ~email
 let hasNoAccounts = async (~countAllMembers) => {
   switch await countAllMembers(.) {
   | count => Ok(count == 0)
-  | exception Js.Exn.Error(exn) => Error(IOError({exn: exn}))
+  | exception Js.Exn.Error(exn) => Error(#IOError({"exn": exn}))
   }
 }
 
@@ -51,25 +42,26 @@ let requestSignup = async (
   switch session {
   | Some({Session.state: Some(sessionState)}) =>
     switch await validateSignup(~findMemberByEmail, ~findMemberByName, ~name, ~email) {
-    | Ok() => {
+    | Ok(result) if result["name"] && result["email"] => {
         let member = Member.make(memberId, ())
         switch await hasNoAccounts(~countAllMembers) {
         | Ok(true) =>
-          switch Member.createAdmin(member, ~date, ~name, ~email, ~auth=sessionState.subject) {
+          switch member->Member.createAdmin(~date, ~name, ~email, ~auth=sessionState.subject) {
           | Ok(member) => Ok({"member": member, "isAdmin": true})
-          | Error(error) => Error(MemberError({error: error}))
+          | Error(error) => Error(#MemberError({"error": error}))
           }
         | Ok(false) =>
-          switch Member.create(member, ~date, ~name, ~email, ~auth=sessionState.subject) {
+          switch member->Member.create(~date, ~name, ~email, ~auth=sessionState.subject) {
           | Ok(member) => Ok({"member": member, "isAdmin": false})
-          | Error(error) => Error(MemberError({error: error}))
+          | Error(error) => Error(#MemberError({"error": error}))
           }
         | Error(_) as error => error
         }
       }
 
+    | Ok(result) => Error(#InvalidInput({"name": result["name"], "email": result["email"]}))
     | Error(_) as error => error
     }
-  | _ => Error(InvalidSession({session: session}))
+  | _ => Error(#InvalidSession({"session": session}))
   }
 }

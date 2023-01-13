@@ -2,15 +2,6 @@ module Organization = Council_Entity_Organization
 module Member = Council_Entity_Member
 
 @genType
-type error =
-  | IOError({exn: Js.Exn.t})
-  | InvalidCreateOrganization({name: bool, label: bool})
-  | InvalidMember({member: option<Member.id>})
-  | InvalidOrganization({organization: option<Organization.id>})
-  | MemberError({error: Member.error})
-  | OrganizationError({error: Organization.error})
-
-@genType
 let validateCreateOrganization = async (~findOrganizationByName, ~name, ~label) => {
   let validateName = async name => {
     let re = %re("/[a-z0-9][a-z\-]*[a-z0-9]/")
@@ -22,9 +13,8 @@ let validateCreateOrganization = async (~findOrganizationByName, ~name, ~label) 
   }
 
   switch (await validateName(name), validateLabel(label)) {
-  | (true, true) => Ok()
-  | (name, label) => Error(InvalidCreateOrganization({name, label}))
-  | exception Js.Exn.Error(exn) => Error(IOError({exn: exn}))
+  | (name, label) => Ok({"name": name, "label": label})
+  | exception Js.Exn.Error(exn) => Error(#IOError({"exn": exn}))
   }
 }
 
@@ -37,26 +27,26 @@ let createOrganization = async (
   ~name,
   ~label,
 ) => {
-  switch member {
-  | Some({Member.state: Some(_)} as member) =>
-    switch await validateCreateOrganization(~findOrganizationByName, ~name, ~label) {
-    | Ok() => {
-        let organization = Organization.make(organizationId, ())
-        switch Organization.create(organization, ~date, ~name, ~label, ~by=member.id) {
-        | Ok(organization) =>
-          switch Member.joinToOrganization(member, ~date, ~organization=organization.id) {
-          | Ok(member) => Ok({"organization": organization, "member": member})
-          | Error(error) => Error(MemberError({error: error}))
-          }
-        | Error(error) => Error(OrganizationError({error: error}))
-        }
+  switch await validateCreateOrganization(~findOrganizationByName, ~name, ~label) {
+  | Ok(result) if result["name"] && result["label"] => {
+      let organization = Organization.make(organizationId, ())
+      switch (
+        organization->Organization.create(~date, ~name, ~label, ~by=member.Member.id),
+        member->Member.joinToOrganization(~date, ~organization=organization.id),
+      ) {
+      | (Ok(organization), Ok(member)) => Ok({"organization": organization, "member": member})
+      | (organizationResult, memberResult) =>
+        Error(
+          #AggregatedError({
+            "member": memberResult->Util.someError,
+            "organization": organizationResult->Util.someError,
+          }),
+        )
       }
-
-    | Error(_) as error => error
     }
 
-  | Some(member) => Error(InvalidMember({member: Some(member.id)}))
-  | None => Error(InvalidMember({member: None}))
+  | Ok(result) => Error(#InvalidInput({"name": result["name"], "label": result["label"]}))
+  | Error(_) as error => error
   }
 }
 
@@ -69,23 +59,30 @@ let addMemberToOrganization = async (
   ~by,
   ~date,
 ) => {
-  switch await findMember(. memberId) {
-  | Some({Member.state: Some(_)} as member) =>
-    switch await findOrganization(. organizationId) {
-    | Some({Organization.state: Some(_)} as organization) =>
-      switch organization->Organization.addMember(~member=member.id, ~by, ~date) {
-      | Ok(organization) =>
-        switch member->Member.joinToOrganization(~organization=organization.id, ~date) {
-        | Ok(member) => Ok({"organization": organization, "member": member})
-        | Error(error) => Error(MemberError({error: error}))
-        }
-      | Error(error) => Error(OrganizationError({error: error}))
-      }
-    | _ => Error(InvalidOrganization({organization: Some(organizationId)}))
-    | exception Js.Exn.Error(exn) => Error(IOError({exn: exn}))
+  open Belt
+  switch await Js.Promise2.all2((findMember(. memberId), findOrganization(. organizationId))) {
+  | (Some(member), Some(organization)) =>
+    switch (
+      organization->Organization.addMember(~member=member.Member.id, ~by, ~date),
+      member->Member.joinToOrganization(~organization=organization.id, ~date),
+    ) {
+    | (Ok(organization), Ok(member)) => Ok({"organization": organization, "member": member})
+    | (organizationResult, memberResult) =>
+      Error(
+        #AggregatedError({
+          "member": memberResult->Util.someError,
+          "organization": organizationResult->Util.someError,
+        }),
+      )
     }
-  | _ => Error(InvalidMember({member: Some(memberId)}))
-  | exception Js.Exn.Error(exn) => Error(IOError({exn: exn}))
+  | (member, organization) =>
+    Error(
+      #InvalidParameter({
+        "member": member->Option.map(member => member.id),
+        "organization": organization->Option.map(organization => organization.id),
+      }),
+    )
+  | exception Js.Exn.Error(exn) => Error(#IOError({"exn": exn}))
   }
 }
 
@@ -98,22 +95,29 @@ let removeMemberFromOrganization = async (
   ~by,
   ~date,
 ) => {
-  switch await findMember(. memberId) {
-  | Some({Member.state: Some(_)} as member) =>
-    switch await findOrganization(. organizationId) {
-    | Some({Organization.state: Some(_)} as organization) =>
-      switch organization->Organization.removeMember(~member=member.id, ~by, ~date) {
-      | Ok(organization) =>
-        switch member->Member.leaveFromOrganization(~organization=organization.id, ~date) {
-        | Ok(member) => Ok({"organization": organization, "member": member})
-        | Error(error) => Error(MemberError({error: error}))
-        }
-      | Error(error) => Error(OrganizationError({error: error}))
-      }
-    | _ => Error(InvalidOrganization({organization: Some(organizationId)}))
-    | exception Js.Exn.Error(exn) => Error(IOError({exn: exn}))
+  open Belt
+  switch await Js.Promise2.all2((findMember(. memberId), findOrganization(. organizationId))) {
+  | (Some(member), Some(organization)) =>
+    switch (
+      organization->Organization.removeMember(~member=member.Member.id, ~by, ~date),
+      member->Member.leaveFromOrganization(~organization=organization.id, ~date),
+    ) {
+    | (Ok(organization), Ok(member)) => Ok({"organization": organization, "member": member})
+    | (organizationResult, memberResult) =>
+      Error(
+        #AggregatedError({
+          "member": memberResult->Util.someError,
+          "organization": organizationResult->Util.someError,
+        }),
+      )
     }
-  | _ => Error(InvalidMember({member: Some(memberId)}))
-  | exception Js.Exn.Error(exn) => Error(IOError({exn: exn}))
+  | (member, organization) =>
+    Error(
+      #InvalidParameter({
+        "member": member->Option.map(member => member.id),
+        "organization": organization->Option.map(organization => organization.id),
+      }),
+    )
+  | exception Js.Exn.Error(exn) => Error(#IOError({"exn": exn}))
   }
 }

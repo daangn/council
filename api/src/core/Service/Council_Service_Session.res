@@ -2,19 +2,11 @@ module Session = Council_Entity_Session
 module Member = Council_Entity_Member
 
 @genType
-type error =
-  | IOError({exn: Js.Exn.t})
-  | InvalidSession({session: option<Session.id>})
-  | InvalidMember({member: option<Member.id>})
-  | SessionError({error: Session.error})
-  | MemberError({error: Member.error})
-
-@genType
 let createSession = (~sessionId, ~date, ~data) => {
   let session = Session.make(sessionId, ())
-  switch Session.create(session, ~date, ~data) {
+  switch session->Session.create(~date, ~data) {
   | Ok(_) as result => result
-  | Error(error) => Error(SessionError({error: error}))
+  | Error(error) => Error(#SessionError({"error": error}))
   }
 }
 
@@ -23,7 +15,7 @@ let findOrCreateSession = async (~findSession, ~sessionId, ~date, ~data) => {
   switch await findSession(. sessionId) {
   | Some(session) => Ok(session)
   | None => createSession(~sessionId, ~date, ~data)
-  | exception Js.Exn.Error(exn) => Error(IOError({exn: exn}))
+  | exception Js.Exn.Error(exn) => Error(#IOError({"exn": exn}))
   }
 }
 
@@ -33,10 +25,10 @@ let verifySession = async (~findSession, ~sessionId) => {
   | Some(sessionId) =>
     switch await findSession(. sessionId) {
     | Some({Session.state: Some(_)} as session) => Ok(session)
-    | _ => Error(InvalidSession({session: Some(sessionId)}))
-    | exception Js.Exn.Error(exn) => Error(IOError({exn: exn}))
+    | _ => Error(#InvalidSession({"session": Some(sessionId)}))
+    | exception Js.Exn.Error(exn) => Error(#IOError({"exn": exn}))
     }
-  | None => Error(InvalidSession({session: None}))
+  | None => Error(#InvalidSession({"session": None}))
   }
 }
 
@@ -50,12 +42,13 @@ let verifyMemberSession = async (~findSession, ~findMember, ~sessionId, ~memberI
       | Some({Member.state: Some(memberState)} as member) =>
         switch memberState.authProviders->Js.Array2.includes(sessionState.subject) {
         | true => Ok({"member": member, "session": session})
-        | false => Error(InvalidMember({member: Some(memberId)}))
+        | false => Error(#InvalidMember({"member": Some(memberId)}))
         }
-      | _ => Error(InvalidMember({member: Some(memberId)}))
+      | _ => Error(#InvalidMember({"member": Some(memberId)}))
       }
-    | None => Error(InvalidMember({member: None}))
+    | None => Error(#InvalidMember({"member": None}))
     }
-  | _ => Error(InvalidSession({session: sessionId}))
+  | Ok({Session.id: sessionId}) => Error(#InvalidSession({"session": Some(sessionId)}))
+  | Error(_) as error => error
   }
 }
