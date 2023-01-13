@@ -1,9 +1,4 @@
-import * as React from 'react';
-import { type ExecutionResult } from 'graphql';
-
-import { type IndexPageQuery } from '~/client/graphql.gen';
 import { type PageContext } from '~/client/ssr';
-import { Link } from 'react-router-dom';
 
 export async function getPageProps({ req }: PageContext) {
   if (!req.sessionOrRedirect()) {
@@ -27,16 +22,19 @@ export async function getPageProps({ req }: PageContext) {
   return result;
 }
 
-export default function IndexPage({ data }: ExecutionResult<IndexPageQuery>) {
+export default function CreateOrganizationPage() {
   return (
     <div>
-      Hello World
-
-      {data?.site.permissions.canCreateOrganization && (
-        <Link to="/admin/orgs/new">
-          Create Organization
-        </Link>
-      )}
+      <form>
+        <label>
+          Name:
+          <input type="text" name="name" />
+        </label>
+        <label>
+          Label:
+          <input type="text" name="label" />
+        </label>
+      </form>
     </div>
-  );
+  )
 }

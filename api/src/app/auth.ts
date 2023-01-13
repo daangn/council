@@ -160,7 +160,7 @@ export async function setupAuth(app: FastifyInstance): Promise<void> {
   });
 
   app.decorateRequest('activeMemberOrRedirect', null).addHook('onRequest', async (req, reply) => {
-    req.memberOrRedirect = function memberOrRedirect<T>(): T {
+    req.activeMemberOrRedirect = function memberOrRedirect<T>(): T {
       if (!req.currentMember?.state) {
         reply.redirect('/admin/signup');
         return null as T;

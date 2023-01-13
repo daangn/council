@@ -5,19 +5,6 @@ import { AccountService, type Member } from '~/core';
 
 import { OrganizationSchema } from './organization';
 
-export const MemberRolesSchema = builder.objectRef<Member.t>('MemberRoles').implement({
-  fields: (t) => ({
-    canCreateOrganization: t.boolean({
-      async resolve(root, _args, ctx) {
-        const { allowed } = await ctx.app.fga.check({
-          tuple_key: TupleKey.canCreateOrganization(`member:${root.id}`),
-        });
-        return allowed ?? false;
-      },
-    }),
-  }),
-});
-
 export const MemberSchema = builder.loadableObject('Member', {
   load: (ids: string[], context: GraphQLContext) => context.app.repo.loadMembers(ids),
   fields: (t) => ({
@@ -31,7 +18,6 @@ export const MemberSchema = builder.loadableObject('Member', {
         return root.state?.value.data.joinedOrganizations ?? [];
       },
     }),
-    roles: t.field({ type: MemberRolesSchema, resolve: (root) => root }),
   }),
 });
 
