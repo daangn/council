@@ -1,31 +1,24 @@
 import { type FastifyInstance } from 'fastify';
 
 import { merge } from './_inject';
-import findMember from './findMember';
-import findMemberByAuth from './findMemberByAuth';
-import findMemberByEmail from './findMemberByEmail';
-import findMemberByName from './findMemberByName';
-import findOrganization from './findOrganization';
-import findOrganizationByName from './findOrganizationByName';
-import findSession from './findSession';
-import loadMembers from './loadMembers';
-import loadOrganizations from './loadOrganizations';
 
-const injectAll = merge([
-  findMember,
-  findMemberByAuth,
-  findMemberByEmail,
-  findMemberByName,
-  findOrganization,
-  findOrganizationByName,
-  findSession,
-  loadMembers,
-  loadOrganizations,
-] as const);
-type AppRepo = ReturnType<typeof injectAll>;
+const modules = await Promise.all([
+  import('./findMember'),
+  import('./findMemberByAuth'),
+  import('./findMemberByEmail'),
+  import('./findMemberByName'),
+  import('./findOrganization'),
+  import('./findOrganizationByName'),
+  import('./findSession'),
+  import('./loadMembers'),
+  import('./loadOrganizations'),
+]);
+
+const inject = merge(modules);
+type AppRepo = ReturnType<typeof inject>;
 
 export async function setupRepo(app: FastifyInstance) {
-  app.decorate('repo', injectAll(app));
+  app.decorate('repo', inject(app));
 }
 
 declare module 'fastify' {
