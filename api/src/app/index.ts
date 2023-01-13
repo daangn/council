@@ -12,6 +12,7 @@ import { setupGraphQL } from './graphql';
 import { setupId } from './id';
 import { setupPrisma } from './prisma';
 import { setupRepo } from './repo';
+// import { setupOTEL } from './tracer';
 
 export async function makeApp(options: {
   dev: boolean;
@@ -33,6 +34,8 @@ export async function makeApp(options: {
     hook: 'onRequest',
   });
 
+  // See https://github.com/open-telemetry/opentelemetry-js/issues/3521
+  //  await setupOTEL(app);
   await setupId(app);
   await setupPrisma(app);
   await setupEventStore(app);

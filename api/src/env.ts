@@ -20,4 +20,6 @@ export const env = envalid.cleanEnv(process.env, {
 
   AUTH0_CLIENT_SECRET: envalid.str(),
   AUTH0_REDIRECT_URI: envalid.str(),
+
+  ZIPKIN_ENDPOINT: envalid.str({ default: '' }),
 });
