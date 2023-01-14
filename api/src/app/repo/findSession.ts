@@ -1,10 +1,19 @@
+import { type FastifyInstance } from 'fastify';
+
 import { Session } from '~/core';
 
-import { type Injectable } from './_inject';
-
-const repo: Injectable<{
+interface AppRepo {
   findSession(sessionId: string): Promise<Session.t | null>;
-}> = (app) => {
+}
+
+declare module 'fastify' {
+  interface InjectedAppRepo extends AppRepo {}
+  interface FastifyInstance {
+    repo: InjectedAppRepo;
+  }
+}
+
+export default function make(app: FastifyInstance): AppRepo {
   return {
     async findSession(sessionId) {
       const snapshot = await app.prisma.councilSnapshot.findUnique({
@@ -41,6 +50,4 @@ const repo: Injectable<{
       return session;
     },
   };
-};
-
-export default repo;
+}

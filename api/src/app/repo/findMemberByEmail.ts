@@ -1,10 +1,19 @@
+import { type FastifyInstance } from 'fastify';
+
 import { Member } from '~/core';
 
-import { type Injectable } from './_inject';
-
-const repo: Injectable<{
+interface AppRepo {
   findMemberByEmail(email: string): Promise<Member.t | null>;
-}> = (app) => {
+}
+
+declare module 'fastify' {
+  interface InjectedAppRepo extends AppRepo {}
+  interface FastifyInstance {
+    repo: InjectedAppRepo;
+  }
+}
+
+export default function make(app: FastifyInstance): AppRepo {
   return {
     async findMemberByEmail(email) {
       const snapshot = await app.prisma.councilSnapshot.findFirst({
@@ -38,6 +47,4 @@ const repo: Injectable<{
       return member;
     },
   };
-};
-
-export default repo;
+}

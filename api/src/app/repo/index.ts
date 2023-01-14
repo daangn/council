@@ -1,28 +1,17 @@
 import { type FastifyInstance } from 'fastify';
 
-import { merge } from './_inject';
-
-const modules = await Promise.all([
-  import('./findMember'),
-  import('./findMemberByAuth'),
-  import('./findMemberByEmail'),
-  import('./findMemberByName'),
-  import('./findOrganization'),
-  import('./findOrganizationByName'),
-  import('./findSession'),
-  import('./loadMembers'),
-  import('./loadOrganizations'),
-]);
-
-const inject = merge(modules);
-type AppRepo = ReturnType<typeof inject>;
-
-export async function setupRepo(app: FastifyInstance) {
-  app.decorate('repo', inject(app));
+interface Injectable<T extends object> {
+  (app: FastifyInstance): T;
 }
 
-declare module 'fastify' {
-  interface FastifyInstance {
-    repo: AppRepo;
+type InjectableModule<T extends object> = { default: Injectable<T> };
+
+const modules = import.meta.glob<true, string, InjectableModule<object>>(['./*.ts'], { eager: true });
+
+export async function setupRepo(app: FastifyInstance) {
+  const deps = {};
+  for (const [_, module] of Object.entries(modules)) {
+    Object.assign(deps, module.default(app));
   }
+  app.decorate('repo', deps);
 }

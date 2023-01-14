@@ -1,10 +1,19 @@
+import { type FastifyInstance } from 'fastify';
+
 import { Organization } from '~/core';
 
-import { type Injectable } from './_inject';
-
-const repo: Injectable<{
+interface AppRepo {
   findOrganization(id: string): Promise<Organization.t | null>;
-}> = (app) => {
+}
+
+declare module 'fastify' {
+  interface InjectedAppRepo extends AppRepo {}
+  interface FastifyInstance {
+    repo: InjectedAppRepo;
+  }
+}
+
+export default function make(app: FastifyInstance): AppRepo {
   return {
     async findOrganization(id) {
       const snapshot = await app.prisma.councilSnapshot.findUnique({
@@ -38,6 +47,4 @@ const repo: Injectable<{
       return organization;
     },
   };
-};
-
-export default repo;
+}

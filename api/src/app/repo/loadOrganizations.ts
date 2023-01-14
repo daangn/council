@@ -1,10 +1,19 @@
+import { type FastifyInstance } from 'fastify';
+
 import { Organization } from '~/core';
 
-import { type Injectable } from './_inject';
-
-const repo: Injectable<{
+interface AppRepo {
   loadOrganizations(ids: string[]): Promise<Array<Organization.t | Error>>;
-}> = (app) => {
+}
+
+declare module 'fastify' {
+  interface InjectedAppRepo extends AppRepo {}
+  interface FastifyInstance {
+    repo: InjectedAppRepo;
+  }
+}
+
+export default function make(app: FastifyInstance): AppRepo {
   return {
     async loadOrganizations(ids) {
       const snapshots = await app.prisma.councilSnapshot.findMany({
@@ -33,6 +42,4 @@ const repo: Injectable<{
       return members;
     },
   };
-};
-
-export default repo;
+}
