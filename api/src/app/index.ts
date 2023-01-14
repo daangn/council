@@ -12,6 +12,7 @@ import { setupGraphQL } from './graphql';
 import { setupId } from './id';
 import { setupPrisma } from './prisma';
 import { setupRepo } from './repo';
+import { setupWorker } from './worker';
 // import { setupOTEL } from './tracer';
 
 export async function makeApp(options: {
@@ -24,6 +25,7 @@ export async function makeApp(options: {
       },
       level: 'debug',
     },
+    disableRequestLogging: true,
   });
 
   await app.register(FastifyForm);
@@ -41,6 +43,7 @@ export async function makeApp(options: {
   await setupEventStore(app);
   await setupRepo(app);
   await setupFga(app);
+  await setupWorker(app);
   await setupAuth(app);
   await setupGraphQL(app);
   await setupClient(app);
