@@ -28,9 +28,6 @@
       "type": "shell",
       "label": "ReScript Build",
       "command": "yarn workspace api rescript build -w",
-      "runOptions": {
-        "runOn": "folderOpen"
-      },
       "presentation": {
         "reveal": "always",
         "panel": "new"
@@ -54,5 +51,22 @@
         "panel": "new"
       }
     },
+    {
+      "type": "shell",
+      "label": "Start API Server",
+      "command": "yarn workspace api dev",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Start Dev",
+      "dependsOn": [
+        "ReScript Build",
+        "GraphQL Codegen",
+        "Start API Server"
+      ]
+    }
   ]
 }
