@@ -4162,7 +4162,7 @@ __metadata:
     fast-jwt: ^2.0.2
     fastify: ^4.10.2
     graphile-worker: ^0.13.0
-    graphql: "npm:graphql-esm@^16.5.0"
+    graphql: ^16.6.0
     graphql-config: ^4.4.0
     graphql-yoga: ^3.1.1
     nanoid: ^4.0.0
@@ -6396,10 +6396,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql@npm:graphql-esm@^16.5.0":
-  version: 16.5.0
-  resolution: "graphql-esm@npm:16.5.0"
-  checksum: 6e5f32af3895a5698d653472d4ecbe998524aa2a792bccfdf2de8901796d996c58dc8dde7174d49d4dbac365dd8e801c6c859e3db30663107ae42c8a742047dc
+"graphql@npm:^16.6.0":
+  version: 16.6.0
+  resolution: "graphql@npm:16.6.0"
+  checksum: 3a2c15ff58b69d017618d2b224fa6f3c4a7937e1f711c3a5e0948db536b4931e6e649560b53de7cc26735e027ceea6e2d0a6bb7c29fc4639b290313e3aa71618
   languageName: node
   linkType: hard
 

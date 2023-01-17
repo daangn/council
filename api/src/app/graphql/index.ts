@@ -1,7 +1,7 @@
 import { type TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
-import { type DocumentNode, type ExecutionResult, lexicographicSortSchema, printSchema } from 'graphql';
 import { createYoga } from 'graphql-yoga';
+import { type DocumentNode, type ExecutionResult, lexicographicSortSchema, printSchema } from 'graphql/index.js';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import { publicPath } from '~/common';
