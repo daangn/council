@@ -11,6 +11,7 @@ import { setupFga } from './fga';
 import { setupGraphQL } from './graphql';
 import { setupId } from './id';
 import { setupPrisma } from './prisma';
+import { setupPublic } from './public';
 import { setupRepo } from './repo';
 import { setupWorker } from './worker';
 // import { setupOTEL } from './tracer';
@@ -38,6 +39,7 @@ export async function makeApp(options: {
 
   // See https://github.com/open-telemetry/opentelemetry-js/issues/3521
   //  await setupOTEL(app);
+  await setupPublic(app);
   await setupId(app);
   await setupPrisma(app);
   await setupEventStore(app);

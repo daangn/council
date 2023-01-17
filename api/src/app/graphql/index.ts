@@ -1,7 +1,10 @@
 import { type TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
-import { type DocumentNode, type ExecutionResult } from 'graphql';
+import { type DocumentNode, type ExecutionResult, lexicographicSortSchema, printSchema } from 'graphql';
 import { createYoga } from 'graphql-yoga';
+import * as fs from 'node:fs/promises';
+import * as path from 'node:path';
+import { publicPath } from '~/common';
 
 import { type GraphQLContext, contextFactory } from './context';
 import { schema } from './schema';
@@ -38,6 +41,16 @@ export async function setupGraphQL(app: FastifyInstance): Promise<void> {
       reply.send(response.body);
       return reply;
     },
+  });
+
+  const sdlPath = path.resolve(publicPath, 'sdl.graphql');
+  if (import.meta.env.DEV) {
+    await fs.writeFile(sdlPath, printSchema(lexicographicSortSchema(schema)), 'utf-8');
+  }
+
+  app.get('/sdl.graphql', async (req, reply) => {
+    reply.type('application/graphql');
+    reply.sendFile(sdlPath);
   });
 
   function makeGraphQLExecutor(req: FastifyRequest, reply: FastifyReply) {

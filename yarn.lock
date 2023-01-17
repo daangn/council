@@ -1145,6 +1145,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fastify/send@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@fastify/send@npm:1.0.0"
+  dependencies:
+    debug: ^4.3.4
+    depd: 2.0.0
+    destroy: 1.2.0
+    encodeurl: ~1.0.2
+    escape-html: ~1.0.3
+    etag: ~1.8.1
+    fresh: 0.5.2
+    http-errors: 2.0.0
+    mime: 1.6.0
+    ms: 2.1.3
+    on-finished: 2.4.1
+    range-parser: ~1.2.1
+    statuses: 2.0.1
+  checksum: 2696b94921847c3db1ee41caa5b0756ba1b1caf2b033a1aee2f064eac43fd82bbb3593f12cec58dc5d420e9b73394121a2c28d7772d507a5ee71fdddfd1391ef
+  languageName: node
+  linkType: hard
+
 "@fastify/static@npm:^6.5.0":
   version: 6.6.0
   resolution: "@fastify/static@npm:6.6.0"
@@ -1157,6 +1178,21 @@ __metadata:
     readable-stream: ^4.0.0
     send: ^0.18.0
   checksum: e8e180103382a59625e6d58c4868201b157ec9a8e68e612ced4d26d837513200e81b3a60dfa0fbfc18700e3c292485cb0a3c25375663213d4909e4b50991a391
+  languageName: node
+  linkType: hard
+
+"@fastify/static@npm:^6.6.1":
+  version: 6.6.1
+  resolution: "@fastify/static@npm:6.6.1"
+  dependencies:
+    "@fastify/accept-negotiator": ^1.0.0
+    "@fastify/send": ^1.0.0
+    content-disposition: ^0.5.3
+    fastify-plugin: ^4.0.0
+    glob: ^8.0.1
+    p-limit: ^3.1.0
+    readable-stream: ^4.0.0
+  checksum: 45f888865ca3d7dd6d73ca757754983948af2273e70b4fc10d7bdd0fc8e25aeae198307be38b608b4d6313fe06208922546f8ab008b47c2eb64ba0a4bc385784
   languageName: node
   linkType: hard
 
@@ -1292,6 +1328,21 @@ __metadata:
   peerDependencies:
     graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
   checksum: c80d2848c1fc9e362749dc84ea27c2b6ad234448d7fc623bfb4b48b3f09a9d00819c86982e8c791cd0d048753ba69f834ee55c61413e17c3f2323f1506314a33
+  languageName: node
+  linkType: hard
+
+"@graphql-codegen/typed-document-node@npm:^2.3.12":
+  version: 2.3.12
+  resolution: "@graphql-codegen/typed-document-node@npm:2.3.12"
+  dependencies:
+    "@graphql-codegen/plugin-helpers": ^3.1.2
+    "@graphql-codegen/visitor-plugin-common": 2.13.7
+    auto-bind: ~4.0.0
+    change-case-all: 1.0.15
+    tslib: ~2.4.0
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 4263826449678c2ebd177fbe6a7ed7e5838695b6065ed57827eb7bcaaa28ac0c2507807432edb0a02ce680576b1d48d064e629e0be5ef10e3c45916f3cd45bbd
   languageName: node
   linkType: hard
 
@@ -4077,9 +4128,11 @@ __metadata:
     "@fastify/auth": ^4.2.0
     "@fastify/cookie": ^8.3.0
     "@fastify/formbody": ^7.4.0
+    "@fastify/static": ^6.6.1
     "@fastify/vite": ^3.0.3
     "@graphql-codegen/cli": ^2.16.3
     "@graphql-codegen/core": ^2.6.8
+    "@graphql-codegen/typed-document-node": ^2.3.12
     "@graphql-codegen/typescript": ^2.8.7
     "@graphql-codegen/typescript-operations": ^2.5.12
     "@graphql-typed-document-node/core": ^3.1.1
@@ -4109,7 +4162,7 @@ __metadata:
     fast-jwt: ^2.0.2
     fastify: ^4.10.2
     graphile-worker: ^0.13.0
-    graphql: ^16.6.0
+    graphql: "npm:graphql-esm@^16.5.0"
     graphql-config: ^4.4.0
     graphql-yoga: ^3.1.1
     nanoid: ^4.0.0
@@ -4127,6 +4180,7 @@ __metadata:
     vite-node: ^0.25.8
     vite-plugin-graphql-codegen: ^3.0.1
     vite-plugin-preload: ^0.1.8
+    vite-plugin-static-copy: ^0.13.0
     vite-tsconfig-paths: ^4.0.2
     vitest: ^0.25.8
   languageName: unknown
@@ -5762,7 +5816,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.2.12, fast-glob@npm:^3.2.5, fast-glob@npm:^3.2.9":
+"fast-glob@npm:^3.2.11, fast-glob@npm:^3.2.12, fast-glob@npm:^3.2.5, fast-glob@npm:^3.2.9":
   version: 3.2.12
   resolution: "fast-glob@npm:3.2.12"
   dependencies:
@@ -6031,6 +6085,17 @@ __metadata:
     jsonfile: ^6.0.1
     universalify: ^2.0.0
   checksum: 5f579466e7109719d162a9249abbeffe7f426eb133ea486e020b89bc6d67a741134076bf439983f2eb79276ceaf6bd7b7c1e43c3fd67fe889863e69072fb0a5e
+  languageName: node
+  linkType: hard
+
+"fs-extra@npm:^11.1.0":
+  version: 11.1.0
+  resolution: "fs-extra@npm:11.1.0"
+  dependencies:
+    graceful-fs: ^4.2.0
+    jsonfile: ^6.0.1
+    universalify: ^2.0.0
+  checksum: 8085a078ead6a95711cc3cb689f9a64ad7393a1cdf7ed1bdab9dbef384f4a8fac941d20b1eb3067c427c82730a1078f9cfe93d86b98e848ee5445024ad0a3fa4
   languageName: node
   linkType: hard
 
@@ -6331,10 +6396,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql@npm:^16.6.0":
-  version: 16.6.0
-  resolution: "graphql@npm:16.6.0"
-  checksum: 3a2c15ff58b69d017618d2b224fa6f3c4a7937e1f711c3a5e0948db536b4931e6e649560b53de7cc26735e027ceea6e2d0a6bb7c29fc4639b290313e3aa71618
+"graphql@npm:graphql-esm@^16.5.0":
+  version: 16.5.0
+  resolution: "graphql-esm@npm:16.5.0"
+  checksum: 6e5f32af3895a5698d653472d4ecbe998524aa2a792bccfdf2de8901796d996c58dc8dde7174d49d4dbac365dd8e801c6c859e3db30663107ae42c8a742047dc
   languageName: node
   linkType: hard
 
@@ -9725,6 +9790,20 @@ __metadata:
   peerDependencies:
     vite: ">=2.0.0"
   checksum: 59b86743e46fccabbca3a66bfb8e08a300e22627101da43db7824c6076f4188bdeb12b8aa131072e28b509df2d2758cad82cfa5e811517651e09615d053b5ca6
+  languageName: node
+  linkType: hard
+
+"vite-plugin-static-copy@npm:^0.13.0":
+  version: 0.13.0
+  resolution: "vite-plugin-static-copy@npm:0.13.0"
+  dependencies:
+    chokidar: ^3.5.3
+    fast-glob: ^3.2.11
+    fs-extra: ^11.1.0
+    picocolors: ^1.0.0
+  peerDependencies:
+    vite: ^3.0.0 || ^4.0.0
+  checksum: b8d7cbf6cd8ea2a4fe02c2e479853039d04355f054b2ef094e1db86a8cd63c2720c7be4b53c3161c91cf6a0629a862df979dea6487a4820047e9c1c8e7b81796
   languageName: node
   linkType: hard
 

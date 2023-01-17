@@ -15,6 +15,7 @@
     "@fastify/auth": "^4.2.0",
     "@fastify/cookie": "^8.3.0",
     "@fastify/formbody": "^7.4.0",
+    "@fastify/static": "^6.6.1",
     "@fastify/vite": "^3.0.3",
     "@opentelemetry/api": "^1.4.0",
     "@opentelemetry/auto-instrumentations-node": "^0.36.0",
@@ -36,7 +37,7 @@
     "fast-jwt": "^2.0.2",
     "fastify": "^4.10.2",
     "graphile-worker": "^0.13.0",
-    "graphql": "^16.6.0",
+    "graphql": "npm:graphql-esm@^16.5.0",
     "graphql-yoga": "^3.1.1",
     "nanoid": "^4.0.0",
     "react": "^18.2.0",
@@ -48,6 +49,7 @@
   "devDependencies": {
     "@graphql-codegen/cli": "^2.16.3",
     "@graphql-codegen/core": "^2.6.8",
+    "@graphql-codegen/typed-document-node": "^2.3.12",
     "@graphql-codegen/typescript": "^2.8.7",
     "@graphql-codegen/typescript-operations": "^2.5.12",
     "@graphql-typed-document-node/core": "^3.1.1",
@@ -67,6 +69,7 @@
     "vite-node": "^0.25.8",
     "vite-plugin-graphql-codegen": "^3.0.1",
     "vite-plugin-preload": "^0.1.8",
+    "vite-plugin-static-copy": "^0.13.0",
     "vite-tsconfig-paths": "^4.0.2",
     "vitest": "^0.25.8"
   },

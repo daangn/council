@@ -1,0 +1,87 @@
+input AddMemberToOrganization {
+  memberId: String!
+  organizationId: String!
+}
+
+type AddMemberToOrganizationOutput {
+  member: Member!
+  organization: Organization!
+}
+
+input CreateOrganizationInput {
+  label: String!
+  name: String!
+}
+
+type CreateOrganizationOutput {
+  member: Member!
+  organization: Organization!
+}
+
+type Member {
+  active: Boolean!
+  id: ID!
+  joinedOrganizations: [Organization!]!
+}
+
+type Mutation {
+  addMemberToOrganization(input: AddMemberToOrganization!): AddMemberToOrganizationOutput!
+  createOrganization(input: CreateOrganizationInput!): CreateOrganizationOutput!
+  removeMemberFromOrganization(input: RemoveMemberFromOrganization!): RemoveMemberFromOrganizationOutput!
+  requestSignup(input: SignupInput!): RequestSignupOutput!
+  validateCreateOrganization(input: CreateOrganizationInput!): ValidateCreateOrganizationOutputSchema!
+  validateSignup(input: SignupInput!): ValidateSingupOutput!
+}
+
+type Organization {
+  id: ID!
+}
+
+type Query {
+  currentSession: Session!
+  member(id: String!): Member!
+  members(ids: [String!]!): [Member!]!
+  site: Site!
+}
+
+input RemoveMemberFromOrganization {
+  memberId: String!
+  organizationId: String!
+}
+
+type RemoveMemberFromOrganizationOutput {
+  member: Member!
+  organization: Organization!
+}
+
+type RequestSignupOutput {
+  isAdmin: Boolean!
+  member: Member!
+}
+
+type Session {
+  member: Member
+}
+
+input SignupInput {
+  email: String!
+  name: String!
+}
+
+type Site {
+  permissions: SitePermissions!
+}
+
+type SitePermissions {
+  canCreateOrganization: Boolean!
+}
+
+type ValidateCreateOrganizationOutputSchema {
+  label: Boolean!
+  name: Boolean!
+}
+
+type ValidateSingupOutput {
+  email: Boolean!
+  name: Boolean!
+}

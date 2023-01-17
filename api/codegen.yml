@@ -1,13 +1,14 @@
-schema: http://localhost:3000/graphql
+schema: ./src/public/sdl.graphql
 
 documents:
   - ./src/client/pages/**/*.tsx
 
 generates:
-  ./src/client/graphql.gen.ts:
+  ./src/client/graphql.ts:
     plugins:
       - typescript
       - typescript-operations
+      - typed-document-node
     config:
       skipTypename: true
       avoidOptionals: true

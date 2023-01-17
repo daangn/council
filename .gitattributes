@@ -3,4 +3,5 @@
 
 .vscode/*.json    language=JSON5
 
-*.typegen.ts      linguist-generated
+*.typegen.ts            linguist-generated
+src/public/sdl.graphql  linguist-generated

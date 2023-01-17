@@ -1,9 +1,18 @@
-import * as React from 'react';
 import { type ExecutionResult } from 'graphql';
 
-import { type IndexPageQuery } from '~/client/graphql.gen';
+import { IndexPageDocument, type IndexPageQuery } from '~/client/graphql';
 import { type PageContext } from '~/client/ssr';
 import { Link } from 'react-router-dom';
+
+/* GraphQL */`
+  query IndexPage {
+    site {
+      permissions {
+        canCreateOrganization
+      }
+    }
+  }
+`;
 
 export async function getPageProps({ req }: PageContext) {
   if (!req.sessionOrRedirect()) {
@@ -14,15 +23,7 @@ export async function getPageProps({ req }: PageContext) {
     return;
   }
 
-  const result = await req.executeGraphQL(/* GraphQL */`
-    query IndexPage {
-      site {
-        permissions {
-          canCreateOrganization
-        }
-      }
-    }
-  `);
+  const result = await req.executeGraphQL(IndexPageDocument);
 
   return result;
 }
