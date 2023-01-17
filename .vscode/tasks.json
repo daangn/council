@@ -65,6 +65,7 @@
       "dependsOn": [
         "ReScript Build",
         "GraphQL Codegen",
+        "Prisma Studio",
         "Start API Server"
       ]
     }
