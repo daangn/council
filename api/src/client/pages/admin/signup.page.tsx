@@ -1,6 +1,6 @@
 import { type PageContext } from '~/client/ssr';
 
-import { RequestSignupDocument } from './signup.gen';
+import { RequestSignupDocument } from './signup.graphql';
 
 type PageProps = {
   suggestedName?: string,

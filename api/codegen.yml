@@ -13,7 +13,7 @@ generates:
   ./src/client/:
     preset: near-operation-file
     presetConfig:
-      extension: '.gen.ts'
+      extension: '.graphql.ts'
       baseTypesPath: '~~/client/graphql.gen'
     plugins:
       - typescript-operations

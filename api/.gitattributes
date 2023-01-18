@@ -1,1 +1,2 @@
-*.gen.ts  linguist-generated
+*.gen.ts      linguist-generated
+*.graphql.ts  linguist-generated
