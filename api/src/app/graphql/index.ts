@@ -1,5 +1,6 @@
 import { type TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
+import FastifyGraphQLVoyager from 'fastify-graphql-voyager';
 import { createYoga } from 'graphql-yoga';
 import { type DocumentNode, type ExecutionResult, lexicographicSortSchema, printSchema } from 'graphql/index.js';
 import * as fs from 'node:fs/promises';
@@ -41,6 +42,11 @@ export async function setupGraphQL(app: FastifyInstance): Promise<void> {
       reply.send(response.body);
       return reply;
     },
+  });
+
+  await app.register(FastifyGraphQLVoyager, {
+    path: '/voyager',
+    graphql: { schema },
   });
 
   const sdlPath = path.resolve(publicPath, 'sdl.graphql');

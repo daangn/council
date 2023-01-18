@@ -3142,31 +3142,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/client@npm:^4.8.0":
-  version: 4.8.0
-  resolution: "@prisma/client@npm:4.8.0"
+"@prisma/client@npm:^4.9.0":
+  version: 4.9.0
+  resolution: "@prisma/client@npm:4.9.0"
   dependencies:
-    "@prisma/engines-version": 4.8.0-61.d6e67a83f971b175a593ccc12e15c4a757f93ffe
+    "@prisma/engines-version": 4.9.0-42.ceb5c99003b99c9ee2c1d2e618e359c14aef2ea5
   peerDependencies:
     prisma: "*"
   peerDependenciesMeta:
     prisma:
       optional: true
-  checksum: c0843f2830b5b83249ab9e144ac54d29e1246ae7945c1f708a35d5ae3a0eb413fdacebfcd5c76ed670aa113617fe418c280f1b48da4265b169ba02e3b183894e
+  checksum: 452188fe7d7d493dc059a10fdb5d70f29d28fb324ee008aaecf59fe23f8f8d69463128579c583c45ac05f6a8f8cf2098a9d671ec1303c99a44d0e533fe44fc0d
   languageName: node
   linkType: hard
 
-"@prisma/engines-version@npm:4.8.0-61.d6e67a83f971b175a593ccc12e15c4a757f93ffe":
-  version: 4.8.0-61.d6e67a83f971b175a593ccc12e15c4a757f93ffe
-  resolution: "@prisma/engines-version@npm:4.8.0-61.d6e67a83f971b175a593ccc12e15c4a757f93ffe"
-  checksum: d59ed71a545d5141c4b853d265e503c874e165c591419b96de48806a3254901a6449c73e3e45cb4f480c76a562e0aed4f4c8a4933993d2de376dd2dda7a376b0
+"@prisma/engines-version@npm:4.9.0-42.ceb5c99003b99c9ee2c1d2e618e359c14aef2ea5":
+  version: 4.9.0-42.ceb5c99003b99c9ee2c1d2e618e359c14aef2ea5
+  resolution: "@prisma/engines-version@npm:4.9.0-42.ceb5c99003b99c9ee2c1d2e618e359c14aef2ea5"
+  checksum: db6e33343f7b0e4709b1280406298f3797a4b3c47b2420d10ef099ffa472793cbc47d041ea416f6762ea3becadcaf7b6a812e1d2d173e08d23053cac643c8af3
   languageName: node
   linkType: hard
 
-"@prisma/engines@npm:4.8.0":
-  version: 4.8.0
-  resolution: "@prisma/engines@npm:4.8.0"
-  checksum: 4f44919891b19121810365e9faa6d1fd1b0318d2267fc0c0bb8b6dfe88be1b138188b8d97d38ef1ef02ca52d7d09d86321c0a14023d2c5bcc3e75c3aa2ee73ad
+"@prisma/engines@npm:4.9.0":
+  version: 4.9.0
+  resolution: "@prisma/engines@npm:4.9.0"
+  checksum: f9b757f55513ae78aaf3ade54375e2576aa6f73d40b75ff21eb0c0278b69d4496d727c844bbcebfebf32389ba8091844cd6df8cdb88d3ee2fdeb6a523bcfc4d1
   languageName: node
   linkType: hard
 
@@ -4157,7 +4157,7 @@ __metadata:
     "@pothos/plugin-scope-auth": ^3.16.0
     "@pothos/plugin-tracing": ^0.5.7
     "@pothos/tracing-opentelemetry": ^0.6.8
-    "@prisma/client": ^4.8.0
+    "@prisma/client": ^4.9.0
     "@rescript/react": ^0.11.0
     "@tailwindcss/jit": ^0.1.18
     "@types/node": ^18.11.15
@@ -4170,7 +4170,8 @@ __metadata:
     dotenv: ^16.0.3
     envalid: ^7.3.1
     fast-jwt: ^2.0.2
-    fastify: ^4.10.2
+    fastify: ^4.11.0
+    fastify-graphql-voyager: ^0.1.2
     graphile-worker: ^0.13.0
     graphql: ^16.6.0
     graphql-config: ^4.4.0
@@ -4178,7 +4179,7 @@ __metadata:
     nanoid: ^4.0.0
     pino-pretty: ^9.1.1
     postcss: ^8.4.20
-    prisma: ^4.8.0
+    prisma: ^4.9.0
     react: ^18.2.0
     react-dom: ^18.2.0
     react-icons: ^4.7.1
@@ -5902,6 +5903,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fastify-graphql-voyager@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "fastify-graphql-voyager@npm:0.1.2"
+  dependencies:
+    fastify-plugin: ^4.5.0
+  peerDependencies:
+    fastify: ^4.0.0
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: a059de8dc3693d60e46f4ace23a0c42f5f54897a50bda9ad226a97aad9fbeec1eabe2b89976d6c76a5a2cb81a1e02df9e79dae9bee2335d13464c000c713c361
+  languageName: node
+  linkType: hard
+
 "fastify-plugin@npm:^3.0.0":
   version: 3.0.1
   resolution: "fastify-plugin@npm:3.0.1"
@@ -5916,7 +5929,37 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify@npm:^4.10.2, fastify@npm:^4.7.0":
+"fastify-plugin@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "fastify-plugin@npm:4.5.0"
+  checksum: 81a63886e038fffb5427df5104c53b0f5d8ad89e59a451110cf591a81372ead1986df59d95bd897d9bd742f78e20eb3ff50bda0115382e6359ed1616883b9a01
+  languageName: node
+  linkType: hard
+
+"fastify@npm:^4.11.0":
+  version: 4.11.0
+  resolution: "fastify@npm:4.11.0"
+  dependencies:
+    "@fastify/ajv-compiler": ^3.3.1
+    "@fastify/error": ^3.0.0
+    "@fastify/fast-json-stringify-compiler": ^4.1.0
+    abstract-logging: ^2.0.1
+    avvio: ^8.2.0
+    content-type: ^1.0.4
+    find-my-way: ^7.3.0
+    light-my-request: ^5.6.1
+    pino: ^8.5.0
+    process-warning: ^2.0.0
+    proxy-addr: ^2.0.7
+    rfdc: ^1.3.0
+    secure-json-parse: ^2.5.0
+    semver: ^7.3.7
+    tiny-lru: ^10.0.0
+  checksum: db23dd24ae906702f7f0e6e3336d3980c525b563e4704a24ed964f3e8c09bc0575e83948bbc5a9d1945d13520e82405deeb6d9bb96a9102a008267bbaf21eb3c
+  languageName: node
+  linkType: hard
+
+"fastify@npm:^4.7.0":
   version: 4.10.2
   resolution: "fastify@npm:4.10.2"
   dependencies:
@@ -8344,15 +8387,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prisma@npm:^4.8.0":
-  version: 4.8.0
-  resolution: "prisma@npm:4.8.0"
+"prisma@npm:^4.9.0":
+  version: 4.9.0
+  resolution: "prisma@npm:4.9.0"
   dependencies:
-    "@prisma/engines": 4.8.0
+    "@prisma/engines": 4.9.0
   bin:
     prisma: build/index.js
     prisma2: build/index.js
-  checksum: 0705b5dd7e8cfa0a4b64f6c335244eeebc635bd675e242c67a60e1d426684639d03e689a0925ea818e7aa3838064a1c2665630df4ce27f5a30ab1aa34487fccf
+  checksum: c65de63bf2e6cb05fd65cc9a67f7a196868765c58a0a4928148b2edc4e798904103c02f44aaa01d403898a5714b2098d13b5b641e4c57c138ae0931f45a36b37
   languageName: node
   linkType: hard
 
