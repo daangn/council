@@ -1,8 +1,9 @@
 import { type ExecutionResult } from 'graphql';
 import { Link } from 'react-router-dom';
 
-import { AdminPageDocument, type AdminPageQuery } from '~/client/graphql.gen';
 import { type PageContext } from '~/client/ssr';
+
+import { AdminPageDocument, type AdminPageQuery } from './index.gen';
 
 export async function getPageProps({ req }: PageContext) {
   if (!req.sessionOrRedirect()) {
@@ -13,15 +14,6 @@ export async function getPageProps({ req }: PageContext) {
     return;
   }
 
-  /* GraphQL */`
-    query AdminPage {
-      site {
-        permissions {
-          canCreateOrganization
-        }
-      }
-    }
-  `;
   const result = await req.executeGraphQL(AdminPageDocument);
   return result;
 }

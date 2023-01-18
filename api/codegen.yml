@@ -1,14 +1,20 @@
 schema: ./src/public/sdl.graphql
 
 documents:
-  - ./src/client/pages/**/*.tsx
+  - ./src/client/pages/**/*.graphql
 
 generates:
   ./src/client/graphql.gen.ts:
     plugins:
       - typescript
-      - typescript-operations
-      - typed-document-node
     config:
       skipTypename: true
       avoidOptionals: true
+  ./src/client/:
+    preset: near-operation-file
+    presetConfig:
+      extension: '.gen.ts'
+      baseTypesPath: '~~/client/graphql.gen'
+    plugins:
+      - typescript-operations
+      - typed-document-node

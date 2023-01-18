@@ -1,0 +1,11 @@
+mutation RequestSignup($name: String!, $email: String!) {
+  requestSignup(input: {
+    name: $name,
+    email: $email,
+  }) {
+    member {
+      id
+      active
+    }
+  }
+}

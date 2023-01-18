@@ -1,0 +1,7 @@
+query SiteAdminPage {
+  site {
+    permissions {
+      siteAdmin
+    }
+  }
+}

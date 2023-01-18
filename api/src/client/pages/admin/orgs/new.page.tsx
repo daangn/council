@@ -1,5 +1,6 @@
-import { CreateOrganizationPageDocument } from '~/client/graphql.gen';
 import { type PageContext } from '~/client/ssr';
+
+import { CreateOrganizationPageDocument } from './new.gen';
 
 export async function getPageProps({ req }: PageContext) {
   if (!req.sessionOrRedirect()) {
@@ -10,15 +11,6 @@ export async function getPageProps({ req }: PageContext) {
     return;
   }
 
-  /* GraphQL */`
-    query CreateOrganizationPage {
-      site {
-        permissions {
-          canCreateOrganization
-        }
-      }
-    }
-  `;
   const result = await req.executeGraphQL(CreateOrganizationPageDocument);
   return result;
 }

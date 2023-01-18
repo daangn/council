@@ -6,9 +6,9 @@ export type SSRContext = {
   pageProps?: unknown;
 };
 
-export type PageContext = {
+export type PageContext<Params = unknown> = {
   app: FastifyInstance,
-  req: FastifyRequest,
+  req: FastifyRequest<{ Params: Params }>,
   reply: FastifyReply,
 };
 

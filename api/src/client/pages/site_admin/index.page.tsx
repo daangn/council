@@ -1,16 +1,8 @@
-import { SiteAdminPageDocument } from '~/client/graphql.gen';
 import { PageContext } from '~/client/ssr';
 
+import { SiteAdminPageDocument } from './index.gen';
+
 export async function getPageProps({ req, reply }: PageContext) {
-  /* GraphQL */`
-    query SiteAdminPage {
-      site {
-        permissions {
-          siteAdmin
-        }
-      }
-    }
-  `;
   const { data } = await req.executeGraphQL(SiteAdminPageDocument);
   if (!data?.site.permissions.siteAdmin) {
     if (req.currentSession) {

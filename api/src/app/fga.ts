@@ -29,21 +29,56 @@ declare module 'fastify' {
 }
 
 export const TupleKey = {
-  siteMember(props: { memberId: string }): FgaTupleKey {
+  siteMember(props: {
+    memberId: string;
+  }): FgaTupleKey {
     return {
       user: `member:${props.memberId}`,
       relation: 'member',
       object: 'site:default',
     };
   },
-  siteAdmin(props: { memberId: string }): FgaTupleKey {
+  siteAdmin(props: {
+    memberId: string;
+  }): FgaTupleKey {
     return {
       user: `member:${props.memberId}`,
       relation: 'admin',
       object: 'site:default',
     };
   },
-  canCreateOrganization(props: { memberId: string }): FgaTupleKey {
+  orgSite(props: {
+    organizationId: string;
+  }): FgaTupleKey {
+    return {
+      user: 'site:default',
+      relation: 'site',
+      object: `organization:${props.organizationId}`,
+    };
+  },
+  orgMember(props: {
+    memberId: string;
+    organizationId: string;
+  }): FgaTupleKey {
+    return {
+      user: `member:${props.memberId}`,
+      relation: 'member',
+      object: `organization:${props.organizationId}`,
+    };
+  },
+  orgAdmin(props: {
+    memberId: string;
+    organizationId: string;
+  }): FgaTupleKey {
+    return {
+      user: `member:${props.memberId}`,
+      relation: 'admin',
+      object: `organization:${props.organizationId}`,
+    };
+  },
+  canCreateOrganization(props: {
+    memberId: string;
+  }): FgaTupleKey {
     return {
       user: `member:${props.memberId}`,
       relation: 'can_create_organization',

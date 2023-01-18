@@ -1,0 +1,7 @@
+query AdminPage {
+  site {
+    permissions {
+      canCreateOrganization
+    }
+  }
+}

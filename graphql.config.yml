@@ -1,0 +1,4 @@
+schema: ./api/src/public/sdl.graphql
+
+documents:
+  - ./api/src/client/pages/**/*.graphql

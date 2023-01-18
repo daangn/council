@@ -1,5 +1,6 @@
-import { RequestSignupDocument } from '~/client/graphql.gen';
 import { type PageContext } from '~/client/ssr';
+
+import { RequestSignupDocument } from './signup.gen';
 
 type PageProps = {
   suggestedName?: string,
@@ -21,19 +22,6 @@ export async function getPageProps({ req, reply }: PageContext) {
 }
 
 export async function postAction({ app, req, reply }: PageContext) {
-  /* GraphQL */`
-    mutation RequestSignup($name: String!, $email: String!) {
-      requestSignup(input: {
-        name: $name,
-        email: $email,
-      }) {
-        member {
-          id
-          active
-        }
-      }
-    }
-  `;
   const { data } = await req.executeGraphQL(RequestSignupDocument);
   if (data) {
     if (data.requestSignup.member.active) {

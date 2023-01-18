@@ -1,4 +1,3 @@
-import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -141,32 +140,3 @@ export type ValidateSingupOutput = {
   email: Scalars['Boolean'];
   name: Scalars['Boolean'];
 };
-
-export type AdminPageQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type AdminPageQuery = { site: { permissions: { canCreateOrganization: boolean } } };
-
-export type CreateOrganizationPageQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type CreateOrganizationPageQuery = { site: { permissions: { canCreateOrganization: boolean } } };
-
-export type RequestSignupMutationVariables = Exact<{
-  name: Scalars['String'];
-  email: Scalars['String'];
-}>;
-
-
-export type RequestSignupMutation = { requestSignup: { member: { id: string, active: boolean } } };
-
-export type SiteAdminPageQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type SiteAdminPageQuery = { site: { permissions: { siteAdmin: boolean } } };
-
-
-export const AdminPageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminPage"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"site"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"permissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"canCreateOrganization"}}]}}]}}]}}]} as unknown as DocumentNode<AdminPageQuery, AdminPageQueryVariables>;
-export const CreateOrganizationPageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CreateOrganizationPage"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"site"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"permissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"canCreateOrganization"}}]}}]}}]}}]} as unknown as DocumentNode<CreateOrganizationPageQuery, CreateOrganizationPageQueryVariables>;
-export const RequestSignupDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RequestSignup"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"requestSignup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"member"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"active"}}]}}]}}]}}]} as unknown as DocumentNode<RequestSignupMutation, RequestSignupMutationVariables>;
-export const SiteAdminPageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SiteAdminPage"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"site"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"permissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"siteAdmin"}}]}}]}}]}}]} as unknown as DocumentNode<SiteAdminPageQuery, SiteAdminPageQueryVariables>;
