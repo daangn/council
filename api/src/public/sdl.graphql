@@ -74,6 +74,7 @@ type Site {
 
 type SitePermissions {
   canCreateOrganization: Boolean!
+  siteAdmin: Boolean!
 }
 
 type ValidateCreateOrganizationOutputSchema {

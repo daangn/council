@@ -24,7 +24,7 @@ export default function make(app: FastifyInstance): AppRepo {
         },
         where: {
           state: {
-            path: ['authProviders'],
+            path: ['value', 'data', 'authProviders'],
             array_contains: authProvider,
           },
         },

@@ -1,3 +1,4 @@
+import { RequestSignupDocument } from '~/client/graphql.gen';
 import { type PageContext } from '~/client/ssr';
 
 type PageProps = {
@@ -20,7 +21,7 @@ export async function getPageProps({ req, reply }: PageContext) {
 }
 
 export async function postAction({ app, req, reply }: PageContext) {
-  const { data } = await req.executeGraphQL(/* GraphQL */`
+  /* GraphQL */`
     mutation RequestSignup($name: String!, $email: String!) {
       requestSignup(input: {
         name: $name,
@@ -31,13 +32,15 @@ export async function postAction({ app, req, reply }: PageContext) {
           active
         }
       }
-    }`,
-    req.body,
-  );
-  if (data.requestSignup.member.active) {
-    return reply.redirect('/admin');
-  } else {
-    return reply.redirect('/admin/signup_requested');
+    }
+  `;
+  const { data } = await req.executeGraphQL(RequestSignupDocument);
+  if (data) {
+    if (data.requestSignup.member.active) {
+      return reply.redirect('/admin');
+    } else {
+      return reply.redirect('/admin/signup_requested');
+    }
   }
 }
 

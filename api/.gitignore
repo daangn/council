@@ -2,6 +2,6 @@ node_modules
 .env
 
 lib/bs
-*.bs.js
-*.gen.ts
+src/core/**/*.bs.js
+src/core/**/*.gen.ts
 .bsb.lock

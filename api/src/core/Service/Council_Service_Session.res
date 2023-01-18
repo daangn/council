@@ -2,17 +2,9 @@ module Session = Council_Entity_Session
 module Member = Council_Entity_Member
 
 @genType
-let createAnonymousSession = (~sessionId, ~date, ~data, ~suggestedName, ~suggestedEmail) => {
-  let session = Session.make(sessionId, ())
-  switch session->Session.createAnonymous(~date, ~data, ~suggestedName, ~suggestedEmail) {
-  | Ok(_) as result => result
-  | Error(error) => Error(#SessionError({"error": error}))
-  }
-}
-
-@genType
 let findOrCreateSession = async (
   ~findSession,
+  ~findMemberByAuth,
   ~sessionId,
   ~date,
   ~data,
@@ -20,8 +12,24 @@ let findOrCreateSession = async (
   ~suggestedEmail,
 ) => {
   switch await findSession(. sessionId) {
-  | Some(session) => Ok(session)
-  | None => createAnonymousSession(~sessionId, ~date, ~data, ~suggestedName, ~suggestedEmail)
+  | Some({Session.state: Some(_)} as session) => Ok(session)
+  | Some({Session.state: None}) => Error(#InvalidSession({"session": Some(sessionId)}))
+  | None => {
+      let session = Session.make(sessionId, ())
+      switch await findMemberByAuth(. data.Session.subject) {
+      | Some(member) =>
+        switch session->Session.createMember(~date, ~data, ~member=member.Member.id) {
+        | Ok(session) => Ok(session)
+        | Error(error) => Error(#SessionError({"error": error}))
+        }
+      | None =>
+        switch session->Session.createAnonymous(~date, ~data, ~suggestedName, ~suggestedEmail) {
+        | Ok(session) => Ok(session)
+        | Error(error) => Error(#SessionError({"error": error}))
+        }
+      }
+    }
+
   | exception Js.Exn.Error(exn) => Error(#IOError({"exn": exn}))
   }
 }

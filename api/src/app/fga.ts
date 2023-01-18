@@ -29,23 +29,23 @@ declare module 'fastify' {
 }
 
 export const TupleKey = {
-  siteMember(user: string): FgaTupleKey {
+  siteMember(props: { memberId: string }): FgaTupleKey {
     return {
-      user,
+      user: `member:${props.memberId}`,
       relation: 'member',
       object: 'site:default',
     };
   },
-  siteAdmin(user: string): FgaTupleKey {
+  siteAdmin(props: { memberId: string }): FgaTupleKey {
     return {
-      user,
+      user: `member:${props.memberId}`,
       relation: 'admin',
       object: 'site:default',
     };
   },
-  canCreateOrganization(user: string): FgaTupleKey {
+  canCreateOrganization(props: { memberId: string }): FgaTupleKey {
     return {
-      user,
+      user: `member:${props.memberId}`,
       relation: 'can_create_organization',
       object: 'site:default',
     };

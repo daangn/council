@@ -24,7 +24,7 @@ export default function make(app: FastifyInstance): AppRepo {
         },
         where: {
           state: {
-            path: ['email'],
+            path: ['value', 'data', 'email'],
             equals: email,
           },
         },

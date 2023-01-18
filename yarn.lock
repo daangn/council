@@ -2060,6 +2060,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@heroicons/react@npm:^2.0.13":
+  version: 2.0.13
+  resolution: "@heroicons/react@npm:2.0.13"
+  peerDependencies:
+    react: ">= 16"
+  checksum: d1272d98c02dc17830b4a6664cd99939e1931a621f42328210e79b045801bb603dc23a62a2650b413600ff9ce476058399643c0dd662eed3fa9e4aa1ad528c95
+  languageName: node
+  linkType: hard
+
 "@iarna/toml@npm:^2.2.5":
   version: 2.2.5
   resolution: "@iarna/toml@npm:2.2.5"
@@ -4136,6 +4145,7 @@ __metadata:
     "@graphql-codegen/typescript": ^2.8.7
     "@graphql-codegen/typescript-operations": ^2.5.12
     "@graphql-typed-document-node/core": ^3.1.1
+    "@heroicons/react": ^2.0.13
     "@opentelemetry/api": ^1.4.0
     "@opentelemetry/auto-instrumentations-node": ^0.36.0
     "@opentelemetry/exporter-zipkin": ^1.9.0
@@ -4171,6 +4181,7 @@ __metadata:
     prisma: ^4.8.0
     react: ^18.2.0
     react-dom: ^18.2.0
+    react-icons: ^4.7.1
     react-router: ^6.5.0
     react-router-dom: ^6.5.0
     rescript: ^10.1.0
@@ -8518,6 +8529,15 @@ __metadata:
   peerDependencies:
     react: ^18.2.0
   checksum: 66dfc5f93e13d0674e78ef41f92ed21dfb80f9c4ac4ac25a4b51046d41d4d2186abc915b897f69d3d0ebbffe6184e7c5876f2af26bfa956f179225d921be713a
+  languageName: node
+  linkType: hard
+
+"react-icons@npm:^4.7.1":
+  version: 4.7.1
+  resolution: "react-icons@npm:4.7.1"
+  peerDependencies:
+    react: "*"
+  checksum: be1d82522feba668df7d6f4d1f6ea59f4d5aca58f761790a5e08fcef50ef27d563a9fe78d803576fa64910607172886d559f6ad1cd9c7857b683b4e16eb50eea
   languageName: node
   linkType: hard
 

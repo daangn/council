@@ -1,18 +1,8 @@
 import { type ExecutionResult } from 'graphql';
-
-import { IndexPageDocument, type IndexPageQuery } from '~/client/graphql';
-import { type PageContext } from '~/client/ssr';
 import { Link } from 'react-router-dom';
 
-/* GraphQL */`
-  query IndexPage {
-    site {
-      permissions {
-        canCreateOrganization
-      }
-    }
-  }
-`;
+import { AdminPageDocument, type AdminPageQuery } from '~/client/graphql.gen';
+import { type PageContext } from '~/client/ssr';
 
 export async function getPageProps({ req }: PageContext) {
   if (!req.sessionOrRedirect()) {
@@ -23,15 +13,25 @@ export async function getPageProps({ req }: PageContext) {
     return;
   }
 
-  const result = await req.executeGraphQL(IndexPageDocument);
-
+  /* GraphQL */`
+    query AdminPage {
+      site {
+        permissions {
+          canCreateOrganization
+        }
+      }
+    }
+  `;
+  const result = await req.executeGraphQL(AdminPageDocument);
   return result;
 }
 
-export default function IndexPage({ data }: ExecutionResult<IndexPageQuery>) {
+export default function AdminPage({ data }: ExecutionResult<AdminPageQuery>) {
   return (
     <div>
-      Hello World
+      <header>
+        여기 헤더
+      </header>
 
       {data?.site.permissions.canCreateOrganization && (
         <Link to="/admin/orgs/new">

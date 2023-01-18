@@ -126,8 +126,8 @@ builder.mutationFields((t) => ({
         writes: {
           tuple_keys: [
             result.value.isAdmin
-              ? TupleKey.siteAdmin(`member:${result.value.member.id}`)
-              : TupleKey.siteMember(`member:${result.value.member.id}`),
+              ? TupleKey.siteAdmin({ memberId: result.value.member.id })
+              : TupleKey.siteMember({ memberId: result.value.member.id }),
           ],
         },
       });

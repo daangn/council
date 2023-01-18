@@ -1,3 +1,4 @@
+import { CreateOrganizationPageDocument } from '~/client/graphql.gen';
 import { type PageContext } from '~/client/ssr';
 
 export async function getPageProps({ req }: PageContext) {
@@ -9,16 +10,16 @@ export async function getPageProps({ req }: PageContext) {
     return;
   }
 
-  const result = await req.executeGraphQL(/* GraphQL */`
-    query IndexPage {
+  /* GraphQL */`
+    query CreateOrganizationPage {
       site {
         permissions {
           canCreateOrganization
         }
       }
     }
-  `);
-
+  `;
+  const result = await req.executeGraphQL(CreateOrganizationPageDocument);
   return result;
 }
 

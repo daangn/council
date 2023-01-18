@@ -3,7 +3,7 @@ import FastifyAuth, { type FastifyAuthFunction } from '@fastify/auth';
 import { createDecoder } from 'fast-jwt';
 import { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 
-import { type Member, type Session, SessionService } from '~/core';
+import { type Member, Session, SessionService } from '~/core';
 import { env } from '~/env';
 
 export async function setupAuth(app: FastifyInstance): Promise<void> {
@@ -19,12 +19,13 @@ export async function setupAuth(app: FastifyInstance): Promise<void> {
         type: 'object',
         properties: {
           code: { type: 'string' },
+          redirect_to: { type: 'string' },
         },
         required: ['code'],
       },
     },
     async handler(req, reply) {
-      const query = req.query as { code: string };
+      const query = req.query as { code: string; redirect_to?: string };
 
       const self = new URL('/auth/callback', `${req.protocol}://${req.hostname}`);
       const tokenUrl = new URL('/oauth/token', `https://${import.meta.env.VITE_AUTH0_DOMAIN}`);
@@ -68,6 +69,7 @@ export async function setupAuth(app: FastifyInstance): Promise<void> {
 
       const result = await SessionService.findOrCreateSession({
         findSession: app.repo.findSession,
+        findMemberByAuth: app.repo.findMemberByAuth,
         sessionId: decoded.sid,
         date: Date.now(),
         data: {
@@ -88,7 +90,11 @@ export async function setupAuth(app: FastifyInstance): Promise<void> {
       reply.setCookie('sessionId', session.id, { path: '/' });
 
       if (await app.repo.findMemberByAuth(decoded.sub)) {
-        reply.redirect('/admin');
+        if (query.redirect_to) {
+          reply.redirect(query.redirect_to);
+        } else {
+          reply.redirect('/admin');
+        }
       } else {
         reply.redirect('/admin/signup');
       }
@@ -127,7 +133,7 @@ export async function setupAuth(app: FastifyInstance): Promise<void> {
     .decorateRequest('currentSession', null)
     .decorateRequest('currentMemeber', null)
     .addHook('onRequest', async (req) => {
-      if (!(req.url.startsWith('/admin') || req.url.startsWith('/graphql'))) {
+      if (!/^\/(admin|site_admin|graphql)/.test(req.url)) {
         return;
       }
       if (req.cookies.sessionId) {
@@ -160,7 +166,7 @@ export async function setupAuth(app: FastifyInstance): Promise<void> {
   });
 
   app.decorateRequest('activeMemberOrRedirect', null).addHook('onRequest', async (req, reply) => {
-    req.activeMemberOrRedirect = function memberOrRedirect<T>(): T {
+    req.activeMemberOrRedirect = function activeMemberOrRedirect<T>(): T {
       if (!req.currentMember?.state) {
         reply.redirect('/admin/signup');
         return null as T;
