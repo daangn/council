@@ -1,6 +1,6 @@
 import { PageContext } from '~/client/ssr';
 
-import { SiteAdminPageDocument } from './index.graphql';
+import { SiteAdminPageDocument } from './index.graphql.gen';
 
 export async function getPageProps({ req, reply }: PageContext) {
   const { data } = await req.executeGraphQL(SiteAdminPageDocument);

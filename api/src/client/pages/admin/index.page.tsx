@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { type PageContext } from '~/client/ssr';
 
-import { AdminPageDocument, type AdminPageQuery } from './index.gen';
+import { AdminPageDocument, type AdminPageQuery } from './index.graphql.gen';
 
 export async function getPageProps({ req }: PageContext) {
   if (!req.sessionOrRedirect()) {

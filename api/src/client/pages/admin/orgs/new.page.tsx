@@ -1,6 +1,6 @@
 import { type PageContext } from '~/client/ssr';
 
-import { CreateOrganizationPageDocument } from './new.graphql';
+import { CreateOrganizationPageDocument } from './new.graphql.gen';
 
 export async function getPageProps({ req }: PageContext) {
   if (!req.sessionOrRedirect()) {
