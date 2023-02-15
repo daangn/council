@@ -97,7 +97,7 @@ export async function setupAuth(app: FastifyInstance): Promise<void> {
         serviceSpan.setStatus({ code: SpanStatusCode.OK });
 
         const session = await app.eventStore.publish(result.value);
-        reply.setCookie('sessionId', session.id, { path: '/' });
+        reply.setCookie('sessionId', session.id, { path: '/', expires: new Date(decoded.exp) });
 
         if (await app.repo.findMemberByAuth(decoded.sub)) {
           if (query.redirect_to) {
