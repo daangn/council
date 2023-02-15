@@ -13,8 +13,8 @@ import { setupId } from './id';
 import { setupPrisma } from './prisma';
 import { setupPublic } from './public';
 import { setupRepo } from './repo';
+import { setupOTEL } from './tracer';
 import { setupWorker } from './worker';
-// import { setupOTEL } from './tracer';
 
 export async function makeApp(options: {
   dev: boolean;
@@ -37,8 +37,7 @@ export async function makeApp(options: {
     hook: 'onRequest',
   });
 
-  // See https://github.com/open-telemetry/opentelemetry-js/issues/3521
-  //  await setupOTEL(app);
+  await setupOTEL(app);
   await setupPublic(app);
   await setupId(app);
   await setupPrisma(app);

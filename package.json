@@ -9,10 +9,13 @@
   },
   "resolutions": {
     "@fastify/vite": "patch:@fastify/vite@npm%3A3.0.3#./.yarn/patches/@fastify-vite-npm-3.0.3-cf89bc0c9d.patch",
-    "vite-node": "patch:vite-node@npm%3A0.25.8#./.yarn/patches/vite-node-npm-0.25.8-e6cae0797c.patch"
+    "@opentelemetry/resources": "patch:@opentelemetry/resources@npm%3A1.9.1#./.yarn/patches/@opentelemetry-resources-npm-1.9.1-064322e166.patch"
   },
   "dependencies": {
+    "@envelop/opentelemetry": "^4.0.4",
     "@openfga/sdk": "^0.1.1",
+    "@pothos/plugin-tracing": "^0.5.7",
+    "@pothos/tracing-opentelemetry": "^0.6.8",
     "string-dedent": "^3.0.1"
   },
   "devDependencies": {

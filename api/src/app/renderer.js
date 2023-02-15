@@ -5,34 +5,51 @@ import * as ReactDOM from 'react-dom/server';
 
 export function createRoute({ handler, errorHandler, route }, app, config) {
   app.get(`/_getPageProps${route.path}`, async (req, reply) => {
-    if (route.getPageProps) {
-      const pageProps = await route.getPageProps({ app, req, reply });
-      if (!reply.sent) {
-        reply.send(pageProps);
+    await app.tracer.startActiveSpan('getPageProps', async (span) => {
+      span.setAttribute('getPageProps.path', `/_getPageProps${route.path}`);
+      if (route.getPageProps) {
+        span.setAttribute('getPageProps.exist', true);
+        const pageProps = await route.getPageProps({ app, req, reply });
+        if (!reply.sent) {
+          reply.send(pageProps);
+        }
+      } else {
+        span.setAttribute('getPageProps.exist', false);
+        reply.send(null);
       }
-    } else {
-      reply.send(null);
-    }
+    });
+    span.end();
   });
   app.get(route.path, {
     handler,
     errorHandler,
     ...route,
     async preHandler(req, reply, done) {
-      if (route.getPageProps) {
-        req.pageProps = await route.getPageProps({ app, req, reply });
-        if (reply.sent) {
-          done();
+      await app.tracer.startActiveSpan('getPageProps', async (span) => {
+        span.setAttribute('getPageProps.path', route.path);
+        if (route.getPageProps) {
+          span.setAttribute('getPageProps.exist', true);
+          req.pageProps = await route.getPageProps({ app, req, reply });
+          if (reply.sent) {
+            done();
+          }
+        } else {
+          span.setAttribute('getPageProps.exist', false);
+          req.pageProps = null;
         }
-      } else {
-        req.pageProps = null;
-      }
+        span.end();
+      });
     },
   });
 
   if (route.postAction) {
     app.post(route.path, (req, reply) => {
-      return route.postAction({ app, req, reply });
+      return app.tracer.startActiveSpan('postAction', async (span) => {
+        span.setAttribute('postAction.path', route.path);
+        const result = await route.postAction({ app, req, reply });
+        span.end();
+        return result;
+      });
     });
   }
 }

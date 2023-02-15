@@ -1,4 +1,4 @@
-import { HiExclamationTriangle } from 'react-icons/hi2';
+import { HiExclamationTriangle } from 'react-icons/hi2/index.js';
 
 export default function DeniedPage() {
   return (

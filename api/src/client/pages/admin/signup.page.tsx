@@ -22,7 +22,10 @@ export async function getPageProps({ req, reply }: PageContext) {
 }
 
 export async function postAction({ app, req, reply }: PageContext) {
-  const { data } = await req.executeGraphQL(RequestSignupDocument);
+  const { data } = await req.executeGraphQL(
+    RequestSignupDocument,
+    req.body as { name: string, email: string },
+  );
   if (data) {
     if (data.requestSignup.member.active) {
       return reply.redirect('/admin');

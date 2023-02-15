@@ -1,0 +1,303 @@
+diff --git a/build/esm/Resource.js b/build/esm/Resource.js
+index bd48b88560ef3caaa3127894e19800ea67981ff9..8e80df5f07885cc6189b51604193099a75cf3f4e 100644
+--- a/build/esm/Resource.js
++++ b/build/esm/Resource.js
+@@ -15,7 +15,7 @@
+  */
+ import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
+ import { SDK_INFO } from '@opentelemetry/core';
+-import { defaultServiceName } from './platform';
++// import { defaultServiceName } from './platform';
+ /**
+  * A Resource describes the entity for which a signals (metrics or trace) are
+  * collected.
+@@ -42,7 +42,7 @@ var Resource = /** @class */ (function () {
+     Resource.default = function () {
+         var _a;
+         return new Resource((_a = {},
+-            _a[SemanticResourceAttributes.SERVICE_NAME] = defaultServiceName(),
++            // _a[SemanticResourceAttributes.SERVICE_NAME] = defaultServiceName(),
+             _a[SemanticResourceAttributes.TELEMETRY_SDK_LANGUAGE] = SDK_INFO[SemanticResourceAttributes.TELEMETRY_SDK_LANGUAGE],
+             _a[SemanticResourceAttributes.TELEMETRY_SDK_NAME] = SDK_INFO[SemanticResourceAttributes.TELEMETRY_SDK_NAME],
+             _a[SemanticResourceAttributes.TELEMETRY_SDK_VERSION] = SDK_INFO[SemanticResourceAttributes.TELEMETRY_SDK_VERSION],
+diff --git a/build/esnext/Resource.js b/build/esnext/Resource.js
+index 2ed98083c3ce368fbb2b8de2a34d324974307d04..d5e3213fdf71e70e451413a11325b582fad36eff 100644
+--- a/build/esnext/Resource.js
++++ b/build/esnext/Resource.js
+@@ -15,7 +15,7 @@
+  */
+ import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
+ import { SDK_INFO } from '@opentelemetry/core';
+-import { defaultServiceName } from './platform';
++// import { defaultServiceName } from './platform';
+ /**
+  * A Resource describes the entity for which a signals (metrics or trace) are
+  * collected.
+@@ -41,7 +41,7 @@ export class Resource {
+      */
+     static default() {
+         return new Resource({
+-            [SemanticResourceAttributes.SERVICE_NAME]: defaultServiceName(),
++            // [SemanticResourceAttributes.SERVICE_NAME]: defaultServiceName(),
+             [SemanticResourceAttributes.TELEMETRY_SDK_LANGUAGE]: SDK_INFO[SemanticResourceAttributes.TELEMETRY_SDK_LANGUAGE],
+             [SemanticResourceAttributes.TELEMETRY_SDK_NAME]: SDK_INFO[SemanticResourceAttributes.TELEMETRY_SDK_NAME],
+             [SemanticResourceAttributes.TELEMETRY_SDK_VERSION]: SDK_INFO[SemanticResourceAttributes.TELEMETRY_SDK_VERSION],
+diff --git a/build/esnext/detectors/BrowserDetector.js b/build/esnext/detectors/BrowserDetector.js
+index 1ab10fe3b98fe8e381d134691644ece8a418c63a..3f32bcc89848833853ddea08d4b9384452ef93b5 100644
+--- a/build/esnext/detectors/BrowserDetector.js
++++ b/build/esnext/detectors/BrowserDetector.js
+@@ -15,7 +15,7 @@
+  */
+ import { diag } from '@opentelemetry/api';
+ import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
+-import { Resource } from '..';
++import { Resource } from '../Resource.js';
+ /**
+  * BrowserDetector will be used to detect the resources related to browser.
+  */
+diff --git a/build/esnext/detectors/EnvDetector.js b/build/esnext/detectors/EnvDetector.js
+index 0935787fe8a3f5ad5df1f4365ac4d1cf107344cc..53c7c2f7a0dcfb38fd41847779f3aabfd1529df3 100644
+--- a/build/esnext/detectors/EnvDetector.js
++++ b/build/esnext/detectors/EnvDetector.js
+@@ -16,7 +16,7 @@
+ import { diag } from '@opentelemetry/api';
+ import { getEnv } from '@opentelemetry/core';
+ import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
+-import { Resource } from '../Resource';
++import { Resource } from '../Resource.js';
+ /**
+  * EnvDetector can be used to detect the presence of and create a Resource
+  * from the OTEL_RESOURCE_ATTRIBUTES environment variable.
+diff --git a/build/esnext/detectors/NoopDetector.js b/build/esnext/detectors/NoopDetector.js
+index 3ea9a4454e500ec5ad5c75a976c84a4939a8c367..6625a07a9a0a5f329b2b9ce989ba1eabe2e34335 100644
+--- a/build/esnext/detectors/NoopDetector.js
++++ b/build/esnext/detectors/NoopDetector.js
+@@ -13,7 +13,7 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-import { Resource } from '../Resource';
++import { Resource } from '../Resource.js';
+ export class NoopDetector {
+     async detect() {
+         return new Resource({});
+diff --git a/build/esnext/detectors/ProcessDetector.js b/build/esnext/detectors/ProcessDetector.js
+index 414445be252027b0fe5ed1b260fd16fda33bab76..0c00a6fe6077eaf64b3355589a1a847caa419032 100644
+--- a/build/esnext/detectors/ProcessDetector.js
++++ b/build/esnext/detectors/ProcessDetector.js
+@@ -15,7 +15,7 @@
+  */
+ import { diag } from '@opentelemetry/api';
+ import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
+-import { Resource } from '../Resource';
++import { Resource } from '../Resource.js';
+ /**
+  * ProcessDetector will be used to detect the resources related current process running
+  * and being instrumented from the NodeJS Process module.
+diff --git a/build/esnext/detectors/index.js b/build/esnext/detectors/index.js
+index 23171d5c4bee28eb8aba1fe31263bba5e9b2c51c..b1395d1f9a1ff044417fcad06e06e5be248ab828 100644
+--- a/build/esnext/detectors/index.js
++++ b/build/esnext/detectors/index.js
+@@ -13,7 +13,7 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-export * from './BrowserDetector';
+-export * from './EnvDetector';
+-export * from './ProcessDetector';
++export * from './BrowserDetector.js';
++export * from './EnvDetector.js';
++export * from './ProcessDetector.js';
+ //# sourceMappingURL=index.js.map
+\ No newline at end of file
+diff --git a/build/esnext/index.js b/build/esnext/index.js
+index 50a3a3eee13ccd6f740b7ecc2d83785dc864c4e2..5faa6f6ed1e14a5b0f1073d1cb2f1af96ffb6a81 100644
+--- a/build/esnext/index.js
++++ b/build/esnext/index.js
+@@ -13,9 +13,9 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-export * from './Resource';
+-export * from './platform';
+-export * from './types';
+-export * from './config';
+-export * from './detectors';
++export * from './Resource.js';
++export * from './platform/index.js';
++export * from './types.js';
++export * from './config.js';
++export * from './detectors/index.js';
+ //# sourceMappingURL=index.js.map
+\ No newline at end of file
+diff --git a/build/esnext/platform/browser/HostDetector.js b/build/esnext/platform/browser/HostDetector.js
+index d05ee6d0b2b45c30c2ba840cb719bb450900e459..c7a8816903de32761fa278ac52959caed826284b 100644
+--- a/build/esnext/platform/browser/HostDetector.js
++++ b/build/esnext/platform/browser/HostDetector.js
+@@ -13,6 +13,6 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-import { noopDetector } from '../../detectors/NoopDetector';
++import { noopDetector } from '../../detectors/NoopDetector.js';
+ export const hostDetector = noopDetector;
+ //# sourceMappingURL=HostDetector.js.map
+\ No newline at end of file
+diff --git a/build/esnext/platform/browser/OSDetector.js b/build/esnext/platform/browser/OSDetector.js
+index 5459c34d2461fcf19d16a18c3a5abd0a17e1c136..b09899052f95329fdc9cd444d6353c32d2090af8 100644
+--- a/build/esnext/platform/browser/OSDetector.js
++++ b/build/esnext/platform/browser/OSDetector.js
+@@ -13,6 +13,6 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-import { noopDetector } from '../../detectors/NoopDetector';
++import { noopDetector } from '../../detectors/NoopDetector.js';
+ export const osDetector = noopDetector;
+ //# sourceMappingURL=OSDetector.js.map
+\ No newline at end of file
+diff --git a/build/esnext/platform/browser/detect-resources.js b/build/esnext/platform/browser/detect-resources.js
+index 7b9b7bca14c35bc61f5ad7f7007352b74d22c753..aefd4f827ea2915c4067dc19bbf9d634467b2637 100644
+--- a/build/esnext/platform/browser/detect-resources.js
++++ b/build/esnext/platform/browser/detect-resources.js
+@@ -13,7 +13,7 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-import { Resource } from '../../Resource';
++import { Resource } from '../../Resource.js';
+ import { diag } from '@opentelemetry/api';
+ /**
+  * Runs all resource detectors and returns the results merged into a single
+diff --git a/build/esnext/platform/browser/index.js b/build/esnext/platform/browser/index.js
+index 263f4f3a3c360dc05bda8552703fad2c350e6f7c..13a42061b2bea3928785deef14d47a9b421654a8 100644
+--- a/build/esnext/platform/browser/index.js
++++ b/build/esnext/platform/browser/index.js
+@@ -13,8 +13,8 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-export * from './default-service-name';
+-export * from './detect-resources';
+-export * from './HostDetector';
+-export * from './OSDetector';
++export * from './default-service-name.js';
++export * from './detect-resources.js';
++export * from './HostDetector.js';
++export * from './OSDetector.js';
+ //# sourceMappingURL=index.js.map
+\ No newline at end of file
+diff --git a/build/esnext/platform/index.js b/build/esnext/platform/index.js
+index c0df125ca99239bef7b3d463d2f991cc75f402e4..0883ee7f703996214a297ba879db1a33592883c3 100644
+--- a/build/esnext/platform/index.js
++++ b/build/esnext/platform/index.js
+@@ -13,5 +13,5 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-export * from './node';
++export * from './node/index.js';
+ //# sourceMappingURL=index.js.map
+\ No newline at end of file
+diff --git a/build/esnext/platform/node/HostDetector.js b/build/esnext/platform/node/HostDetector.js
+index 3654e3dc4bffe70b0bf1544c0d977b04dc97f1e8..fd3c2429beefd9cdc1123c490efe648eb6157211 100644
+--- a/build/esnext/platform/node/HostDetector.js
++++ b/build/esnext/platform/node/HostDetector.js
+@@ -14,7 +14,7 @@
+  * limitations under the License.
+  */
+ import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
+-import { Resource } from '../../Resource';
++import { Resource } from '../../Resource.js';
+ import { arch, hostname } from 'os';
+ /**
+  * HostDetector detects the resources related to the host current process is
+diff --git a/build/esnext/platform/node/OSDetector.js b/build/esnext/platform/node/OSDetector.js
+index e9ef67b4157e327e2b48fde9622baf3670883090..f881375ff3b4c9c4eab222f62e05db6c43cedd28 100644
+--- a/build/esnext/platform/node/OSDetector.js
++++ b/build/esnext/platform/node/OSDetector.js
+@@ -14,7 +14,7 @@
+  * limitations under the License.
+  */
+ import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
+-import { Resource } from '../../Resource';
++import { Resource } from '../../Resource.js';
+ import { platform, release } from 'os';
+ /**
+  * OSDetector detects the resources related to the operating system (OS) on
+diff --git a/build/esnext/platform/node/detect-resources.js b/build/esnext/platform/node/detect-resources.js
+index 35310c117b3150490b2dc43917dc55d1df898d6f..b28163abdcd96dd528a98c97284f7c7d3ac5fd57 100644
+--- a/build/esnext/platform/node/detect-resources.js
++++ b/build/esnext/platform/node/detect-resources.js
+@@ -13,7 +13,7 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-import { Resource } from '../../Resource';
++import { Resource } from '../../Resource.js';
+ import { diag } from '@opentelemetry/api';
+ import * as util from 'util';
+ /**
+diff --git a/build/esnext/platform/node/index.js b/build/esnext/platform/node/index.js
+index 263f4f3a3c360dc05bda8552703fad2c350e6f7c..13a42061b2bea3928785deef14d47a9b421654a8 100644
+--- a/build/esnext/platform/node/index.js
++++ b/build/esnext/platform/node/index.js
+@@ -13,8 +13,8 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-export * from './default-service-name';
+-export * from './detect-resources';
+-export * from './HostDetector';
+-export * from './OSDetector';
++export * from './default-service-name.js';
++export * from './detect-resources.js';
++export * from './HostDetector.js';
++export * from './OSDetector.js';
+ //# sourceMappingURL=index.js.map
+\ No newline at end of file
+diff --git a/build/src/Resource.js b/build/src/Resource.js
+index 3351bf1515757f1729d094d87046ffc9b8c83db2..182cd67bff23cfc137909edcb1c651db4be0b614 100644
+--- a/build/src/Resource.js
++++ b/build/src/Resource.js
+@@ -18,7 +18,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.Resource = void 0;
+ const semantic_conventions_1 = require("@opentelemetry/semantic-conventions");
+ const core_1 = require("@opentelemetry/core");
+-const platform_1 = require("./platform");
++// const platform_1 = require("./platform");
+ /**
+  * A Resource describes the entity for which a signals (metrics or trace) are
+  * collected.
+@@ -44,7 +44,7 @@ class Resource {
+      */
+     static default() {
+         return new Resource({
+-            [semantic_conventions_1.SemanticResourceAttributes.SERVICE_NAME]: (0, platform_1.defaultServiceName)(),
++            // [semantic_conventions_1.SemanticResourceAttributes.SERVICE_NAME]: (0, platform_1.defaultServiceName)(),
+             [semantic_conventions_1.SemanticResourceAttributes.TELEMETRY_SDK_LANGUAGE]: core_1.SDK_INFO[semantic_conventions_1.SemanticResourceAttributes.TELEMETRY_SDK_LANGUAGE],
+             [semantic_conventions_1.SemanticResourceAttributes.TELEMETRY_SDK_NAME]: core_1.SDK_INFO[semantic_conventions_1.SemanticResourceAttributes.TELEMETRY_SDK_NAME],
+             [semantic_conventions_1.SemanticResourceAttributes.TELEMETRY_SDK_VERSION]: core_1.SDK_INFO[semantic_conventions_1.SemanticResourceAttributes.TELEMETRY_SDK_VERSION],
+diff --git a/package.json b/package.json
+index 9389e0f3de299a193b6a197de810be6eabec10ae..3b588fbe72beb58a922c314591df1fdde77196d0 100644
+--- a/package.json
++++ b/package.json
+@@ -2,16 +2,8 @@
+   "name": "@opentelemetry/resources",
+   "version": "1.9.1",
+   "description": "OpenTelemetry SDK resources",
+-  "main": "build/src/index.js",
+-  "module": "build/esm/index.js",
+-  "esnext": "build/esnext/index.js",
+-  "browser": {
+-    "./src/platform/index.ts": "./src/platform/browser/index.ts",
+-    "./build/esm/platform/index.js": "./build/esm/platform/browser/index.js",
+-    "./build/esnext/platform/index.js": "./build/esnext/platform/browser/index.js",
+-    "./build/src/platform/index.js": "./build/src/platform/browser/index.js"
+-  },
+-  "types": "build/src/index.d.ts",
++  "main": "./build/src/index.js",
++  "types": "./build/src/index.d.ts",
+   "repository": "open-telemetry/opentelemetry-js",
+   "scripts": {
+     "prepublishOnly": "npm run compile",

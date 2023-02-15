@@ -1,3 +1,4 @@
+import { useOpenTelemetry } from '@envelop/opentelemetry';
 import { type TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 import FastifyGraphQLVoyager from 'fastify-graphql-voyager';
@@ -5,6 +6,7 @@ import { createYoga } from 'graphql-yoga';
 import { type DocumentNode, type ExecutionResult, lexicographicSortSchema, printSchema } from 'graphql/index.js';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
+
 import { publicPath } from '~/common';
 
 import { type GraphQLContext, contextFactory } from './context';
@@ -20,6 +22,17 @@ export async function setupGraphQL(app: FastifyInstance): Promise<void> {
   >({
     schema,
     context: contextFactory(app),
+    plugins: [
+      useOpenTelemetry(
+        {
+          resolvers: true,
+          variables: true,
+          result: true,
+        },
+        // rome-ignore lint/suspicious/noExplicitAny: intentional
+        app.tracerProvider as any,
+      ),
+    ],
     logging: {
       debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
       info: (...args) => args.forEach((arg) => app.log.info(arg)),

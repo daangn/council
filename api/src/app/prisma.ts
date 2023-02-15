@@ -61,18 +61,12 @@ export async function setupPrisma(app: FastifyInstance) {
 
   await prisma.$connect();
 
-  app
-    .decorate('prisma', prisma)
-    .decorateRequest('prisma', { getter: () => prisma })
-    .addHook('onClose', async () => {
-      await prisma.$disconnect();
-    });
+  app.decorate('prisma', prisma).addHook('onClose', async () => {
+    await prisma.$disconnect();
+  });
 }
 
 declare module 'fastify' {
-  interface FastifyRequest {
-    prisma: PrismaClient;
-  }
   interface FastifyInstance {
     prisma: PrismaClient;
   }

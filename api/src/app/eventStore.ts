@@ -16,6 +16,13 @@ interface EventStore {
 
 export async function setupEventStore(app: FastifyInstance) {
   async function publishInTransaction<T extends Aggregate>(tx: Prisma.TransactionClient, aggregate: T): Promise<T> {
+    const span = app.tracer.startSpan('publishInTransaction', {
+      attributes: {
+        'aggregate.name': aggregate._RE,
+        'aggregate.id': aggregate.id,
+      },
+    });
+
     const events = aggregate.events;
     if (events.length === 0) {
       app.log.debug('events is empty, no effects');
@@ -62,7 +69,12 @@ export async function setupEventStore(app: FastifyInstance) {
     });
 
     app.log.debug('aggregate commited %o', next);
+
     app.log.debug('seq %d -> %d', aggregate.seq, next.seq);
+    span.setAttribute('aggregate.prev', aggregate.seq);
+    span.setAttribute('aggregate.next', next.seq);
+
+    span.end();
 
     return next;
   }
@@ -142,16 +154,22 @@ export async function setupEventStore(app: FastifyInstance) {
       return publishInTransaction(app.prisma, aggregate);
     },
     publishAny(obj) {
-      return app.prisma.$transaction(async (tx) => {
-        const result: Record<string, unknown> = {};
-        for (const [key, value] of Object.entries(obj)) {
-          if (value && typeof value === 'object' && '_RE' in value) {
-            result[key] = await publishInTransaction(tx, value as Aggregate);
-          } else {
-            result[key] = value;
-          }
+      return app.tracer.startActiveSpan('publishAny', async (span) => {
+        try {
+          return app.prisma.$transaction(async (tx) => {
+            const result: Record<string, unknown> = {};
+            for (const [key, value] of Object.entries(obj)) {
+              if (value && typeof value === 'object' && '_RE' in value) {
+                result[key] = await publishInTransaction(tx, value as Aggregate);
+              } else {
+                result[key] = value;
+              }
+            }
+            return result as typeof obj;
+          });
+        } finally {
+          span.end();
         }
-        return result as typeof obj;
       });
     },
   };

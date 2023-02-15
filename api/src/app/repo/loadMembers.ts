@@ -15,31 +15,35 @@ declare module 'fastify' {
 
 export default function make(app: FastifyInstance): AppRepo {
   return {
-    async loadMembers(ids) {
-      const snapshots = await app.prisma.councilSnapshot.findMany({
-        select: {
-          stream_id: true,
-          sequence: true,
-          state: true,
-        },
-        where: {
-          aggregate_name: 'Member',
-          stream_id: {
-            in: ids,
+    loadMembers(ids) {
+      return app.tracer.startActiveSpan('repo loadMembers', async (span) => {
+        const snapshots = await app.prisma.councilSnapshot.findMany({
+          select: {
+            stream_id: true,
+            sequence: true,
+            state: true,
           },
-        },
+          where: {
+            aggregate_name: 'Member',
+            stream_id: {
+              in: ids,
+            },
+          },
+        });
+        const snapshotMap = new Map(snapshots.map((snapshot) => [snapshot.stream_id, snapshot]));
+        const members = ids.map((id) => {
+          const snapshot = snapshotMap.get(id);
+          return snapshot
+            ? Member.make(id, {
+                state: snapshot.state as Member.state,
+                seq: Number(snapshot.sequence),
+              })
+            : new Error(`Member(id: ${id}) doesn't exist.`);
+        });
+
+        span.end();
+        return members;
       });
-      const snapshotMap = new Map(snapshots.map((snapshot) => [snapshot.stream_id, snapshot]));
-      const members = ids.map((id) => {
-        const snapshot = snapshotMap.get(id);
-        return snapshot
-          ? Member.make(id, {
-              state: snapshot.state as Member.state,
-              seq: Number(snapshot.sequence),
-            })
-          : new Error(`Member(id: ${id}) doesn't exist.`);
-      });
-      return members;
     },
   };
 }
