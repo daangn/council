@@ -17,8 +17,8 @@ export function createRoute({ handler, errorHandler, route }, app, config) {
         span.setAttribute('getPageProps.exist', false);
         reply.send(null);
       }
+      span.end();
     });
-    span.end();
   });
   app.get(route.path, {
     handler,

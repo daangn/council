@@ -19,7 +19,7 @@ function toServerRoutes(pagesMap: Record<string, any>): PageRoute[] {
         .replace(/\/index$/, '/')
         // Remove trailing slash
         .replace(/([^\/]+)\/$/, '$1');
-      const layoutPath = staticLayouts.find((layout) => layout.path === path)?.path ?? '/';
+      const layoutPath = staticLayouts.find((layout) => path.startsWith(layout.path))?.path ?? '/';
       const component = pagesMap[pageComponentPath].default;
       const getPageProps = pagesMap[pageComponentPath].getPageProps;
       const postAction = pagesMap[pageComponentPath].postAction;

@@ -31,6 +31,7 @@
     "@pothos/tracing-opentelemetry": "^0.6.8",
     "@prisma/client": "^4.9.0",
     "@rescript/react": "^0.11.0",
+    "daisyui": "^2.50.1",
     "dataloader": "^2.1.0",
     "devalue": "^4.2.0",
     "dotenv": "^16.0.3",

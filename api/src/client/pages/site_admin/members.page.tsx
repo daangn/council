@@ -1,9 +1,10 @@
+import { Link } from 'react-router-dom';
 import { PageContext } from '~/client/ssr';
 
-import { SiteAdminHomePageDocument } from './index.graphql.gen';
+import { SiteAdminMembersPageDocument } from './members.graphql.gen';
 
 export async function getPageProps({ req, reply }: PageContext) {
-  const { data } = await req.executeGraphQL(SiteAdminHomePageDocument);
+  const { data } = await req.executeGraphQL(SiteAdminMembersPageDocument);
   if (!data?.site.permissions.siteAdmin) {
     if (req.currentSession) {
       return reply.redirect(403, '/denied');
@@ -13,17 +14,27 @@ export async function getPageProps({ req, reply }: PageContext) {
   }
 }
 
-export default function SiteAdminHomePage() {
+export default function SiteAdminMembersPage() {
   return (
     <div>
       <div className="breadcrumbs">
         <ul>
-          <li>Site Admin</li>
+          <li>
+            <Link to="/site_admin">
+              Site Admin
+            </Link>
+          </li>
+          <li>
+            Members
+          </li>
         </ul>
       </div>
       <main>
-
+        <h1>
+          Members
+        </h1>
       </main>
     </div>
   )
 }
+

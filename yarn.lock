@@ -4493,6 +4493,7 @@ __metadata:
     "@types/react-dom": ^18.0.9
     "@vitejs/plugin-react": ^3.0.0
     autoprefixer: ^10.4.13
+    daisyui: ^2.50.1
     dataloader: ^2.1.0
     devalue: ^4.2.0
     dotenv: ^16.0.3
@@ -5214,10 +5215,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"color-name@npm:^1.1.4, color-name@npm:~1.1.4":
+"color-name@npm:^1.0.0, color-name@npm:^1.1.4, color-name@npm:~1.1.4":
   version: 1.1.4
   resolution: "color-name@npm:1.1.4"
   checksum: a1a3f914156960902f46f7f56bc62effc6c94e84b2cae157a526b1c1f74b677a47ec602bf68a61abfa2b42d15b7c5651c6dbe72a43af720bc588dff885b10f95
+  languageName: node
+  linkType: hard
+
+"color-string@npm:^1.9.0":
+  version: 1.9.1
+  resolution: "color-string@npm:1.9.1"
+  dependencies:
+    color-name: ^1.0.0
+    simple-swizzle: ^0.2.2
+  checksum: b0bfd74c03b1f837f543898b512f5ea353f71630ccdd0d66f83028d1f0924a7d4272deb278b9aef376cacf1289b522ac3fb175e99895283645a2dc3a33af2404
   languageName: node
   linkType: hard
 
@@ -5227,6 +5238,16 @@ __metadata:
   bin:
     color-support: bin.js
   checksum: 8ffeaa270a784dc382f62d9be0a98581db43e11eee301af14734a6d089bd456478b1a8b3e7db7ca7dc5b18a75f828f775c44074020b51c05fc00e6d0992b1cc6
+  languageName: node
+  linkType: hard
+
+"color@npm:^4.2":
+  version: 4.2.3
+  resolution: "color@npm:4.2.3"
+  dependencies:
+    color-convert: ^2.0.1
+    color-string: ^1.9.0
+  checksum: 7fbe7cfb811054c808349de19fb380252e5e34e61d7d168ec3353e9e9aacb1802674bddc657682e4e9730c2786592a4de6f8283e7e0d3870b829bb0b7b2f6118
   languageName: node
   linkType: hard
 
@@ -5390,6 +5411,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"css-selector-tokenizer@npm:^0.8.0":
+  version: 0.8.0
+  resolution: "css-selector-tokenizer@npm:0.8.0"
+  dependencies:
+    cssesc: ^3.0.0
+    fastparse: ^1.1.2
+  checksum: 86f68cc666d41f9d153351677694002a9d00e2609e6abc66fcfd7f580be3d6ecc0929e46a06c621ab28da5febbb54567db9709b819414edae4a36d9ff9133e16
+  languageName: node
+  linkType: hard
+
 "cssesc@npm:^3.0.0":
   version: 3.0.0
   resolution: "cssesc@npm:3.0.0"
@@ -5426,6 +5457,21 @@ __metadata:
   version: 3.1.1
   resolution: "csstype@npm:3.1.1"
   checksum: 7c8b8c5923049d84132581c13bae6e1faf999746fe3998ba5f3819a8e1cdc7512ace87b7d0a4a69f0f4b8ba11daf835d4f1390af23e09fc4f0baad52c084753a
+  languageName: node
+  linkType: hard
+
+"daisyui@npm:^2.50.1":
+  version: 2.50.1
+  resolution: "daisyui@npm:2.50.1"
+  dependencies:
+    color: ^4.2
+    css-selector-tokenizer: ^0.8.0
+    postcss-js: ^4.0.0
+    tailwindcss: ^3
+  peerDependencies:
+    autoprefixer: ^10.0.2
+    postcss: ^8.1.6
+  checksum: 8f81c7017500ba07584298e823d03e912a27c2093bf8a4c7f8e5f52c9fdbc774c89f71ddba429e713a2fb976c69ff967ed2cb14b01001d1fe8fa4d8b8ec64a21
   languageName: node
   linkType: hard
 
@@ -6457,6 +6503,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fastparse@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "fastparse@npm:1.1.2"
+  checksum: c08d6e7ef10c0928426c1963dd4593e2baaf44d223ab1e5ba5d7b30470144b3a4ecb3605958b73754cea3f857ecef00b67c885f07ca2c312b38b67d9d88b84b5
+  languageName: node
+  linkType: hard
+
 "fastq@npm:^1.6.0, fastq@npm:^1.6.1":
   version: 1.14.0
   resolution: "fastq@npm:1.14.0"
@@ -7209,6 +7262,13 @@ __metadata:
   version: 0.2.1
   resolution: "is-arrayish@npm:0.2.1"
   checksum: e7fb686a739068bb70f860b39b67afc62acc62e36bb61c5f965768abce1873b379c563e61dd2adad96ebb7edf6651111b385e490cf508378959b0ed4cac4e729
+  languageName: node
+  linkType: hard
+
+"is-arrayish@npm:^0.3.1":
+  version: 0.3.2
+  resolution: "is-arrayish@npm:0.3.2"
+  checksum: f59b43dc1d129edb6f0e282595e56477f98c40278a2acdc8b0a5c57097c9eff8fe55470493df5775478cf32a4dc8eaf6d3a749f07ceee5bc263a78b2434f6a54
   languageName: node
   linkType: hard
 
@@ -8835,7 +8895,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-selector-parser@npm:^6.0.10, postcss-selector-parser@npm:^6.0.4":
+"postcss-selector-parser@npm:^6.0.10, postcss-selector-parser@npm:^6.0.11, postcss-selector-parser@npm:^6.0.4":
   version: 6.0.11
   resolution: "postcss-selector-parser@npm:6.0.11"
   dependencies:
@@ -8852,6 +8912,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"postcss@npm:^8.0.9, postcss@npm:^8.4.21":
+  version: 8.4.21
+  resolution: "postcss@npm:8.4.21"
+  dependencies:
+    nanoid: ^3.3.4
+    picocolors: ^1.0.0
+    source-map-js: ^1.0.2
+  checksum: a26e7cc86a1807d624d9965914c26c20faa3f237184cbd69db537387f6a4f62df97347549144284d47e9e8e27e7c60e797cb3b92ad36cb2f4c3c9cb3b73f9758
+  languageName: node
+  linkType: hard
+
 "postcss@npm:^8.4.18, postcss@npm:^8.4.20":
   version: 8.4.20
   resolution: "postcss@npm:8.4.20"
@@ -8860,17 +8931,6 @@ __metadata:
     picocolors: ^1.0.0
     source-map-js: ^1.0.2
   checksum: 12b0b65d51a69673c4c5a5270c45a1c8b303601b17b7f373ce4319e900248e9c8923367616c5c5f6df39411e5af5a7df772bdf889959a52b58c53fc715d624dd
-  languageName: node
-  linkType: hard
-
-"postcss@npm:^8.4.21":
-  version: 8.4.21
-  resolution: "postcss@npm:8.4.21"
-  dependencies:
-    nanoid: ^3.3.4
-    picocolors: ^1.0.0
-    source-map-js: ^1.0.2
-  checksum: a26e7cc86a1807d624d9965914c26c20faa3f237184cbd69db537387f6a4f62df97347549144284d47e9e8e27e7c60e797cb3b92ad36cb2f4c3c9cb3b73f9758
   languageName: node
   linkType: hard
 
@@ -9707,6 +9767,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"simple-swizzle@npm:^0.2.2":
+  version: 0.2.2
+  resolution: "simple-swizzle@npm:0.2.2"
+  dependencies:
+    is-arrayish: ^0.3.1
+  checksum: df5e4662a8c750bdba69af4e8263c5d96fe4cd0f9fe4bdfa3cbdeb45d2e869dff640beaaeb1ef0e99db4d8d2ec92f85508c269f50c972174851bc1ae5bd64308
+  languageName: node
+  linkType: hard
+
 "slash@npm:^3.0.0":
   version: 3.0.0
   resolution: "slash@npm:3.0.0"
@@ -10010,6 +10079,42 @@ __metadata:
   version: 3.2.4
   resolution: "symbol-tree@npm:3.2.4"
   checksum: dfbe201ae09ac6053d163578778c53aa860a784147ecf95705de0cd23f42c851e1be7889241495e95c37cabb058edb1052f141387bef68f705afc8f9dd358509
+  languageName: node
+  linkType: hard
+
+"tailwindcss@npm:^3":
+  version: 3.2.6
+  resolution: "tailwindcss@npm:3.2.6"
+  dependencies:
+    arg: ^5.0.2
+    chokidar: ^3.5.3
+    color-name: ^1.1.4
+    detective: ^5.2.1
+    didyoumean: ^1.2.2
+    dlv: ^1.1.3
+    fast-glob: ^3.2.12
+    glob-parent: ^6.0.2
+    is-glob: ^4.0.3
+    lilconfig: ^2.0.6
+    micromatch: ^4.0.5
+    normalize-path: ^3.0.0
+    object-hash: ^3.0.0
+    picocolors: ^1.0.0
+    postcss: ^8.0.9
+    postcss-import: ^14.1.0
+    postcss-js: ^4.0.0
+    postcss-load-config: ^3.1.4
+    postcss-nested: 6.0.0
+    postcss-selector-parser: ^6.0.11
+    postcss-value-parser: ^4.2.0
+    quick-lru: ^5.1.1
+    resolve: ^1.22.1
+  peerDependencies:
+    postcss: ^8.0.9
+  bin:
+    tailwind: lib/cli.js
+    tailwindcss: lib/cli.js
+  checksum: 4ece9a2f1341ac180e798b5a66c6a3e6c221cf76715ea1d53b586d98e7ef5e4990ad2fa121e9362561927e93780a0158b58a7764663aeb10197717c9fd9254e8
   languageName: node
   linkType: hard
 

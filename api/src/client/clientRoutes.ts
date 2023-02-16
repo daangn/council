@@ -21,10 +21,10 @@ function toClientRoutes(pagesMap: Record<string, any>): PageRoute[] {
         .replace(/\/index$/, '/')
         // Remove trailing slash
         .replace(/([^\/]+)\/$/, '$1');
-      const layoutPath = staticLayouts.find((layout) => layout.path === path)?.path ?? '/';
+      const layoutPath = staticLayouts.find((layout) => path.startsWith(layout.path))?.path ?? '/';
       const component = React.lazy(pagesMap[pageComponentPath]);
       return {
-        path: path.replace(layoutPath, ''),
+        path: path.replace(layoutPath, '').replace(/^\//, ''),
         layoutPath,
         component,
       };

@@ -1,4 +1,4 @@
-query SiteAdminHomePage {
+query SiteAdminOrgsPage {
   site {
     permissions {
       siteAdmin
