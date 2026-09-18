@@ -33,7 +33,7 @@
     "@rescript/react": "^0.11.0",
     "daisyui": "^2.50.1",
     "dataloader": "^2.1.0",
-    "devalue": "^4.2.0",
+    "devalue": "^5.9.1",
     "dotenv": "^16.0.3",
     "envalid": "^7.3.1",
     "fast-jwt": "^2.0.2",

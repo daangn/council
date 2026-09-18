@@ -4495,7 +4495,7 @@ __metadata:
     autoprefixer: ^10.4.13
     daisyui: ^2.50.1
     dataloader: ^2.1.0
-    devalue: ^4.2.0
+    devalue: ^5.9.1
     dotenv: ^16.0.3
     envalid: ^7.3.1
     fast-jwt: ^2.0.2
@@ -5636,10 +5636,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"devalue@npm:^4.2.0":
-  version: 4.2.0
-  resolution: "devalue@npm:4.2.0"
-  checksum: 94b0a71c01875e61fea8e59c0b837b1780835c5fd65d10619760ce5325a0edf11ec17699fc0e5f9e937dc68bf2dfa6e039ce24f010c5fd56de076316dc7180bc
+"devalue@npm:^5.9.1":
+  version: 5.9.1
+  resolution: "devalue@npm:5.9.1"
+  checksum: 051254fbd21cd3ee90de325e038a76ea84d2102d27344043a0f861c7d5c8212dbda63979f053ac2d627d83cf33c42b62d301b0b82b4e6a4c6ea539d8feba87e7
   languageName: node
   linkType: hard
 
