@@ -2381,6 +2381,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lukeed/ms@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "@lukeed/ms@npm:2.0.2"
+  checksum: 843b922717313bcde4943f478145d8bc13115b9b91d83bbaed53739b5644122984412310aed574792f4e6b492f2cbda178175f601856d310f67e14834c3f17a0
+  languageName: node
+  linkType: hard
+
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -4498,7 +4505,7 @@ __metadata:
     devalue: ^4.2.0
     dotenv: ^16.0.3
     envalid: ^7.3.1
-    fast-jwt: ^2.0.2
+    fast-jwt: ^6.3.4
     fastify: ^4.11.0
     fastify-graphql-voyager: ^0.1.2
     graphile-worker: ^0.13.0
@@ -4586,7 +4593,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"asn1.js@npm:^5.3.0":
+"asn1.js@npm:^5.4.1":
   version: 5.4.1
   resolution: "asn1.js@npm:5.4.1"
   dependencies:
@@ -6376,14 +6383,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-jwt@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "fast-jwt@npm:2.0.2"
+"fast-jwt@npm:^6.3.4":
+  version: 6.3.4
+  resolution: "fast-jwt@npm:6.3.4"
   dependencies:
-    asn1.js: ^5.3.0
+    "@lukeed/ms": ^2.0.2
+    asn1.js: ^5.4.1
     ecdsa-sig-formatter: ^1.0.11
-    mnemonist: ^0.39.0
-  checksum: da5c06218a2862e745f332c27837c3d31acffaf09ac0133346872bc24f405aa0771c3e1fd6dacfda26b97410171c2b98a91e90db784df6a4e21c6a5ab1f4014c
+    mnemonist: ^0.40.0
+    safe-regex2: ^5.1.0
+  checksum: ec3da6855e3bcfbc4fe9ae81d248973499ca11108525999307ddd3c32369a8f51fe098b0a7f628afc22d3a07eccb95c97f640f10d560626b09746e6aa828f4bb
   languageName: node
   linkType: hard
 
@@ -8149,12 +8158,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mnemonist@npm:^0.39.0":
-  version: 0.39.5
-  resolution: "mnemonist@npm:0.39.5"
+"mnemonist@npm:^0.40.0":
+  version: 0.40.6
+  resolution: "mnemonist@npm:0.40.6"
   dependencies:
-    obliterator: ^2.0.1
-  checksum: 8a274af3a0d5f31749083e1d8e171cacba841d06edbe1465623c4023b6316a32c3ffd1ae8f65407b6b1f045534ac1d2f8ff00176312227b5b31a36e88081fe07
+    obliterator: ^2.0.4
+  checksum: a7d758d4cf4d085f481f753409ee165c7fa6ab586f623eca5f85e7e73469075f31815c9d1e19a6bf7dc200017780b352cebaaa038ae749991bdc02e45d9606c1
   languageName: node
   linkType: hard
 
@@ -8376,10 +8385,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"obliterator@npm:^2.0.1":
-  version: 2.0.4
-  resolution: "obliterator@npm:2.0.4"
-  checksum: ff2c10d4de7d62cd1d588b4d18dfc42f246c9e3a259f60d5716f7f88e5b3a3f79856b3207db96ec9a836a01d0958a21c15afa62a3f4e73a1e0b75f2c2f6bab40
+"obliterator@npm:^2.0.4":
+  version: 2.0.5
+  resolution: "obliterator@npm:2.0.5"
+  checksum: 36e67d88271c51aa6412a7d449d6c60ae6387176f94dbc557eea67456bf6ccedbcbcecdb1e56438aa4f4694f68f531b3bf2be87b019e2f69961b144bec124e70
   languageName: node
   linkType: hard
 
@@ -9455,6 +9464,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ret@npm:~0.5.0":
+  version: 0.5.0
+  resolution: "ret@npm:0.5.0"
+  checksum: 220868b194f87bf1998e32e409086eec6b39e860c052bf267f8ad4d0131706a9773d45fd3f91acfb1a7c928fce002b694ab86fdba90bc8d4b8df68fa8645c5cc
+  languageName: node
+  linkType: hard
+
 "retry@npm:^0.12.0":
   version: 0.12.0
   resolution: "retry@npm:0.12.0"
@@ -9603,6 +9619,17 @@ __metadata:
   dependencies:
     ret: ~0.2.0
   checksum: f499e4fc69caafd7dd8023759e69a32991baa66e90bec5e2a7777b907943b27068dbff4e7a32cc8231f1354fcb779142f419e85498ae1e37384dc60619509c27
+  languageName: node
+  linkType: hard
+
+"safe-regex2@npm:^5.1.0":
+  version: 5.1.2
+  resolution: "safe-regex2@npm:5.1.2"
+  dependencies:
+    ret: ~0.5.0
+  bin:
+    safe-regex2: bin/safe-regex2.js
+  checksum: 1cca87acef2be612464e2ffbfa876b4454cb0b842cae4fb8f0ed6f8a9bd45b5fe393a0de338044cebd4c887a7247303354e0c9b7ea32ec7519d8ad812768d08e
   languageName: node
   linkType: hard
 
